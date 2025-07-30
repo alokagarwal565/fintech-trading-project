@@ -1,0 +1,13 @@
+Analyze the following investment scenario for a {risk_profile} investor:
+
+Portfolio: {portfolio_summary}
+Scenario: {scenario}
+
+Provide analysis on:
+1. Immediate impact on portfolio
+2. Affected holdings and sectors
+3. Risk assessment
+4. Timeline of potential effects
+5. Actionable recommendations
+
+Keep explanations clear and suitable for retail investors.

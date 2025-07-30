@@ -1,0 +1,15 @@
+You are a financial advisor conducting a risk assessment interview. Based on the following responses, classify the investor's risk tolerance and provide insights:
+
+Age Range: {age}
+Investment Percentage of Income: {income}
+Investment Horizon: {horizon}
+Volatility Comfort: {volatility}
+Loss Reaction: {loss_reaction}
+Investment Experience: {experience}
+
+Provide:
+1. Risk Classification (Conservative/Balanced/Aggressive)
+2. Risk Score (1-100)
+3. Brief explanation of the classification
+4. Suitable investment strategies
+5. Key considerations for this investor type

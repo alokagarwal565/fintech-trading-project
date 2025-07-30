@@ -1,0 +1,8 @@
+Generate actionable investment suggestions for a {risk_profile} investor based on:
+
+Current Portfolio: {portfolio_summary}
+Market Scenario: {scenario}
+Portfolio Metrics: {metrics}
+
+Provide 5-7 specific, actionable suggestions that the investor can implement immediately.
+Focus on practical steps, not generic advice.
