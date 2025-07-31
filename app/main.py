@@ -1,579 +1,347 @@
 import streamlit as st
-import sys
 import os
+from dotenv import load_dotenv
 import pandas as pd
-import plotly.express as px
-import plotly.graph_objects as go
+from datetime import datetime
 
-# Add backend to path
-sys.path.append(os.path.join(os.path.dirname(__file__), '..'))
+# Load environment variables
+load_dotenv()
 
-from backend.risk_profile import RiskProfiler
-from backend.portfolio import PortfolioHandler
-from backend.scenario_analysis import ScenarioAnalyzer
-from backend.explain import ExplanationGenerator
-from backend.data_fetcher import DataFetcher
-
-# Page config
-st.set_page_config(
-    page_title="AI Risk & Scenario Advisor",
-    page_icon="📊",
-    layout="wide",
-    initial_sidebar_state="expanded"
-)
-
-# Custom CSS
-st.markdown("""
-<style>
-    .main-header {
-        background: linear-gradient(90deg, #1e3c72 0%, #2a5298 100%);
-        padding: 20px;
-        border-radius: 10px;
-        margin-bottom: 30px;
-    }
-    .main-header h1 {
-        color: white;
-        text-align: center;
-        margin: 0;
-    }
-    .metric-card {
-        background: #f8f9fa;
-        padding: 15px;
-        border-radius: 8px;
-        border-left: 4px solid #2a5298;
-        margin: 10px 0;
-    }
-    .risk-conservative { border-left-color: #28a745; }
-    .risk-balanced { border-left-color: #ffc107; }
-    .risk-aggressive { border-left-color: #dc3545; }
-</style>
-""", unsafe_allow_html=True)
+# Import our modules
+from risk_profile import RiskProfiler
+from portfolio import PortfolioAnalyzer
+from scenario_analysis import ScenarioAnalyzer
+from utils import export_to_text, export_to_pdf, validate_environment
 
 def main():
-    # Initialize session state
-    if 'step' not in st.session_state:
-        st.session_state.step = 1
-    if 'risk_answers' not in st.session_state:
-        st.session_state.risk_answers = {}
-    if 'portfolio' not in st.session_state:
-        st.session_state.portfolio = []
-    if 'portfolio_metrics' not in st.session_state:
-        st.session_state.portfolio_metrics = {}
+    st.set_page_config(
+        page_title="AI-Powered Risk & Scenario Advisor",
+        page_icon="📊",
+        layout="wide",
+        initial_sidebar_state="expanded"
+    )
     
-    # Header
-    st.markdown("""
-    <div class="main-header">
-        <h1>🎯 AI-Powered Risk & Scenario Advisor</h1>
-        <p style="color: white; text-align: center; margin: 0;">
-            Understand your risk tolerance • Analyze your portfolio • Get AI-powered insights
-        </p>
-    </div>
-    """, unsafe_allow_html=True)
+    # Validate environment
+    if not validate_environment():
+        st.error("⚠️ Missing required environment variables. Please check your .env file.")
+        st.stop()
+    
+    # Main header
+    st.title("📊 AI-Powered Risk & Scenario Advisor for Retail Investors")
+    st.markdown("---")
     
     # Sidebar navigation
     st.sidebar.title("Navigation")
+    page = st.sidebar.radio(
+        "Choose a section:",
+        ["🎯 Risk Profiling", "💼 Portfolio Analysis", "🔮 Scenario Analysis", "📋 Export Results"]
+    )
     
-    steps = [
-        "🏠 Welcome",
-        "📝 Risk Assessment", 
-        "💼 Portfolio Input",
-        "🔍 Scenario Analysis",
-        "📊 Results & Insights"
-    ]
+    # Initialize session state
+    if 'risk_profile' not in st.session_state:
+        st.session_state.risk_profile = None
+    if 'portfolio_data' not in st.session_state:
+        st.session_state.portfolio_data = None
+    if 'scenario_results' not in st.session_state:
+        st.session_state.scenario_results = []
     
-    # Display current step
-    for i, step_name in enumerate(steps, 1):
-        if st.sidebar.button(step_name, key=f"nav_{i}"):
-            st.session_state.step = i
-    
-    st.sidebar.markdown("---")
-    st.sidebar.markdown("**Current Step:** " + steps[st.session_state.step - 1])
-    
-    # Main content based on step
-    if st.session_state.step == 1:
-        show_welcome()
-    elif st.session_state.step == 2:
-        show_risk_assessment()
-    elif st.session_state.step == 3:
-        show_portfolio_input()
-    elif st.session_state.step == 4:
+    # Page routing
+    if page == "🎯 Risk Profiling":
+        show_risk_profiling()
+    elif page == "💼 Portfolio Analysis":
+        show_portfolio_analysis()
+    elif page == "🔮 Scenario Analysis":
         show_scenario_analysis()
-    elif st.session_state.step == 5:
-        show_results()
+    elif page == "📋 Export Results":
+        show_export_options()
 
-def show_welcome():
-    st.markdown("## Welcome to Your Personal Investment Advisor! 🚀")
-    
-    col1, col2 = st.columns([2, 1])
-    
-    with col1:
-        st.markdown("""
-        ### What This Tool Does:
-        
-        🎯 **Risk Assessment**: Answer a few questions to understand your investment personality
-        
-        💼 **Portfolio Analysis**: Input your holdings and get instant insights
-        
-        🔍 **Scenario Planning**: See how market events might impact your investments
-        
-        📊 **AI-Powered Advice**: Get personalized suggestions based on your risk profile
-        
-        ### How It Works:
-        1. **Complete the risk assessment** (5 minutes)
-        2. **Enter your portfolio** (stocks you own)
-        3. **Describe a scenario** (market event, news, etc.)
-        4. **Get AI analysis** with actionable insights
-        
-        ### Sample Scenarios You Can Test:
-        - "What if RBI increases interest rates by 0.5%?"
-        - "How would a 15% drop in IT sector affect my portfolio?"
-        - "What if crude oil prices rise by 30%?"
-        - "Impact of upcoming budget announcement on my holdings"
-        """)
-    
-    with col2:
-        st.markdown("""
-        <div class="metric-card">
-            <h4>🎨 Built For You</h4>
-            <p>No complex financial jargon. Get insights in plain English that you can act on immediately.</p>
-        </div>
-        
-        <div class="metric-card">
-            <h4>🔒 Privacy First</h4>
-            <p>Your data stays with you. No accounts, no tracking, no data storage.</p>
-        </div>
-        
-        <div class="metric-card">
-            <h4>⚡ Real-Time Data</h4>
-            <p>Powered by live market data and cutting-edge AI analysis.</p>
-        </div>
-        """, unsafe_allow_html=True)
-    
-    if st.button("🚀 Start Risk Assessment", type="primary", use_container_width=True):
-        st.session_state.step = 2
-        st.rerun()
-
-def show_risk_assessment():
-    st.markdown("## 📝 Risk Assessment Questionnaire")
-    st.markdown("Answer these questions to understand your investment personality:")
+def show_risk_profiling():
+    st.header("🎯 Risk Tolerance Assessment")
+    st.write("Complete this questionnaire to understand your investment risk profile.")
     
     profiler = RiskProfiler()
     
     with st.form("risk_assessment_form"):
-        answers = {}
+        st.subheader("Investment Risk Questionnaire")
         
-        for i, question in enumerate(profiler.questions):
-            st.markdown(f"### {i+1}. {question['question']}")
-            answers[question['id']] = st.radio(
-                f"Select your answer:",
-                question['options'],
-                key=f"q_{question['id']}",
-                index=0
-            )
+        # Question 1: Investment experience
+        q1 = st.radio(
+            "1. How long have you been investing in stocks?",
+            ["Less than 1 year", "1-3 years", "3-5 years", "More than 5 years"],
+            key="q1"
+        )
         
-        submitted = st.form_submit_button("📊 Calculate My Risk Profile", type="primary")
+        # Question 2: Risk comfort
+        q2 = st.radio(
+            "2. If your portfolio lost 20% in a month, what would you do?",
+            ["Sell immediately", "Sell some holdings", "Hold and wait", "Buy more"],
+            key="q2"
+        )
+        
+        # Question 3: Investment goals
+        q3 = st.radio(
+            "3. What is your primary investment goal?",
+            ["Capital preservation", "Steady income", "Moderate growth", "Aggressive growth"],
+            key="q3"
+        )
+        
+        # Question 4: Time horizon
+        q4 = st.radio(
+            "4. When do you plan to use this money?",
+            ["Within 1 year", "1-3 years", "3-7 years", "More than 7 years"],
+            key="q4"
+        )
+        
+        # Question 5: Income stability
+        q5 = st.radio(
+            "5. How stable is your current income?",
+            ["Very unstable", "Somewhat unstable", "Stable", "Very stable"],
+            key="q5"
+        )
+        
+        # Question 6: Emergency fund
+        q6 = st.radio(
+            "6. Do you have an emergency fund covering 3-6 months of expenses?",
+            ["No emergency fund", "Less than 3 months", "3-6 months", "More than 6 months"],
+            key="q6"
+        )
+        
+        submitted = st.form_submit_button("Assess My Risk Profile")
         
         if submitted:
-            st.session_state.risk_answers = answers
-            risk_score, risk_profile = profiler.calculate_risk_score(answers)
-            
-            st.session_state.risk_score = risk_score
+            answers = [q1, q2, q3, q4, q5, q6]
+            risk_profile = profiler.assess_risk_tolerance(answers)
             st.session_state.risk_profile = risk_profile
             
-            # Show results
-            st.success("✅ Risk assessment completed!")
+            # Display results
+            st.success("✅ Risk Assessment Complete!")
             
-            col1, col2, col3 = st.columns(3)
-            
+            col1, col2 = st.columns(2)
             with col1:
-                st.metric("Risk Score", f"{risk_score:.0f}/100")
-            
+                st.metric("Risk Profile", risk_profile['category'])
             with col2:
-                st.metric("Risk Profile", risk_profile)
+                st.metric("Risk Score", f"{risk_profile['score']}/24")
             
-            with col3:
-                color = {"Conservative": "🟢", "Balanced": "🟡", "Aggressive": "🔴"}
-                st.metric("Risk Level", color.get(risk_profile, "⚪"))
+            st.write("**Profile Description:**")
+            st.write(risk_profile['description'])
             
-            # Explanation
-            risk_class = risk_profile.lower()
-            st.markdown(f"""
-            <div class="metric-card risk-{risk_class}">
-                <h4>Your Risk Profile: {risk_profile}</h4>
-                <p>{profiler.get_risk_description(risk_profile)}</p>
-            </div>
-            """, unsafe_allow_html=True)
-            
-            if st.button("➡️ Continue to Portfolio Input", type="primary"):
-                st.session_state.step = 3
-                st.rerun()
+            st.write("**Investment Recommendations:**")
+            for rec in risk_profile['recommendations']:
+                st.write(f"• {rec}")
 
-def show_portfolio_input():
-    st.markdown("## 💼 Portfolio Input")
+def show_portfolio_analysis():
+    st.header("💼 Portfolio Analysis")
     
-    if 'risk_profile' not in st.session_state:
-        st.warning("⚠️ Please complete the risk assessment first!")
-        if st.button("Go to Risk Assessment"):
-            st.session_state.step = 2
-            st.rerun()
+    if st.session_state.risk_profile is None:
+        st.warning("⚠️ Please complete the risk assessment first.")
         return
     
-    st.markdown(f"**Your Risk Profile:** {st.session_state.risk_profile}")
+    st.write("Enter your stock holdings in natural language (e.g., 'TCS: 10, HDFC Bank: 5 shares')")
     
-    portfolio_handler = PortfolioHandler()
-    data_fetcher = DataFetcher()
+    analyzer = PortfolioAnalyzer()
     
-    col1, col2 = st.columns([2, 1])
-    
-    with col1:
-        st.markdown("### Enter Your Portfolio")
-        st.markdown("Enter your holdings in any of these formats:")
-        st.code("""TCS, 10
-HDFC Bank: 5 shares
-INFY 15
-RELIANCE, 8 shares""")
-        
-        portfolio_text = st.text_area(
-            "Your Portfolio Holdings:",
-            height=200,
-            placeholder="Enter ticker, quantity (one per line)",
-            help="Supported formats: 'TCS, 10' or 'TCS: 10 shares' or 'TCS 10'"
-        )
-        
-        if st.button("📊 Analyze Portfolio", type="primary") and portfolio_text:
-            with st.spinner("Analyzing your portfolio..."):
-                # Parse portfolio
-                parsed_portfolio = portfolio_handler.parse_portfolio_input(portfolio_text)
-                
-                if parsed_portfolio:
-                    # Validate and enrich
-                    validated_portfolio, errors = portfolio_handler.validate_and_enrich_portfolio(parsed_portfolio)
-                    
-                    if errors:
-                        st.error("Some issues found:")
-                        for error in errors:
-                            st.write(f"❌ {error}")
-                    
-                    if validated_portfolio:
-                        # Calculate metrics
-                        metrics = portfolio_handler.calculate_portfolio_metrics(validated_portfolio)
-                        
-                        # Store in session state
-                        st.session_state.portfolio = validated_portfolio
-                        st.session_state.portfolio_metrics = metrics
-                        
-                        st.success(f"✅ Successfully analyzed {len(validated_portfolio)} holdings!")
-                        
-                        # Show portfolio summary
-                        st.markdown("### Portfolio Summary")
-                        
-                        # Metrics
-                        col_a, col_b, col_c, col_d = st.columns(4)
-                        with col_a:
-                            st.metric("Total Value", f"₹{metrics['total_value']:,.0f}")
-                        with col_b:
-                            st.metric("Holdings", metrics['num_holdings'])
-                        with col_c:
-                            st.metric("Portfolio Beta", f"{metrics['weighted_beta']:.2f}")
-                        with col_d:
-                            avg_weight = 100 / metrics['num_holdings']
-                            st.metric("Avg Weight", f"{avg_weight:.1f}%")
-                        
-                        # Holdings table
-                        df = pd.DataFrame(validated_portfolio)
-                        df['weight_pct'] = df['weight'] * 100
-                        df['total_value_formatted'] = df['total_value'].apply(lambda x: f"₹{x:,.0f}")
-                        
-                        display_df = df[['company_name', 'ticker', 'quantity', 'current_price', 'total_value_formatted', 'weight_pct', 'sector']].copy()
-                        display_df.columns = ['Company', 'Ticker', 'Qty', 'Price', 'Value', 'Weight %', 'Sector']
-                        display_df['Weight %'] = display_df['Weight %'].round(1)
-                        display_df['Price'] = display_df['Price'].round(2)
-                        
-                        st.dataframe(display_df, use_container_width=True)
-                        
-                        if st.button("🎯 Continue to Scenario Analysis", type="primary"):
-                            st.session_state.step = 4
-                            st.rerun()
-    
-    with col2:
-        st.markdown("### Sample Portfolios")
-        
-        sample_portfolios = {
-            "Tech Heavy": "TCS, 10\nINFY, 15\nWIPRO, 20\nHCLTECH, 8",
-            "Balanced": "RELIANCE, 5\nHDFC, 10\nSBI, 15\nITC, 25\nTCS, 8",
-            "Banking Focus": "HDFC, 10\nICICIBC, 15\nSBI, 20\nAXISBANK, 12"
-        }
-        
-        for name, portfolio in sample_portfolios.items():
-            if st.button(f"Load {name}", key=f"sample_{name}"):
-                st.text_area("Portfolio", value=portfolio, key="loaded_portfolio", height=100)
-
-def show_scenario_analysis():
-    st.markdown("## 🔍 Scenario Analysis")
-    
-    if not st.session_state.portfolio:
-        st.warning("⚠️ Please enter your portfolio first!")
-        if st.button("Go to Portfolio Input"):
-            st.session_state.step = 3
-            st.rerun()
-        return
-    
-    # Show current portfolio summary
-    with st.expander("📊 Current Portfolio Summary", expanded=False):
-        metrics = st.session_state.portfolio_metrics
-        
-        col1, col2, col3 = st.columns(3)
-        with col1:
-            st.metric("Total Value", f"₹{metrics['total_value']:,.0f}")
-        with col2:
-            st.metric("Holdings", metrics['num_holdings'])
-        with col3:
-            st.metric("Portfolio Beta", f"{metrics['weighted_beta']:.2f}")
-        
-        # Top holdings
-        portfolio_df = pd.DataFrame(st.session_state.portfolio)
-        top_holdings = portfolio_df.nlargest(5, 'total_value')
-        st.markdown("**Top 5 Holdings:**")
-        for _, holding in top_holdings.iterrows():
-            weight = holding['weight'] * 100
-            st.write(f"• {holding['company_name']}: ₹{holding['total_value']:,.0f} ({weight:.1f}%)")
-    
-    # Scenario input
-    st.markdown("### What scenario would you like to analyze?")
-    
-    # Predefined scenarios
-    st.markdown("**Quick Scenarios:**")
-    quick_scenarios = [
-        "RBI increases repo rate by 0.5%",
-        "IT sector expected to decline 15% due to US recession fears",
-        "Budget announcement increases infrastructure spending by 25%",
-        "Crude oil prices surge 30% due to geopolitical tensions",
-        "Banking sector faces stress due to rising NPAs",
-        "Market correction of 20% expected in next 3 months"
-    ]
-    
-    col1, col2 = st.columns(2)
-    for i, scenario in enumerate(quick_scenarios):
-        col = col1 if i % 2 == 0 else col2
-        if col.button(scenario, key=f"quick_{i}", use_container_width=True):
-            st.session_state.selected_scenario = scenario
-    
-    # Custom scenario
-    st.markdown("**Or describe your own scenario:**")
-    custom_scenario = st.text_area(
-        "Describe the market event or scenario:",
-        height=100,
-        placeholder="e.g., What if the government announces new tax reforms affecting IT companies?",
-        value=st.session_state.get('selected_scenario', '')
+    # Portfolio input
+    portfolio_input = st.text_area(
+        "Your Holdings:",
+        placeholder="Example: TCS: 10, HDFC Bank: 5 shares, Reliance: 15, Infosys: 8",
+        height=100
     )
     
-    if st.button("🔮 Analyze This Scenario", type="primary") and custom_scenario:
-        with st.spinner("🤖 AI is analyzing the scenario impact..."):
-            analyzer = ScenarioAnalyzer()
-            
-            # Run the analysis
-            analysis_result = analyzer.analyze_scenario(
-                custom_scenario,
-                st.session_state.portfolio,
-                st.session_state.risk_profile,
-                st.session_state.portfolio_metrics
-            )
-            
-            st.session_state.scenario_analysis = analysis_result
-            
-            # Show results immediately
-            st.markdown("### 📋 Analysis Results")
-            st.markdown(analysis_result['analysis'])
-            
-            # Quick suggestions
-            st.markdown("### 💡 Quick Actions")
-            suggestions = analyzer.generate_quick_suggestions(
-                custom_scenario, 
-                st.session_state.risk_profile
-            )
-            
-            for i, suggestion in enumerate(suggestions[:5], 1):
-                st.markdown(f"{i}. {suggestion}")
-            
-            if st.button("📊 View Detailed Results", type="primary"):
-                st.session_state.step = 5
-                st.rerun()
+    if st.button("Analyze Portfolio"):
+        if portfolio_input.strip():
+            with st.spinner("Fetching live market data..."):
+                try:
+                    portfolio_data = analyzer.parse_and_analyze_portfolio(portfolio_input)
+                    st.session_state.portfolio_data = portfolio_data
+                    
+                    if portfolio_data['valid_holdings']:
+                        st.success("✅ Portfolio analyzed successfully!")
+                        
+                        # Portfolio summary
+                        col1, col2, col3 = st.columns(3)
+                        with col1:
+                            st.metric("Total Value", f"₹{portfolio_data['total_value']:,.2f}")
+                        with col2:
+                            st.metric("Valid Holdings", len(portfolio_data['valid_holdings']))
+                        with col3:
+                            st.metric("Invalid Entries", len(portfolio_data['invalid_holdings']))
+                        
+                        # Holdings table
+                        if portfolio_data['valid_holdings']:
+                            st.subheader("📈 Your Holdings")
+                            df = pd.DataFrame(portfolio_data['valid_holdings'])
+                            st.dataframe(df, use_container_width=True)
+                            
+                            # Portfolio visualization
+                            analyzer.visualize_portfolio(portfolio_data['valid_holdings'])
+                        
+                        # Invalid holdings
+                        if portfolio_data['invalid_holdings']:
+                            st.subheader("⚠️ Invalid Holdings")
+                            for invalid in portfolio_data['invalid_holdings']:
+                                st.error(f"Could not process: {invalid}")
+                    
+                    else:
+                        st.error("❌ No valid holdings found. Please check your input format.")
+                
+                except Exception as e:
+                    st.error(f"❌ Error analyzing portfolio: {str(e)}")
+        else:
+            st.warning("Please enter your portfolio holdings.")
 
-def show_results():
-    st.markdown("## 📊 Detailed Analysis & Insights")
+def show_scenario_analysis():
+    st.header("🔮 AI-Powered Scenario Analysis")
     
-    if 'scenario_analysis' not in st.session_state:
-        st.warning("⚠️ Please complete scenario analysis first!")
-        if st.button("Go to Scenario Analysis"):
-            st.session_state.step = 4
-            st.rerun()
+    if st.session_state.portfolio_data is None:
+        st.warning("⚠️ Please analyze your portfolio first.")
         return
     
-    # Portfolio overview
-    col1, col2 = st.columns([2, 1])
+    analyzer = ScenarioAnalyzer()
+    
+    st.write("Analyze how different market scenarios might affect your portfolio.")
+    
+    # Scenario selection
+    scenario_type = st.radio(
+        "Choose scenario type:",
+        ["Predefined Scenarios", "Custom Scenario"]
+    )
+    
+    if scenario_type == "Predefined Scenarios":
+        predefined_scenarios = [
+            "RBI increases repo rate by 0.5%",
+            "Oil prices surge by 20% due to geopolitical tensions",
+            "US Federal Reserve cuts interest rates",
+            "Major IT company announces poor quarterly results",
+            "Government announces new infrastructure spending",
+            "Global recession fears increase",
+            "New technology disrupts traditional banking",
+            "Inflation rises to 7%"
+        ]
+        
+        selected_scenario = st.selectbox(
+            "Select a scenario:",
+            predefined_scenarios
+        )
+        scenario_text = selected_scenario
+    
+    else:
+        scenario_text = st.text_area(
+            "Describe your custom scenario:",
+            placeholder="Example: What if cryptocurrency becomes mainstream and affects traditional banking stocks?",
+            height=100
+        )
+    
+    if st.button("Analyze Scenario Impact"):
+        if scenario_text.strip():
+            with st.spinner("AI is analyzing the scenario impact..."):
+                try:
+                    analysis = analyzer.analyze_scenario(
+                        scenario_text,
+                        st.session_state.portfolio_data['valid_holdings'],
+                        st.session_state.risk_profile
+                    )
+                    
+                    # Store results
+                    result = {
+                        'timestamp': datetime.now(),
+                        'scenario': scenario_text,
+                        'analysis': analysis
+                    }
+                    st.session_state.scenario_results.append(result)
+                    
+                    st.success("✅ Scenario analysis complete!")
+                    
+                    # Display analysis
+                    st.subheader("🤖 AI Analysis")
+                    st.write(analysis['narrative'])
+                    
+                    st.subheader("📊 Key Insights")
+                    for insight in analysis['insights']:
+                        st.write(f"• {insight}")
+                    
+                    st.subheader("💡 Recommendations")
+                    for rec in analysis['recommendations']:
+                        st.write(f"• {rec}")
+                    
+                    if analysis['risk_assessment']:
+                        st.subheader("⚠️ Risk Assessment")
+                        st.write(analysis['risk_assessment'])
+                
+                except Exception as e:
+                    st.error(f"❌ Error in scenario analysis: {str(e)}")
+        else:
+            st.warning("Please enter a scenario to analyze.")
+    
+    # Show previous analyses
+    if st.session_state.scenario_results:
+        st.subheader("📋 Previous Analyses")
+        for i, result in enumerate(reversed(st.session_state.scenario_results[-5:])):
+            with st.expander(f"Analysis {len(st.session_state.scenario_results)-i}: {result['scenario'][:50]}..."):
+                st.write(f"**Analyzed on:** {result['timestamp'].strftime('%Y-%m-%d %H:%M:%S')}")
+                st.write("**Scenario:**", result['scenario'])
+                st.write("**Analysis:**", result['analysis']['narrative'])
+
+def show_export_options():
+    st.header("📋 Export Your Analysis Results")
+    
+    if not any([st.session_state.risk_profile, st.session_state.portfolio_data, st.session_state.scenario_results]):
+        st.warning("⚠️ No analysis data available to export. Please complete the assessments first.")
+        return
+    
+    st.write("Export your analysis results for future reference.")
+    
+    col1, col2 = st.columns(2)
     
     with col1:
-        st.markdown("### 📈 Portfolio Overview")
-        
-        metrics = st.session_state.portfolio_metrics
-        
-        # Key metrics
-        metric_col1, metric_col2, metric_col3, metric_col4 = st.columns(4)
-        with metric_col1:
-            st.metric("Total Value", f"₹{metrics['total_value']:,.0f}")
-        with metric_col2:
-            st.metric("Risk Profile", st.session_state.risk_profile)
-        with metric_col3:
-            st.metric("Holdings", metrics['num_holdings'])
-        with metric_col4:
-            st.metric("Portfolio Beta", f"{metrics['weighted_beta']:.2f}")
+        if st.button("📄 Export as Text"):
+            try:
+                text_content = export_to_text(
+                    st.session_state.risk_profile,
+                    st.session_state.portfolio_data,
+                    st.session_state.scenario_results
+                )
+                
+                st.download_button(
+                    label="Download Text Report",
+                    data=text_content,
+                    file_name=f"investment_analysis_{datetime.now().strftime('%Y%m%d_%H%M%S')}.txt",
+                    mime="text/plain"
+                )
+                st.success("✅ Text report ready for download!")
+            except Exception as e:
+                st.error(f"❌ Error generating text export: {str(e)}")
     
     with col2:
-        st.markdown("### 🎯 Risk Assessment")
-        risk_score = st.session_state.get('risk_score', 50)
+        if st.button("📑 Export as PDF"):
+            try:
+                pdf_content = export_to_pdf(
+                    st.session_state.risk_profile,
+                    st.session_state.portfolio_data,
+                    st.session_state.scenario_results
+                )
+                
+                st.download_button(
+                    label="Download PDF Report",
+                    data=pdf_content,
+                    file_name=f"investment_analysis_{datetime.now().strftime('%Y%m%d_%H%M%S')}.pdf",
+                    mime="application/pdf"
+                )
+                st.success("✅ PDF report ready for download!")
+            except Exception as e:
+                st.error(f"❌ Error generating PDF export: {str(e)}")
+    
+    # Preview export content
+    if st.checkbox("Preview Export Content"):
+        st.subheader("📄 Export Preview")
         
-        # Risk gauge
-        fig = go.Figure(go.Indicator(
-            mode = "gauge+number",
-            value = risk_score,
-            domain = {'x': [0, 1], 'y': [0, 1]},
-            title = {'text': "Risk Score"},
-            gauge = {
-                'axis': {'range': [None, 100]},
-                'bar': {'color': "darkblue"},
-                'steps': [
-                    {'range': [0, 40], 'color': "lightgreen"},
-                    {'range': [40, 70], 'color': "yellow"},
-                    {'range': [70, 100], 'color': "lightcoral"}
-                ],
-                'threshold': {
-                    'line': {'color': "red", 'width': 4},
-                    'thickness': 0.75,
-                    'value': 90
-                }
-            }
-        ))
-        fig.update_layout(height=300)
-        st.plotly_chart(fig, use_container_width=True)
-    
-    # Portfolio composition charts
-    st.markdown("### 📊 Portfolio Composition")
-    
-    chart_col1, chart_col2 = st.columns(2)
-    
-    with chart_col1:
-        # Holdings pie chart
-        portfolio_df = pd.DataFrame(st.session_state.portfolio)
-        fig_holdings = px.pie(
-            portfolio_df, 
-            values='total_value', 
-            names='company_name',
-            title="Holdings Distribution"
-        )
-        st.plotly_chart(fig_holdings, use_container_width=True)
-    
-    with chart_col2:
-        # Sector allocation
-        sectors = st.session_state.portfolio_metrics.get('sector_allocation', {})
-        if sectors:
-            sector_df = pd.DataFrame(list(sectors.items()), columns=['Sector', 'Weight'])
-            fig_sectors = px.pie(
-                sector_df, 
-                values='Weight', 
-                names='Sector',
-                title="Sector Allocation"
-            )
-            st.plotly_chart(fig_sectors, use_container_width=True)
-    
-    # Scenario analysis results
-    st.markdown("### 🔮 Scenario Analysis Results")
-    
-    analysis = st.session_state.scenario_analysis
-    
-    st.markdown(f"**Analyzed Scenario:** {analysis['scenario']}")
-    
-    # Analysis content
-    with st.container():
-        st.markdown(analysis['analysis'])
-    
-    # AI-powered explanations
-    st.markdown("### 🤖 AI Insights & Explanations")
-    
-    explainer = ExplanationGenerator()
-    
-    with st.spinner("Generating personalized insights..."):
-        # Portfolio explanation
-        portfolio_explanation = explainer.generate_portfolio_explanation(
-            st.session_state.portfolio,
-            st.session_state.portfolio_metrics,
-            st.session_state.risk_profile
-        )
+        if st.session_state.risk_profile:
+            st.write("**Risk Profile:**", st.session_state.risk_profile['category'])
         
-        # Risk profile explanation
-        risk_explanation = explainer.explain_risk_profile(
-            st.session_state.risk_profile,
-            st.session_state.get('risk_score', 50)
-        )
-    
-    tab1, tab2 = st.tabs(["💼 Portfolio Insights", "🎯 Risk Profile Insights"])
-    
-    with tab1:
-        st.markdown(portfolio_explanation)
-    
-    with tab2:
-        st.markdown(risk_explanation)
-    
-    # Export options
-    st.markdown("### 📥 Export Your Analysis")
-    
-    col1, col2, col3 = st.columns(3)
-    
-    with col1:
-        if st.button("📊 Download Portfolio Summary", use_container_width=True):
-            # Create downloadable portfolio summary
-            portfolio_df = pd.DataFrame(st.session_state.portfolio)
-            csv = portfolio_df.to_csv(index=False)
-            st.download_button(
-                label="Download CSV",
-                data=csv,
-                file_name="portfolio_summary.csv",
-                mime="text/csv"
-            )
-    
-    with col2:
-        if st.button("📝 Save Analysis Report", use_container_width=True):
-            # Create text report
-            report = f"""
-            PORTFOLIO ANALYSIS REPORT
-            Generated: {pd.Timestamp.now().strftime('%Y-%m-%d %H:%M:%S')}
-            
-            RISK PROFILE: {st.session_state.risk_profile}
-            RISK SCORE: {st.session_state.get('risk_score', 'N/A')}/100
-            
-            SCENARIO ANALYZED: {analysis['scenario']}
-            
-            ANALYSIS:
-            {analysis['analysis']}
-            
-            PORTFOLIO INSIGHTS:
-            {portfolio_explanation}
-            """
-            
-            st.download_button(
-                label="Download Report",
-                data=report,
-                file_name="investment_analysis_report.txt",
-                mime="text/plain"
-            )
-    
-    with col3:
-        if st.button("🔄 Start New Analysis", use_container_width=True):
-            # Reset session state
-            for key in list(st.session_state.keys()):
-                if key != 'step':
-                    del st.session_state[key]
-            st.session_state.step = 1
-            st.rerun()
+        if st.session_state.portfolio_data:
+            st.write("**Portfolio Holdings:**", len(st.session_state.portfolio_data.get('valid_holdings', [])))
+        
+        if st.session_state.scenario_results:
+            st.write("**Scenario Analyses:**", len(st.session_state.scenario_results))
 
 if __name__ == "__main__":
     main()
