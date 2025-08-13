@@ -310,7 +310,7 @@ def show_portfolio_analysis():
             try:
                 with st.spinner("📊 Fetching live market data and analyzing portfolio..."):
                     result = api_client.analyze_portfolio(portfolio_input, st.session_state.access_token)
-                    st.session_state.portfolio_data = portfolio_data
+                    st.session_state.portfolio_data = result # Corrected line
                     
                     if result['valid_holdings']:
                         st.success("✅ Portfolio analyzed successfully!")
