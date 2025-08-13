@@ -32,7 +32,7 @@ class APIClient:
             data["full_name"] = full_name
         
         response = self.client.post(
-            f"{self.base_url}/auth/register",
+            f"{self.base_base_url}/auth/register",
             json=data,
             headers=self.get_headers()
         )
@@ -115,6 +115,71 @@ class APIClient:
 # Initialize API client
 api_client = APIClient(API_BASE_URL)
 
+def add_custom_css():
+    """
+    Injects custom CSS to handle theme-specific styling and fix the text visibility issue.
+    """
+    st.markdown("""
+        <style>
+            /* --- GLOBAL STYLES FOR TEXT VISIBILITY --- */
+            /* In dark mode, ensure text is a light color */
+            [data-theme="dark"] .stMarkdown,
+            [data-theme="dark"] .stText,
+            [data-theme="dark"] .st-eb {
+                color: #e0e0e0; /* Light gray for readability */
+            }
+            /* In light mode, ensure text is a dark color */
+            [data-theme="light"] .stMarkdown,
+            [data-theme="light"] .stText,
+            [data-theme="light"] .st-eb {
+                color: #222222; /* Dark gray for readability */
+            }
+
+            /* --- SCENARIO ANALYSIS CUSTOM STYLES (ADAPTED FOR DARK/LIGHT THEMES) --- */
+            .scenario-header {
+                font-size: 24px;
+                margin-bottom: 20px;
+            }
+            .section-header {
+                font-size: 20px;
+                margin: 15px 0;
+                padding-bottom: 5px;
+                border-bottom: 2px solid #eee;
+            }
+            
+            /* Light theme colors for headers and boxes */
+            [data-theme="light"] .scenario-header { color: #1f77b4; }
+            [data-theme="light"] .section-header { color: #2c3e50; }
+            [data-theme="light"] .insight-box {
+                background-color: #f8f9fa;
+                border-left: 4px solid #1f77b4;
+            }
+            [data-theme="light"] .st-expander details summary::marker { color: #2c3e50; }
+
+            /* Dark theme colors for headers and boxes */
+            [data-theme="dark"] .scenario-header { color: #8ecae6; } /* Lighter blue */
+            [data-theme="dark"] .section-header { color: #bdbdbd; } /* Lighter gray */
+            [data-theme="dark"] .insight-box {
+                background-color: #333333;
+                border-left: 4px solid #8ecae6;
+            }
+            [data-theme="dark"] .st-expander details summary::marker { color: #e0e0e0; }
+            
+            .risk-high {
+                color: #dc3545;
+                font-weight: bold;
+            }
+            .risk-medium {
+                color: #ffc107;
+                font-weight: bold;
+            }
+            .risk-low {
+                color: #28a745;
+                font-weight: bold;
+            }
+        </style>
+    """, unsafe_allow_html=True)
+
 def main():
     st.set_page_config(
         page_title="AI-Powered Risk & Scenario Advisor",
@@ -122,6 +187,9 @@ def main():
         layout="wide",
         initial_sidebar_state="expanded"
     )
+    
+    # Inject custom CSS at the start of the app
+    add_custom_css()
     
     # Check if backend is running
     try:
@@ -373,6 +441,54 @@ def show_portfolio_analysis():
         else:
             st.warning("Please enter your portfolio holdings.")
 
+
+def display_scenario_analysis(result: dict):
+    """
+    Enhanced display function for scenario analysis results
+    """
+    # Custom CSS for styling is now handled by the global function at the start of the app
+    # st.markdown("""...""", unsafe_allow_html=True) is no longer needed here.
+
+    # Overview Section
+    st.markdown(f'<div class="scenario-header">Scenario Analysis Results</div>',
+                unsafe_allow_html=True)
+    
+    with st.expander("📝 Analysis Overview", expanded=True):
+        st.markdown(f'<div class="insight-box">{result["narrative"]}</div>',
+                    unsafe_allow_html=True)
+
+    # Key Insights
+    col1, col2 = st.columns([2,1])
+    
+    with col1:
+        st.markdown('<div class="section-header">Key Insights</div>',
+                    unsafe_allow_html=True)
+        for insight in result['insights']:
+            # The global CSS now handles the text color here
+            st.write(f'• {insight}')
+
+    with col2:
+        st.markdown('<div class="section-header">Risk Assessment</div>',
+                    unsafe_allow_html=True)
+        risk_level = "HIGH" if "high" in result['risk_assessment'].lower() else \
+                     "MEDIUM" if "medium" in result['risk_assessment'].lower() else "LOW"
+        risk_class = f"risk-{risk_level.lower()}"
+        st.markdown(f'<div class="{risk_class}">{risk_level} RISK</div>',
+                    unsafe_allow_html=True)
+        st.write(result['risk_assessment'])
+
+    # Recommendations
+    st.markdown('<div class="section-header">Actionable Recommendations</div>',
+                unsafe_allow_html=True)
+    
+    for i, rec in enumerate(result['recommendations'], 1):
+        st.markdown(f"""
+            <div class="insight-box">
+                <strong>{i}.</strong> {rec}
+            </div>
+        """, unsafe_allow_html=True)
+
+
 def show_scenario_analysis():
     st.header("🔮 AI-Powered Scenario Analysis")
     
@@ -413,27 +529,15 @@ def show_scenario_analysis():
         if scenario_text.strip():
             try:
                 with st.spinner("🤖 AI is analyzing the scenario impact..."):
-                    result = api_client.analyze_scenario(scenario_text, st.session_state.access_token)
+                    result = api_client.analyze_scenario(scenario_text, 
+                                                         st.session_state.access_token)
                     
                     st.success("✅ Scenario analysis complete!")
                     
-                    # Display analysis
-                    st.subheader("🤖 AI Analysis")
-                    st.write(result['narrative'])
+                    # Display the analysis using the new function
+                    display_scenario_analysis(result)
                     
-                    st.subheader("📊 Key Insights")
-                    for insight in result['insights']:
-                        st.write(f"• {insight}")
-                    
-                    st.subheader("💡 Recommendations")
-                    for rec in result['recommendations']:
-                        st.write(f"• {rec}")
-                    
-                    if result['risk_assessment']:
-                        st.subheader("⚠️ Risk Assessment")
-                        st.write(result['risk_assessment'])
-                    
-                    # Store in session state for display
+                    # Store result
                     scenario_result = {
                         'timestamp': datetime.now(),
                         'scenario': scenario_text,
@@ -453,7 +557,10 @@ def show_scenario_analysis():
             with st.expander(f"Analysis {len(st.session_state.scenario_results)-i}: {result['scenario'][:50]}..."):
                 st.write(f"**Analyzed on:** {result['timestamp'].strftime('%Y-%m-%d %H:%M:%S')}")
                 st.write("**Scenario:**", result['scenario'])
-                st.write("**Analysis:**", result['analysis']['narrative'])
+                
+                # Use the new display function for the previous results as well
+                display_scenario_analysis(result['analysis'])
+
 
 def show_export_options():
     st.header("📋 Export Your Analysis Results")
@@ -515,4 +622,3 @@ def show_export_options():
 
 if __name__ == "__main__":
     main()
-
