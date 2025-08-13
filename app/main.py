@@ -3,15 +3,115 @@ import os
 from dotenv import load_dotenv
 import pandas as pd
 from datetime import datetime
+import httpx
+import asyncio
+from typing import Optional, Dict, Any
 
 # Load environment variables
 load_dotenv()
 
-# Import our modules
-from risk_profile import RiskProfiler
-from portfolio import PortfolioAnalyzer
-from scenario_analysis import ScenarioAnalyzer
-from utils import export_to_text, export_to_pdf, validate_environment
+# API Configuration
+API_BASE_URL = "http://localhost:8000"
+
+class APIClient:
+    def __init__(self, base_url: str):
+        self.base_url = base_url
+        self.client = httpx.Client(timeout=30.0)
+    
+    def get_headers(self, token: Optional[str] = None) -> Dict[str, str]:
+        headers = {"Content-Type": "application/json"}
+        if token:
+            headers["Authorization"] = f"Bearer {token}"
+        return headers
+    
+    def register_user(self, email: str, password: str, full_name: str = None) -> Dict[str, Any]:
+        data = {"email": email, "password": password}
+        if full_name:
+            data["full_name"] = full_name
+        
+        response = self.client.post(
+            f"{self.base_url}/auth/register",
+            json=data,
+            headers=self.get_headers()
+        )
+        response.raise_for_status()
+        return response.json()
+    
+    def login_user(self, email: str, password: str) -> Dict[str, Any]:
+        data = {"username": email, "password": password}
+        response = self.client.post(
+            f"{self.base_url}/auth/token",
+            data=data,
+            headers={"Content-Type": "application/x-www-form-urlencoded"}
+        )
+        response.raise_for_status()
+        return response.json()
+    
+    def assess_risk_profile(self, answers: list, token: str) -> Dict[str, Any]:
+        data = {"answers": answers}
+        response = self.client.post(
+            f"{self.base_url}/api/v1/risk-profile",
+            json=data,
+            headers=self.get_headers(token)
+        )
+        response.raise_for_status()
+        return response.json()
+    
+    def analyze_portfolio(self, portfolio_input: str, token: str) -> Dict[str, Any]:
+        data = {"portfolio_input": portfolio_input}
+        response = self.client.post(
+            f"{self.base_url}/api/v1/analyze-portfolio",
+            json=data,
+            headers=self.get_headers(token)
+        )
+        response.raise_for_status()
+        return response.json()
+    
+    def analyze_scenario(self, scenario_text: str, token: str, portfolio_id: int = None) -> Dict[str, Any]:
+        data = {"scenario_text": scenario_text}
+        if portfolio_id:
+            data["portfolio_id"] = portfolio_id
+        
+        response = self.client.post(
+            f"{self.base_url}/api/v1/analyze-scenario",
+            json=data,
+            headers=self.get_headers(token)
+        )
+        response.raise_for_status()
+        return response.json()
+    
+    def export_text(self, token: str, include_risk_profile: bool = True, 
+                   include_portfolio: bool = True, include_scenarios: bool = True) -> bytes:
+        data = {
+            "include_risk_profile": include_risk_profile,
+            "include_portfolio": include_portfolio,
+            "include_scenarios": include_scenarios
+        }
+        response = self.client.post(
+            f"{self.base_url}/api/v1/export/text",
+            json=data,
+            headers=self.get_headers(token)
+        )
+        response.raise_for_status()
+        return response.content
+    
+    def export_pdf(self, token: str, include_risk_profile: bool = True,
+                  include_portfolio: bool = True, include_scenarios: bool = True) -> bytes:
+        data = {
+            "include_risk_profile": include_risk_profile,
+            "include_portfolio": include_portfolio,
+            "include_scenarios": include_scenarios
+        }
+        response = self.client.post(
+            f"{self.base_url}/api/v1/export/pdf",
+            json=data,
+            headers=self.get_headers(token)
+        )
+        response.raise_for_status()
+        return response.content
+
+# Initialize API client
+api_client = APIClient(API_BASE_URL)
 
 def main():
     st.set_page_config(
@@ -21,17 +121,34 @@ def main():
         initial_sidebar_state="expanded"
     )
     
-    # Validate environment
-    if not validate_environment():
-        st.error("⚠️ Missing required environment variables. Please check your .env file.")
+    # Check if backend is running
+    try:
+        response = api_client.client.get(f"{API_BASE_URL}/health")
+        if response.status_code != 200:
+            st.error("⚠️ Backend API is not responding. Please start the FastAPI server.")
+            st.stop()
+    except Exception as e:
+        st.error("⚠️ Cannot connect to backend API. Please start the FastAPI server on port 8000.")
         st.stop()
     
     # Main header
     st.title("📊 AI-Powered Risk & Scenario Advisor for Retail Investors")
     st.markdown("---")
     
+    # Authentication check
+    if 'access_token' not in st.session_state:
+        show_auth_page()
+        return
+    
     # Sidebar navigation
     st.sidebar.title("Navigation")
+    
+    # Logout button
+    if st.sidebar.button("🚪 Logout"):
+        for key in list(st.session_state.keys()):
+            del st.session_state[key]
+        st.rerun()
+    
     page = st.sidebar.radio(
         "Choose a section:",
         ["🎯 Risk Profiling", "💼 Portfolio Analysis", "🔮 Scenario Analysis", "📋 Export Results"]
@@ -55,11 +172,54 @@ def main():
     elif page == "📋 Export Results":
         show_export_options()
 
+def show_auth_page():
+    st.header("🔐 Authentication")
+    
+    tab1, tab2 = st.tabs(["Login", "Register"])
+    
+    with tab1:
+        st.subheader("Login to Your Account")
+        with st.form("login_form"):
+            email = st.text_input("Email")
+            password = st.text_input("Password", type="password")
+            login_submitted = st.form_submit_button("Login")
+            
+            if login_submitted:
+                if email and password:
+                    try:
+                        with st.spinner("Logging in..."):
+                            result = api_client.login_user(email, password)
+                            st.session_state.access_token = result["access_token"]
+                            st.session_state.user_email = email
+                            st.success("✅ Login successful!")
+                            st.rerun()
+                    except Exception as e:
+                        st.error(f"❌ Login failed: {str(e)}")
+                else:
+                    st.warning("Please enter both email and password.")
+    
+    with tab2:
+        st.subheader("Create New Account")
+        with st.form("register_form"):
+            reg_email = st.text_input("Email", key="reg_email")
+            reg_password = st.text_input("Password", type="password", key="reg_password")
+            reg_full_name = st.text_input("Full Name (Optional)", key="reg_full_name")
+            register_submitted = st.form_submit_button("Register")
+            
+            if register_submitted:
+                if reg_email and reg_password:
+                    try:
+                        with st.spinner("Creating account..."):
+                            result = api_client.register_user(reg_email, reg_password, reg_full_name)
+                            st.success("✅ Account created successfully! Please login.")
+                    except Exception as e:
+                        st.error(f"❌ Registration failed: {str(e)}")
+                else:
+                    st.warning("Please enter both email and password.")
+
 def show_risk_profiling():
     st.header("🎯 Risk Tolerance Assessment")
     st.write("Complete this questionnaire to understand your investment risk profile.")
-    
-    profiler = RiskProfiler()
     
     with st.form("risk_assessment_form"):
         st.subheader("Investment Risk Questionnaire")
@@ -110,35 +270,33 @@ def show_risk_profiling():
         
         if submitted:
             answers = [q1, q2, q3, q4, q5, q6]
-            risk_profile = profiler.assess_risk_tolerance(answers)
-            st.session_state.risk_profile = risk_profile
-            
-            # Display results
-            st.success("✅ Risk Assessment Complete!")
-            
-            col1, col2 = st.columns(2)
-            with col1:
-                st.metric("Risk Profile", risk_profile['category'])
-            with col2:
-                st.metric("Risk Score", f"{risk_profile['score']}/24")
-            
-            st.write("**Profile Description:**")
-            st.write(risk_profile['description'])
-            
-            st.write("**Investment Recommendations:**")
-            for rec in risk_profile['recommendations']:
-                st.write(f"• {rec}")
+            try:
+                with st.spinner("🤖 Analyzing your risk profile..."):
+                    result = api_client.assess_risk_profile(answers, st.session_state.access_token)
+                    st.session_state.risk_profile = result
+                    
+                    # Display results
+                    st.success("✅ Risk Assessment Complete!")
+                    
+                    col1, col2 = st.columns(2)
+                    with col1:
+                        st.metric("Risk Profile", result['category'])
+                    with col2:
+                        st.metric("Risk Score", f"{result['score']}/24")
+                    
+                    st.write("**Profile Description:**")
+                    st.write(result['description'])
+                    
+                    st.write("**Investment Recommendations:**")
+                    for rec in result['recommendations']:
+                        st.write(f"• {rec}")
+            except Exception as e:
+                st.error(f"❌ Error assessing risk profile: {str(e)}")
 
 def show_portfolio_analysis():
     st.header("💼 Portfolio Analysis")
     
-    if st.session_state.risk_profile is None:
-        st.warning("⚠️ Please complete the risk assessment first.")
-        return
-    
     st.write("Enter your stock holdings in natural language (e.g., 'TCS: 10, HDFC Bank: 5 shares')")
-    
-    analyzer = PortfolioAnalyzer()
     
     # Portfolio input
     portfolio_input = st.text_area(
@@ -149,54 +307,45 @@ def show_portfolio_analysis():
     
     if st.button("Analyze Portfolio"):
         if portfolio_input.strip():
-            with st.spinner("Fetching live market data..."):
-                try:
-                    portfolio_data = analyzer.parse_and_analyze_portfolio(portfolio_input)
+            try:
+                with st.spinner("📊 Fetching live market data and analyzing portfolio..."):
+                    result = api_client.analyze_portfolio(portfolio_input, st.session_state.access_token)
                     st.session_state.portfolio_data = portfolio_data
                     
-                    if portfolio_data['valid_holdings']:
+                    if result['valid_holdings']:
                         st.success("✅ Portfolio analyzed successfully!")
                         
                         # Portfolio summary
                         col1, col2, col3 = st.columns(3)
                         with col1:
-                            st.metric("Total Value", f"₹{portfolio_data['total_value']:,.2f}")
+                            st.metric("Total Value", f"₹{result['total_value']:,.2f}")
                         with col2:
-                            st.metric("Valid Holdings", len(portfolio_data['valid_holdings']))
+                            st.metric("Valid Holdings", result['holdings_count'])
                         with col3:
-                            st.metric("Invalid Entries", len(portfolio_data['invalid_holdings']))
+                            st.metric("Invalid Entries", len(result['invalid_holdings']))
                         
                         # Holdings table
-                        if portfolio_data['valid_holdings']:
+                        if result['valid_holdings']:
                             st.subheader("📈 Your Holdings")
-                            df = pd.DataFrame(portfolio_data['valid_holdings'])
+                            df = pd.DataFrame(result['valid_holdings'])
                             st.dataframe(df, use_container_width=True)
-                            
-                            # Portfolio visualization
-                            analyzer.visualize_portfolio(portfolio_data['valid_holdings'])
                         
                         # Invalid holdings
-                        if portfolio_data['invalid_holdings']:
+                        if result['invalid_holdings']:
                             st.subheader("⚠️ Invalid Holdings")
-                            for invalid in portfolio_data['invalid_holdings']:
+                            for invalid in result['invalid_holdings']:
                                 st.error(f"Could not process: {invalid}")
                     
                     else:
                         st.error("❌ No valid holdings found. Please check your input format.")
                 
-                except Exception as e:
-                    st.error(f"❌ Error analyzing portfolio: {str(e)}")
+            except Exception as e:
+                st.error(f"❌ Error analyzing portfolio: {str(e)}")
         else:
             st.warning("Please enter your portfolio holdings.")
 
 def show_scenario_analysis():
     st.header("🔮 AI-Powered Scenario Analysis")
-    
-    if st.session_state.portfolio_data is None:
-        st.warning("⚠️ Please analyze your portfolio first.")
-        return
-    
-    analyzer = ScenarioAnalyzer()
     
     st.write("Analyze how different market scenarios might affect your portfolio.")
     
@@ -233,42 +382,38 @@ def show_scenario_analysis():
     
     if st.button("Analyze Scenario Impact"):
         if scenario_text.strip():
-            with st.spinner("AI is analyzing the scenario impact..."):
-                try:
-                    analysis = analyzer.analyze_scenario(
-                        scenario_text,
-                        st.session_state.portfolio_data['valid_holdings'],
-                        st.session_state.risk_profile
-                    )
-                    
-                    # Store results
-                    result = {
-                        'timestamp': datetime.now(),
-                        'scenario': scenario_text,
-                        'analysis': analysis
-                    }
-                    st.session_state.scenario_results.append(result)
+            try:
+                with st.spinner("🤖 AI is analyzing the scenario impact..."):
+                    result = api_client.analyze_scenario(scenario_text, st.session_state.access_token)
                     
                     st.success("✅ Scenario analysis complete!")
                     
                     # Display analysis
                     st.subheader("🤖 AI Analysis")
-                    st.write(analysis['narrative'])
+                    st.write(result['narrative'])
                     
                     st.subheader("📊 Key Insights")
-                    for insight in analysis['insights']:
+                    for insight in result['insights']:
                         st.write(f"• {insight}")
                     
                     st.subheader("💡 Recommendations")
-                    for rec in analysis['recommendations']:
+                    for rec in result['recommendations']:
                         st.write(f"• {rec}")
                     
-                    if analysis['risk_assessment']:
+                    if result['risk_assessment']:
                         st.subheader("⚠️ Risk Assessment")
-                        st.write(analysis['risk_assessment'])
+                        st.write(result['risk_assessment'])
+                    
+                    # Store in session state for display
+                    scenario_result = {
+                        'timestamp': datetime.now(),
+                        'scenario': scenario_text,
+                        'analysis': result
+                    }
+                    st.session_state.scenario_results.append(scenario_result)
                 
-                except Exception as e:
-                    st.error(f"❌ Error in scenario analysis: {str(e)}")
+            except Exception as e:
+                st.error(f"❌ Error in scenario analysis: {str(e)}")
         else:
             st.warning("Please enter a scenario to analyze.")
     
@@ -284,64 +429,60 @@ def show_scenario_analysis():
 def show_export_options():
     st.header("📋 Export Your Analysis Results")
     
-    if not any([st.session_state.risk_profile, st.session_state.portfolio_data, st.session_state.scenario_results]):
-        st.warning("⚠️ No analysis data available to export. Please complete the assessments first.")
-        return
-    
     st.write("Export your analysis results for future reference.")
+    
+    # Export options
+    col1, col2, col3 = st.columns(3)
+    with col1:
+        include_risk = st.checkbox("Include Risk Profile", value=True)
+    with col2:
+        include_portfolio = st.checkbox("Include Portfolio", value=True)
+    with col3:
+        include_scenarios = st.checkbox("Include Scenarios", value=True)
     
     col1, col2 = st.columns(2)
     
     with col1:
         if st.button("📄 Export as Text"):
             try:
-                text_content = export_to_text(
-                    st.session_state.risk_profile,
-                    st.session_state.portfolio_data,
-                    st.session_state.scenario_results
-                )
-                
-                st.download_button(
-                    label="Download Text Report",
-                    data=text_content,
-                    file_name=f"investment_analysis_{datetime.now().strftime('%Y%m%d_%H%M%S')}.txt",
-                    mime="text/plain"
-                )
-                st.success("✅ Text report ready for download!")
+                with st.spinner("📄 Generating text report..."):
+                    text_content = api_client.export_text(
+                        st.session_state.access_token,
+                        include_risk,
+                        include_portfolio,
+                        include_scenarios
+                    )
+                    
+                    st.download_button(
+                        label="Download Text Report",
+                        data=text_content,
+                        file_name=f"investment_analysis_{datetime.now().strftime('%Y%m%d_%H%M%S')}.txt",
+                        mime="text/plain"
+                    )
+                    st.success("✅ Text report ready for download!")
             except Exception as e:
                 st.error(f"❌ Error generating text export: {str(e)}")
     
     with col2:
         if st.button("📑 Export as PDF"):
             try:
-                pdf_content = export_to_pdf(
-                    st.session_state.risk_profile,
-                    st.session_state.portfolio_data,
-                    st.session_state.scenario_results
-                )
-                
-                st.download_button(
-                    label="Download PDF Report",
-                    data=pdf_content,
-                    file_name=f"investment_analysis_{datetime.now().strftime('%Y%m%d_%H%M%S')}.pdf",
-                    mime="application/pdf"
-                )
-                st.success("✅ PDF report ready for download!")
+                with st.spinner("📑 Generating PDF report..."):
+                    pdf_content = api_client.export_pdf(
+                        st.session_state.access_token,
+                        include_risk,
+                        include_portfolio,
+                        include_scenarios
+                    )
+                    
+                    st.download_button(
+                        label="Download PDF Report",
+                        data=pdf_content,
+                        file_name=f"investment_analysis_{datetime.now().strftime('%Y%m%d_%H%M%S')}.pdf",
+                        mime="application/pdf"
+                    )
+                    st.success("✅ PDF report ready for download!")
             except Exception as e:
                 st.error(f"❌ Error generating PDF export: {str(e)}")
-    
-    # Preview export content
-    if st.checkbox("Preview Export Content"):
-        st.subheader("📄 Export Preview")
-        
-        if st.session_state.risk_profile:
-            st.write("**Risk Profile:**", st.session_state.risk_profile['category'])
-        
-        if st.session_state.portfolio_data:
-            st.write("**Portfolio Holdings:**", len(st.session_state.portfolio_data.get('valid_holdings', [])))
-        
-        if st.session_state.scenario_results:
-            st.write("**Scenario Analyses:**", len(st.session_state.scenario_results))
 
 if __name__ == "__main__":
     main()

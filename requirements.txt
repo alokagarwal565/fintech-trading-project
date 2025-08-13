@@ -5,3 +5,13 @@ yfinance
 plotly
 google-generativeai
 reportlab
+fastapi
+uvicorn
+sqlmodel
+python-jose[cryptography]
+passlib[bcrypt]
+python-multipart
+httpx
+fastapi-limiter
+redis
+aiofiles

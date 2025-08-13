@@ -1,57 +1,68 @@
-import streamlit as st
 import os
-import google.generativeai as genai # Keep this import as it's now correct
-from google.generativeai import types
+import google.generativeai as genai
 from typing import Dict, List, Any
-import json
+from backend.models.models import User, Portfolio, Holding
+from sqlmodel import Session, select
 
-class ScenarioAnalyzer:
+class ScenarioService:
     def __init__(self):
-        # Ensure GEMINI_API_KEY is loaded from .env
         api_key = os.getenv("GEMINI_API_KEY")
         if not api_key:
-            raise ValueError("GEMINI_API_KEY not found in environment variables. Please set it in your .env file.")
+            raise ValueError("GEMINI_API_KEY not found in environment variables")
         
-        # Configure the generative AI library with the API key
         genai.configure(api_key=api_key)
-        
-        # We don't need a self.client object anymore for direct model calls
-        # The models are accessed directly via genai.GenerativeModel
-        
-    def analyze_scenario(self, scenario: str, portfolio_holdings: List[Dict], risk_profile: Dict) -> Dict[str, Any]:
+    
+    def analyze_scenario(self, scenario: str, user: User, session: Session, portfolio_id: int = None) -> Dict[str, Any]:
         """
-        Analyze how a market scenario might affect the portfolio using Gemini AI
+        Analyze how a market scenario might affect the user's portfolio using Gemini AI
         """
         try:
+            # Get user's latest portfolio if portfolio_id not specified
+            if portfolio_id:
+                portfolio_stmt = select(Portfolio).where(Portfolio.id == portfolio_id, Portfolio.user_id == user.id)
+                portfolio = session.exec(portfolio_stmt).first()
+            else:
+                portfolio_stmt = select(Portfolio).where(Portfolio.user_id == user.id).order_by(Portfolio.created_at.desc())
+                portfolio = session.exec(portfolio_stmt).first()
+            
+            if not portfolio:
+                raise Exception("No portfolio found for analysis")
+            
+            # Get portfolio holdings
+            holdings_stmt = select(Holding).where(Holding.portfolio_id == portfolio.id)
+            holdings = session.exec(holdings_stmt).all()
+            
+            # Get user's risk profile
+            risk_profile = None
+            if user.risk_assessments:
+                latest_assessment = sorted(user.risk_assessments, key=lambda x: x.created_at, reverse=True)[0]
+                risk_profile = {
+                    'category': latest_assessment.category,
+                    'description': latest_assessment.description
+                }
+            
             # Prepare portfolio context
-            portfolio_context = self._prepare_portfolio_context(portfolio_holdings)
-            risk_context = f"Risk Profile: {risk_profile['category']} - {risk_profile['description']}"
+            portfolio_context = self._prepare_portfolio_context(holdings)
+            risk_context = f"Risk Profile: {risk_profile['category']} - {risk_profile['description']}" if risk_profile else "No risk profile available"
             
             # Create comprehensive prompt
             prompt = self._create_analysis_prompt(scenario, portfolio_context, risk_context)
             
             # Get AI analysis
-            # Access the model directly using genai.GenerativeModel
             model = genai.GenerativeModel("gemini-2.5-flash")
-            response = model.generate_content(
-                contents=prompt
-            )
+            response = model.generate_content(contents=prompt)
             
             if response.text and response.text.strip():
                 # Parse the structured response
                 analysis_result = self._parse_ai_response(response.text)
                 return analysis_result
             else:
-                raise Exception(f"Empty or invalid response from AI model. Response: {response}")
+                raise Exception(f"Empty or invalid response from AI model")
                 
         except Exception as e:
-            st.error(f"❌ Error in AI analysis: {str(e)}")
-            # Add debugging info
-            st.write(f"Portfolio holdings count: {len(portfolio_holdings)}")
-            st.write(f"Risk profile available: {bool(risk_profile)}")
-            return self._get_fallback_analysis(scenario)
+            return self._get_fallback_analysis(scenario, str(e))
     
-    def _prepare_portfolio_context(self, holdings: List[Dict]) -> str:
+    def _prepare_portfolio_context(self, holdings: List[Holding]) -> str:
         """
         Prepare portfolio information for AI analysis
         """
@@ -59,24 +70,19 @@ class ScenarioAnalyzer:
             return "No portfolio holdings provided."
         
         context = "Portfolio Holdings:\n"
-        total_value = sum(holding.get('Total Value (₹)', 0) for holding in holdings)
+        total_value = sum(holding.total_value for holding in holdings)
         
         for holding in holdings:
-            company = holding.get('Company', 'Unknown')
-            sector = holding.get('Sector', 'Unknown')
-            value = holding.get('Total Value (₹)', 0)
-            percentage = (value / total_value) * 100 if total_value > 0 else 0
-            
-            context += f"- {company} ({sector}): ₹{value:,.2f} ({percentage:.1f}% of portfolio)\n"
+            percentage = (holding.total_value / total_value) * 100 if total_value > 0 else 0
+            context += f"- {holding.company_name} ({holding.sector}): ₹{holding.total_value:,.2f} ({percentage:.1f}% of portfolio)\n"
         
         context += f"\nTotal Portfolio Value: ₹{total_value:,.2f}\n"
         
         # Add sector diversification info
         sectors = {}
         for holding in holdings:
-            sector = holding.get('Sector', 'Unknown')
-            value = holding.get('Total Value (₹)', 0)
-            sectors[sector] = sectors.get(sector, 0) + value
+            sector = holding.sector or 'Unknown'
+            sectors[sector] = sectors.get(sector, 0) + holding.total_value
         
         context += "\nSector Allocation:\n"
         for sector, value in sectors.items():
@@ -140,9 +146,6 @@ Keep the analysis practical, specific to Indian markets, and tailored to the inv
         Parse the AI response into structured components
         """
         try:
-            # Since the AI returns a comprehensive response but not in the exact format we requested,
-            # let's split it into logical sections based on content patterns
-            
             # Split response into paragraphs
             paragraphs = [p.strip() for p in response_text.split('\n\n') if p.strip()]
             
@@ -151,57 +154,45 @@ Keep the analysis practical, specific to Indian markets, and tailored to the inv
             recommendations = []
             risk_assessment_parts = []
             
-            current_section = 'narrative'  # Start with narrative
+            current_section = 'narrative'
             
             for paragraph in paragraphs:
                 lines = paragraph.split('\n')
-                
-                # Check for section indicators in the paragraph
                 paragraph_lower = paragraph.lower()
                 
                 if any(indicator in paragraph_lower for indicator in ['vulnerability', 'sector rotation', 'correlation', 'concentration']):
-                    # This looks like insights content
                     current_section = 'insights'
                 elif any(indicator in paragraph_lower for indicator in ['reduce', 'increase cash', 'diversify', 'rebalancing', 'review investment']):
-                    # This looks like recommendations
                     current_section = 'recommendations'  
                 elif any(indicator in paragraph_lower for indicator in ['impact severity', 'probability assessment', 'potential portfolio impact', 'monitoring indicators']):
-                    # This looks like risk assessment
                     current_section = 'risk_assessment'
                 
-                # Process the content based on current section
                 if current_section == 'narrative':
                     narrative_parts.append(paragraph)
                 elif current_section == 'insights':
-                    # Extract numbered or bulleted insights
                     for line in lines:
                         line = line.strip()
                         if line and (line[0].isdigit() or line.startswith(('•', '-', '*'))):
-                            # Clean up the line by removing bullets/numbers
                             clean_line = line.lstrip('0123456789. •-*').strip()
                             if clean_line:
                                 insights.append(clean_line)
-                        elif line and len(line) > 20:  # Substantial content
+                        elif line and len(line) > 20:
                             insights.append(line)
                 elif current_section == 'recommendations':
-                    # Extract numbered or bulleted recommendations
                     for line in lines:
                         line = line.strip()
                         if line and (line[0].isdigit() or line.startswith(('•', '-', '*'))):
-                            # Clean up the line by removing bullets/numbers
                             clean_line = line.lstrip('0123456789. •-*').strip()
                             if clean_line:
                                 recommendations.append(clean_line)
-                        elif line and len(line) > 20:  # Substantial content
+                        elif line and len(line) > 20:
                             recommendations.append(line)
                 elif current_section == 'risk_assessment':
                     risk_assessment_parts.append(paragraph)
             
-            # Compile final results
-            narrative = '\n\n'.join(narrative_parts[:3]) if narrative_parts else response_text[:500] + "..."  # Limit narrative length
+            narrative = '\n\n'.join(narrative_parts[:3]) if narrative_parts else response_text[:500] + "..."
             risk_assessment = '\n\n'.join(risk_assessment_parts) if risk_assessment_parts else "Risk assessment completed - see full analysis above"
             
-            # Ensure we have some insights and recommendations
             if not insights:
                 insights = [
                     "Portfolio concentration risk identified",
@@ -218,7 +209,6 @@ Keep the analysis practical, specific to Indian markets, and tailored to the inv
                     "Consult with financial advisor for personalized guidance"
                 ]
             
-            # Limit the number of insights and recommendations to avoid overwhelming the user
             insights = insights[:6]
             recommendations = recommendations[:6]
             
@@ -230,7 +220,6 @@ Keep the analysis practical, specific to Indian markets, and tailored to the inv
             }
             
         except Exception as e:
-            st.warning(f"Could not parse AI response structure: {str(e)}")
             return {
                 'narrative': response_text[:1000] + "..." if len(response_text) > 1000 else response_text,
                 'insights': ["AI analysis completed - see narrative for details"],
@@ -238,12 +227,12 @@ Keep the analysis practical, specific to Indian markets, and tailored to the inv
                 'risk_assessment': "Please review the full analysis for risk implications"
             }
     
-    def _get_fallback_analysis(self, scenario: str) -> Dict[str, Any]:
+    def _get_fallback_analysis(self, scenario: str, error: str) -> Dict[str, Any]:
         """
         Provide fallback analysis when AI fails
         """
         return {
-            'narrative': f"Unable to complete AI analysis for scenario: '{scenario}'. This could be due to API limitations or connectivity issues. Please try again later or consult with a financial advisor for scenario analysis.",
+            'narrative': f"Unable to complete AI analysis for scenario: '{scenario}'. Error: {error}. Please try again later or consult with a financial advisor for scenario analysis.",
             'insights': [
                 "AI analysis temporarily unavailable",
                 "Consider general market volatility factors",
@@ -258,70 +247,3 @@ Keep the analysis practical, specific to Indian markets, and tailored to the inv
             ],
             'risk_assessment': "Cannot assess risk without AI analysis. Please retry or seek professional advice."
         }
-    
-    def get_predefined_scenarios(self) -> List[str]:
-        """
-        Get list of predefined market scenarios for Indian markets
-        """
-        return [
-            "RBI increases repo rate by 0.5%",
-            "Oil prices surge by 20% due to geopolitical tensions",
-            "US Federal Reserve cuts interest rates by 0.25%",
-            "Major IT company announces poor quarterly results",
-            "Government announces new infrastructure spending of ₹10 lakh crores",
-            "Global recession fears increase due to banking crisis",
-            "New technology disrupts traditional banking sector",
-            "Inflation rises to 7% affecting consumer spending",
-            "Monsoon failure affects agricultural output",
-            "Foreign institutional investors withdraw ₹50,000 crores",
-            "Crude oil prices fall below $60 per barrel",
-            "New government policy favors renewable energy sector",
-            "Currency volatility: Rupee weakens to ₹85 per USD",
-            "Corporate earnings growth slows to 5% across sectors",
-            "Trade war escalation affects export-oriented companies"
-        ]
-    
-    def analyze_correlation_impact(self, holdings: List[Dict], scenario_type: str) -> Dict[str, List[str]]:
-        """
-        Analyze which holdings might be most affected by scenario type
-        """
-        sector_impact_mapping = {
-            'interest_rate': {
-                'high_impact': ['Banking', 'Real Estate', 'Auto'],
-                'medium_impact': ['Infrastructure', 'Capital Goods'],
-                'low_impact': ['IT Services', 'Pharmaceuticals']
-            },
-            'oil_price': {
-                'high_impact': ['Oil & Gas', 'Airlines', 'Auto'],
-                'medium_impact': ['Chemicals', 'Paints'],
-                'low_impact': ['IT Services', 'Pharmaceuticals']
-            },
-            'currency': {
-                'high_impact': ['IT Services', 'Pharmaceuticals', 'Textiles'],
-                'medium_impact': ['Chemicals', 'Auto'],
-                'low_impact': ['Banking', 'Real Estate']
-            },
-            'general': {
-                'high_impact': ['Small Cap', 'Mid Cap'],
-                'medium_impact': ['Banking', 'Auto'],
-                'low_impact': ['FMCG', 'Utilities']
-            }
-        }
-        
-        # Default to general impact if scenario type not recognized
-        impact_map = sector_impact_mapping.get(scenario_type, sector_impact_mapping['general'])
-        
-        result = {'high_impact': [], 'medium_impact': [], 'low_impact': []}
-        
-        for holding in holdings:
-            company = holding.get('Company', '')
-            sector = holding.get('Sector', '')
-            
-            for impact_level, sectors in impact_map.items():
-                if any(s.lower() in sector.lower() for s in sectors):
-                    result[impact_level].append(company)
-                    break
-            else:
-                result['medium_impact'].append(company)  # Default to medium impact
-        
-        return result

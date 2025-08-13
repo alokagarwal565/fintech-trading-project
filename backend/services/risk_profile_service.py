@@ -1,9 +1,11 @@
-import streamlit as st
+from typing import Dict, List
+from backend.models.models import RiskCategory
+import json
 
-class RiskProfiler:
+class RiskProfileService:
     def __init__(self):
         self.risk_categories = {
-            'Conservative': {
+            RiskCategory.CONSERVATIVE: {
                 'range': (6, 12),
                 'description': "You prefer stable, low-risk investments with predictable returns. Capital preservation is more important than growth.",
                 'recommendations': [
@@ -13,7 +15,7 @@ class RiskProfiler:
                     "Diversify across defensive sectors like FMCG and utilities"
                 ]
             },
-            'Moderate': {
+            RiskCategory.MODERATE: {
                 'range': (13, 19),
                 'description': "You're comfortable with moderate risk for potentially higher returns. You can tolerate some volatility in pursuit of growth.",
                 'recommendations': [
@@ -23,7 +25,7 @@ class RiskProfiler:
                     "Consider systematic investment plans (SIPs) for rupee cost averaging"
                 ]
             },
-            'Aggressive': {
+            RiskCategory.AGGRESSIVE: {
                 'range': (20, 24),
                 'description': "You're willing to take high risks for potentially high returns. You can handle significant portfolio volatility.",
                 'recommendations': [
@@ -35,7 +37,7 @@ class RiskProfiler:
             }
         }
     
-    def assess_risk_tolerance(self, answers):
+    def assess_risk_tolerance(self, answers: List[str]) -> Dict:
         """
         Assess risk tolerance based on questionnaire answers
         """
@@ -63,11 +65,11 @@ class RiskProfiler:
         # Calculate total score
         total_score = 0
         for i, answer in enumerate(answers):
-            if answer in scoring[i]:
+            if i < len(scoring) and answer in scoring[i]:
                 total_score += scoring[i][answer]
         
         # Determine risk category
-        category = "Conservative"
+        category = RiskCategory.CONSERVATIVE
         for cat_name, cat_info in self.risk_categories.items():
             if cat_info['range'][0] <= total_score <= cat_info['range'][1]:
                 category = cat_name
@@ -79,35 +81,3 @@ class RiskProfiler:
             'description': self.risk_categories[category]['description'],
             'recommendations': self.risk_categories[category]['recommendations']
         }
-    
-    def get_risk_adjusted_advice(self, risk_category, portfolio_data):
-        """
-        Get personalized advice based on risk profile and portfolio
-        """
-        advice = []
-        
-        if risk_category == 'Conservative':
-            advice.extend([
-                "Your portfolio seems suitable for conservative investing",
-                "Consider increasing allocation to dividend-paying stocks",
-                "Look for companies with consistent earnings growth",
-                "Avoid highly volatile small-cap stocks"
-            ])
-        
-        elif risk_category == 'Moderate':
-            advice.extend([
-                "Your portfolio allows for balanced growth and stability",
-                "Consider a mix of large-cap and selected mid-cap stocks",
-                "Regular portfolio rebalancing is recommended",
-                "Monitor sector concentration to avoid overexposure"
-            ])
-        
-        else:  # Aggressive
-            advice.extend([
-                "Your risk tolerance allows for growth-oriented investments",
-                "Consider adding small-cap and emerging sector stocks",
-                "You can handle higher portfolio volatility",
-                "Focus on companies with high growth potential"
-            ])
-        
-        return advice
