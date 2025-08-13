@@ -6,12 +6,14 @@ from datetime import datetime
 import httpx
 import asyncio
 from typing import Optional, Dict, Any
+import json
+import plotly.graph_objects as go
 
 # Load environment variables
 load_dotenv()
 
 # API Configuration
-API_BASE_URL = "http://localhost:8000"
+API_BASE_URL = os.getenv("API_BASE_URL", "http://localhost:8000")
 
 class APIClient:
     def __init__(self, base_url: str):
@@ -310,27 +312,54 @@ def show_portfolio_analysis():
             try:
                 with st.spinner("📊 Fetching live market data and analyzing portfolio..."):
                     result = api_client.analyze_portfolio(portfolio_input, st.session_state.access_token)
-                    st.session_state.portfolio_data = result # Corrected line
+                    st.session_state.portfolio_data = result
                     
                     if result['valid_holdings']:
                         st.success("✅ Portfolio analyzed successfully!")
                         
-                        # Portfolio summary
+                        # Display portfolio summary
+                        st.subheader("Portfolio Summary")
                         col1, col2, col3 = st.columns(3)
                         with col1:
                             st.metric("Total Value", f"₹{result['total_value']:,.2f}")
                         with col2:
-                            st.metric("Valid Holdings", result['holdings_count'])
+                            st.metric("Total Holdings", result['metrics']['holdings_count'])
                         with col3:
                             st.metric("Invalid Entries", len(result['invalid_holdings']))
+
+                        # Display key metrics
+                        st.subheader("Key Metrics")
+                        col1, col2, col3 = st.columns(3)
+                        with col1:
+                            st.metric("Average P/E Ratio", f"{result['metrics']['average_pe_ratio']:.2f}" if result['metrics']['average_pe_ratio'] else "N/A")
+                        with col2:
+                            st.metric("Average Dividend Yield", f"{result['metrics']['average_dividend_yield']:.2f}%" if result['metrics']['average_dividend_yield'] else "N/A")
+                        with col3:
+                            st.metric("Largest Holding Concentration", f"{result['metrics']['concentration_percentage']:.2f}%")
                         
-                        # Holdings table
+                        # Display valid holdings table
                         if result['valid_holdings']:
                             st.subheader("📈 Your Holdings")
                             df = pd.DataFrame(result['valid_holdings'])
                             st.dataframe(df, use_container_width=True)
                         
-                        # Invalid holdings
+                        # Display visualizations
+                        if result.get('visualizations'):
+                            st.subheader("📊 Portfolio Visualizations")
+                            vis_col1, vis_col2 = st.columns(2)
+                            with vis_col1:
+                                if result['visualizations']['pie_chart'] != '{}':
+                                    pie_fig = go.Figure(json.loads(result['visualizations']['pie_chart']))
+                                    st.plotly_chart(pie_fig, use_container_width=True)
+                                if result['visualizations']['sector_bar_chart'] != '{}':
+                                    sector_fig = go.Figure(json.loads(result['visualizations']['sector_bar_chart']))
+                                    st.plotly_chart(sector_fig, use_container_width=True)
+                            with vis_col2:
+                                if result['visualizations']['holdings_bar_chart'] != '{}':
+                                    holdings_fig = go.Figure(json.loads(result['visualizations']['holdings_bar_chart']))
+                                    st.plotly_chart(holdings_fig, use_container_width=True)
+
+                        # Display invalid holdings
                         if result['invalid_holdings']:
                             st.subheader("⚠️ Invalid Holdings")
                             for invalid in result['invalid_holdings']:
@@ -486,3 +515,4 @@ def show_export_options():
 
 if __name__ == "__main__":
     main()
+

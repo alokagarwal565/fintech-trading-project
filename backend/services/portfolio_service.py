@@ -3,9 +3,13 @@ import re
 from typing import Dict, List, Any, Tuple
 from sqlmodel import Session
 from backend.models.models import Portfolio, Holding, User
+import plotly.express as px
+import pandas as pd
 
 class PortfolioService:
     def __init__(self):
+        # A comprehensive mapping of common Indian company names to NSE symbols.
+        # This list can be expanded to include more stocks.
         self.indian_stock_suffixes = ['.NS', '.BO']  # NSE and BSE suffixes
         self.symbol_mapping = {
             'tcs': 'TCS.NS',
@@ -63,7 +67,15 @@ class PortfolioService:
     
     def parse_portfolio_input(self, input_text: str) -> Tuple[List[Dict[str, Any]], List[str]]:
         """
-        Parse natural language portfolio input
+        Parses a natural-language text input for portfolio holdings.
+        
+        Args:
+            input_text (str): The raw text input (e.g., "100 shares of Reliance, 50 Infosys").
+            
+        Returns:
+            Tuple[List[Dict[str, Any]], List[str]]:
+                - A list of successfully parsed holdings (company name + quantity).
+                - A list of entries that could not be parsed.
         """
         holdings = []
         invalid_entries = []
@@ -109,12 +121,18 @@ class PortfolioService:
     
     def get_stock_symbol(self, company_name: str) -> str:
         """
-        Convert company name to stock symbol
+        Converts a company name into an official stock ticker symbol.
+        
+        Args:
+            company_name (str): The name of the company.
+            
+        Returns:
+            str: The official stock ticker symbol (e.g., "TCS.NS").
         """
         # Clean and normalize company name
         clean_name = company_name.lower().strip()
         
-        # Try exact match first
+        # Try exact match first from the pre-defined dictionary
         if clean_name in self.symbol_mapping:
             return self.symbol_mapping[clean_name]
         
@@ -129,7 +147,13 @@ class PortfolioService:
     
     def fetch_stock_data(self, symbol: str) -> Dict[str, Any]:
         """
-        Fetch current stock data from yFinance
+        Fetches current stock data for a given symbol using yfinance.
+        
+        Args:
+            symbol (str): The stock ticker symbol.
+            
+        Returns:
+            Dict[str, Any]: A dictionary containing stock information, or an error if invalid.
         """
         try:
             stock = yf.Ticker(symbol)
@@ -138,32 +162,147 @@ class PortfolioService:
             # Get current price
             current_price = info.get('currentPrice') or info.get('regularMarketPrice')
             if not current_price:
-                # Try to get from history
+                # Try to get from history if direct price is not available
                 hist = stock.history(period="1d")
                 if not hist.empty:
                     current_price = hist['Close'].iloc[-1]
             
+            # Retrieve specific metrics required by the application
             return {
                 'symbol': symbol,
                 'current_price': current_price,
                 'company_name': info.get('longName', symbol),
                 'currency': info.get('currency', 'INR'),
-                'market_cap': info.get('marketCap'),
                 'pe_ratio': info.get('trailingPE'),
                 'dividend_yield': info.get('dividendYield'),
                 'sector': info.get('sector'),
                 'valid': True
             }
         except Exception as e:
+            # Handle cases where the stock symbol is invalid or data cannot be fetched
             return {
                 'symbol': symbol,
                 'error': str(e),
                 'valid': False
             }
-    
+
+    def get_portfolio_metrics(self, valid_holdings: List[Dict[str, Any]], total_value: float) -> Dict[str, Any]:
+        """
+        Calculates key portfolio-level metrics.
+        
+        Args:
+            valid_holdings (List[Dict[str, Any]]): A list of valid holdings with fetched data.
+            total_value (float): The total value of the portfolio.
+
+        Returns:
+            Dict[str, Any]: A dictionary of calculated metrics.
+        """
+        if not valid_holdings:
+            return {
+                'holdings_count': 0,
+                'average_pe_ratio': None,
+                'average_dividend_yield': None,
+                'concentration_percentage': 0.0
+            }
+
+        # Calculate weighted averages for P/E ratio and dividend yield
+        total_pe_sum = 0
+        total_dividend_yield_sum = 0
+        largest_holding_value = 0
+
+        for holding in valid_holdings:
+            holding_value = holding.get('total_value', 0)
+            if holding.get('pe_ratio'):
+                total_pe_sum += holding.get('pe_ratio') * holding_value
+            if holding.get('dividend_yield'):
+                total_dividend_yield_sum += holding.get('dividend_yield') * holding_value
+            
+            if holding_value > largest_holding_value:
+                largest_holding_value = holding_value
+
+        # Calculate averages, handling division by zero
+        average_pe = (total_pe_sum / total_value) if total_value > 0 else None
+        average_dividend_yield = (total_dividend_yield_sum / total_value) if total_value > 0 else None
+        
+        # Calculate concentration
+        concentration = (largest_holding_value / total_value) * 100 if total_value > 0 else 0.0
+
+        return {
+            'holdings_count': len(valid_holdings),
+            'average_pe_ratio': round(average_pe, 2) if average_pe else None,
+            'average_dividend_yield': round(average_dividend_yield, 2) if average_dividend_yield else None,
+            'concentration_percentage': round(concentration, 2)
+        }
+
+
+    def visualize_portfolio(self, valid_holdings: List[Dict[str, Any]]) -> Dict[str, str]:
+        """
+        Generates interactive plots for portfolio visualization using plotly.express.
+
+        Args:
+            valid_holdings (List[Dict[str, Any]]): A list of valid holdings with fetched data.
+            
+        Returns:
+            Dict[str, str]: A dictionary of plots in JSON format.
+        """
+        if not valid_holdings:
+            return {
+                "pie_chart": "{}",
+                "sector_bar_chart": "{}",
+                "holdings_bar_chart": "{}"
+            }
+
+        df = pd.DataFrame(valid_holdings)
+
+        # Pie chart for portfolio composition
+        pie_fig = px.pie(
+            df,
+            values='total_value',
+            names='company_name',
+            title='Portfolio Composition',
+            hole=0.3
+        )
+        pie_fig.update_traces(textinfo='percent+label', marker_line_color='rgb(0,0,0)', marker_line_width=1)
+        
+        # Bar chart for sector allocation
+        sector_allocation = df.groupby('sector')['total_value'].sum().reset_index()
+        sector_fig = px.bar(
+            sector_allocation,
+            x='sector',
+            y='total_value',
+            title='Sector Allocation'
+        )
+        sector_fig.update_traces(marker_color='#1f77b4', selector=dict(type='bar'))
+        sector_fig.update_layout(xaxis_title="Sector", yaxis_title="Total Value")
+
+        # Bar chart for individual holding values
+        holdings_fig = px.bar(
+            df,
+            x='company_name',
+            y='total_value',
+            title='Individual Holding Values'
+        )
+        holdings_fig.update_traces(marker_color='#2ca02c', selector=dict(type='bar'))
+        holdings_fig.update_layout(xaxis_title="Company", yaxis_title="Total Value")
+
+        return {
+            "pie_chart": pie_fig.to_json(),
+            "sector_bar_chart": sector_fig.to_json(),
+            "holdings_bar_chart": holdings_fig.to_json()
+        }
+
     def analyze_portfolio(self, input_text: str, user: User, session: Session) -> Dict[str, Any]:
         """
-        Parse input and analyze complete portfolio, saving to database
+        Orchestrates the full portfolio analysis flow: parsing input, fetching data,
+        calculating metrics, generating visualizations, and saving to the database.
+        
+        Args:
+            input_text (str): The natural language text input for the portfolio.
+            user (User): The authenticated user object.
+            session (Session): The database session.
+            
+        Returns:
+            Dict[str, Any]: A comprehensive dictionary with portfolio details, metrics, and plots.
         """
         # Parse input
         holdings, invalid_entries = self.parse_portfolio_input(input_text)
@@ -181,6 +320,7 @@ class PortfolioService:
                 holding_value = holding.get('quantity', 0) * stock_data['current_price']
                 total_value += holding_value
                 
+                # Append stock data to valid holdings list
                 valid_holdings.append({
                     'company_name': stock_data.get('company_name', holding.get('company', '')),
                     'symbol': symbol,
@@ -194,8 +334,12 @@ class PortfolioService:
             else:
                 invalid_holdings.append(holding.get('original_entry', ''))
         
-        # Add invalid entries from parsing
+        # Add any entries that couldn't be parsed
         invalid_holdings.extend(invalid_entries)
+
+        # Calculate metrics and generate visualizations
+        metrics = self.get_portfolio_metrics(valid_holdings, total_value)
+        visualizations = self.visualize_portfolio(valid_holdings)
         
         # Save to database
         portfolio = Portfolio(
@@ -228,5 +372,7 @@ class PortfolioService:
             'portfolio_id': portfolio.id,
             'valid_holdings': valid_holdings,
             'invalid_holdings': invalid_holdings,
-            'total_value': total_value
+            'total_value': total_value,
+            'metrics': metrics,
+            'visualizations': visualizations
         }

@@ -4,15 +4,16 @@ from backend.models.models import User, PortfolioAnalysisRequest
 from backend.models.database import get_session
 from backend.auth.auth import get_current_user
 from backend.services.portfolio_service import PortfolioService
+from typing import Dict, Any
 
 router = APIRouter(prefix="/api/v1", tags=["portfolio"])
 
-@router.post("/analyze-portfolio")
+@router.post("/analyze-portfolio", response_model=Dict[str, Any])
 async def analyze_portfolio(
     request: PortfolioAnalysisRequest,
     current_user: User = Depends(get_current_user),
     session: Session = Depends(get_session)
-):
+) -> Dict[str, Any]:
     """
     Analyze user's portfolio from natural language input
     """
@@ -25,7 +26,9 @@ async def analyze_portfolio(
             "total_value": result['total_value'],
             "valid_holdings": result['valid_holdings'],
             "invalid_holdings": result['invalid_holdings'],
-            "holdings_count": len(result['valid_holdings'])
+            "holdings_count": len(result['valid_holdings']),
+            "metrics": result['metrics'],
+            "visualizations": result['visualizations']
         }
         
     except Exception as e:
