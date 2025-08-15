@@ -47,3 +47,175 @@
 2025-08-16 01:18:55,076 - investment_advisor - INFO - log_api_request:61 - API GET /health - 200 (0.001s)
 2025-08-16 01:19:49,933 - investment_advisor - INFO - log_api_request:61 - API GET /health - 200 (0.001s)
 2025-08-16 01:20:39,682 - investment_advisor - INFO - log_api_request:61 - API GET /health - 200 (0.002s)
+2025-08-16 01:45:26,690 - investment_advisor - INFO - lifespan:22 - Starting AI-Powered Risk & Scenario Advisor API
+2025-08-16 01:45:26,911 - investment_advisor - INFO - lifespan:24 - Database initialized successfully
+2025-08-16 01:45:36,488 - investment_advisor - INFO - log_api_request:61 - API GET /health - 200 (0.001s)
+2025-08-16 01:45:43,600 - investment_advisor - INFO - log_api_request:61 - API GET /health - 200 (0.001s)
+2025-08-16 01:45:43,941 - investment_advisor - INFO - login:98 - User logged in successfully: 1 (alokagarwal629@gmail.com)
+2025-08-16 01:45:43,944 - investment_advisor - INFO - log_api_request:61 - API POST /auth/token - 200 (0.339s)
+2025-08-16 01:45:46,385 - investment_advisor - INFO - log_api_request:61 - API GET /health - 200
+2025-08-16 01:45:46,400 - investment_advisor - INFO - log_api_request:61 - API GET /api/v1/user/data - 500 (0.011s)
+2025-08-16 01:46:14,678 - investment_advisor - INFO - log_api_request:61 - API GET /health - 200 (0.001s)
+2025-08-16 01:46:19,614 - investment_advisor - INFO - log_api_request:61 - API GET /health - 200 (0.001s)
+2025-08-16 01:46:22,615 - investment_advisor - INFO - log_api_request:61 - API GET /health - 200 (0.001s)
+2025-08-16 01:46:25,543 - investment_advisor - INFO - log_api_request:61 - API GET /health - 200 (0.001s)
+2025-08-16 01:46:33,773 - investment_advisor - INFO - log_api_request:61 - API GET /health - 200 (0.001s)
+2025-08-16 01:46:33,789 - investment_advisor - INFO - log_api_request:61 - API POST /api/v1/risk-profile - 500 (0.009s)
+2025-08-16 01:46:53,932 - investment_advisor - INFO - log_api_request:61 - API GET /health - 200 (0.001s)
+2025-08-16 01:47:02,881 - investment_advisor - INFO - log_api_request:61 - API GET /health - 200
+2025-08-16 01:47:02,893 - investment_advisor - INFO - fetch_stock_data:163 - Fetching stock data for symbol: TCS.NS
+2025-08-16 01:47:04,091 - investment_advisor - INFO - fetch_stock_data:182 - Successfully fetched data for TCS.NS in 1.20s
+2025-08-16 01:47:04,093 - investment_advisor - INFO - fetch_stock_data:163 - Fetching stock data for symbol: HDFCBANK.NS
+2025-08-16 01:47:04,446 - investment_advisor - INFO - fetch_stock_data:182 - Successfully fetched data for HDFCBANK.NS in 0.35s
+2025-08-16 01:47:06,110 - investment_advisor - INFO - log_api_request:61 - API POST /api/v1/analyze-portfolio - 200 (3.222s)
+2025-08-16 01:47:10,224 - investment_advisor - INFO - log_api_request:61 - API GET /health - 200
+2025-08-16 01:47:23,449 - investment_advisor - INFO - log_api_request:61 - API GET /health - 200 (0.001s)
+2025-08-16 01:47:27,670 - investment_advisor - INFO - log_api_request:61 - API GET /health - 200 (0.001s)
+2025-08-16 01:47:27,683 - investment_advisor - INFO - analyze_scenario:45 - Starting scenario analysis for user 1: RBI increases repo rate by 0.5%...
+2025-08-16 01:47:27,693 - investment_advisor - ERROR - analyze_scenario:95 - Scenario analysis failed for user 1: (sqlite3.OperationalError) no such column: riskassessment.answers
+[SQL: SELECT riskassessment.id AS riskassessment_id, riskassessment.user_id AS riskassessment_user_id, riskassessment.score AS riskassessment_score, riskassessment.category AS riskassessment_category, riskassessment.description AS riskassessment_description, riskassessment.recommendations AS riskassessment_recommendations, riskassessment.answers AS riskassessment_answers, riskassessment.created_at AS riskassessment_created_at 
+FROM riskassessment 
+WHERE ? = riskassessment.user_id]
+[parameters: (1,)]
+(Background on this error at: https://sqlalche.me/e/20/e3q8)
+2025-08-16 01:47:27,943 - investment_advisor - INFO - log_api_request:61 - API POST /api/v1/analyze-scenario - 200 (0.266s)
+2025-08-16 01:47:30,400 - investment_advisor - INFO - log_api_request:61 - API GET /health - 200 (0.001s)
+2025-08-16 01:47:48,032 - investment_advisor - INFO - log_api_request:61 - API GET /health - 200 (0.001s)
+2025-08-16 01:47:48,050 - investment_advisor - INFO - log_api_request:61 - API GET /api/v1/scenarios - 200 (0.009s)
+2025-08-16 01:47:54,639 - investment_advisor - INFO - log_api_request:61 - API GET /health - 200
+2025-08-16 01:47:59,404 - investment_advisor - INFO - log_api_request:61 - API GET /health - 200 (0.001s)
+2025-08-16 01:48:01,843 - investment_advisor - INFO - log_api_request:61 - API GET /health - 200 (0.001s)
+2025-08-16 01:52:24,414 - investment_advisor - INFO - lifespan:22 - Starting AI-Powered Risk & Scenario Advisor API
+2025-08-16 01:52:25,343 - investment_advisor - INFO - lifespan:24 - Database initialized successfully
+2025-08-16 01:52:31,453 - investment_advisor - INFO - log_api_request:61 - API GET /health - 200 (0.001s)
+2025-08-16 01:54:20,344 - investment_advisor - INFO - lifespan:27 - Shutting down AI-Powered Risk & Scenario Advisor API
+2025-08-16 01:54:34,611 - investment_advisor - INFO - lifespan:22 - Starting AI-Powered Risk & Scenario Advisor API
+2025-08-16 01:54:34,620 - investment_advisor - INFO - lifespan:24 - Database initialized successfully
+2025-08-16 01:54:36,918 - investment_advisor - INFO - log_api_request:61 - API GET /health - 200 (0.001s)
+2025-08-16 01:54:38,984 - investment_advisor - WARNING - log_security_event:76 - SECURITY WEAK_PASSWORD: Weak password attempted for email: test@example.com
+2025-08-16 01:54:38,987 - investment_advisor - INFO - log_api_request:61 - API POST /auth/register - 400 (0.006s)
+2025-08-16 01:54:41,045 - investment_advisor - WARNING - log_security_event:76 - SECURITY FAILED_LOGIN (IP: 127.0.0.1): Failed login attempt for email: test@example.com
+2025-08-16 01:54:41,048 - investment_advisor - INFO - log_api_request:61 - API POST /auth/token - 401 (0.032s)
+2025-08-16 01:54:51,144 - investment_advisor - INFO - lifespan:27 - Shutting down AI-Powered Risk & Scenario Advisor API
+2025-08-16 01:55:04,478 - investment_advisor - INFO - lifespan:22 - Starting AI-Powered Risk & Scenario Advisor API
+2025-08-16 01:55:04,489 - investment_advisor - INFO - lifespan:24 - Database initialized successfully
+2025-08-16 01:55:16,680 - investment_advisor - INFO - lifespan:22 - Starting AI-Powered Risk & Scenario Advisor API
+2025-08-16 01:55:16,689 - investment_advisor - INFO - lifespan:24 - Database initialized successfully
+2025-08-16 01:55:16,702 - investment_advisor - WARNING - log_security_event:76 - SECURITY WEAK_PASSWORD: Weak password attempted for email: test@example.com
+2025-08-16 01:55:16,704 - investment_advisor - INFO - log_api_request:61 - API POST /auth/register - 400 (0.006s)
+2025-08-16 01:55:18,746 - investment_advisor - WARNING - log_security_event:76 - SECURITY WEAK_PASSWORD: Weak password attempted for email: test2@example.com
+2025-08-16 01:55:18,748 - investment_advisor - INFO - log_api_request:61 - API POST /auth/register - 400 (0.003s)
+2025-08-16 01:55:32,566 - investment_advisor - INFO - lifespan:27 - Shutting down AI-Powered Risk & Scenario Advisor API
+2025-08-16 01:55:44,169 - investment_advisor - INFO - lifespan:22 - Starting AI-Powered Risk & Scenario Advisor API
+2025-08-16 01:55:44,179 - investment_advisor - INFO - lifespan:24 - Database initialized successfully
+2025-08-16 01:55:45,674 - investment_advisor - INFO - log_api_request:61 - API GET /health - 200 (0.001s)
+2025-08-16 01:55:48,493 - investment_advisor - INFO - register:65 - New user registered: 1 (test@example.com)
+2025-08-16 01:55:48,495 - investment_advisor - INFO - log_api_request:61 - API POST /auth/register - 200 (0.794s)
+2025-08-16 01:55:51,184 - investment_advisor - INFO - login:98 - User logged in successfully: 1 (test@example.com)
+2025-08-16 01:55:51,188 - investment_advisor - INFO - log_api_request:61 - API POST /auth/token - 200 (0.664s)
+2025-08-16 01:55:53,267 - investment_advisor - INFO - log_api_request:61 - API GET /api/v1/user/data - 200 (0.019s)
+2025-08-16 01:56:37,918 - investment_advisor - INFO - lifespan:27 - Shutting down AI-Powered Risk & Scenario Advisor API
+2025-08-16 01:57:01,837 - investment_advisor - INFO - lifespan:22 - Starting AI-Powered Risk & Scenario Advisor API
+2025-08-16 01:57:01,843 - investment_advisor - INFO - lifespan:24 - Database initialized successfully
+2025-08-16 01:57:12,126 - investment_advisor - INFO - log_api_request:61 - API GET /health - 200
+2025-08-16 01:57:24,393 - investment_advisor - INFO - log_api_request:61 - API GET /health - 200 (0.001s)
+2025-08-16 01:57:24,403 - investment_advisor - WARNING - log_security_event:76 - SECURITY WEAK_PASSWORD: Weak password attempted for email: alokagarwal629@gmail.com
+2025-08-16 01:57:24,405 - investment_advisor - INFO - log_api_request:61 - API POST /auth/register - 400 (0.005s)
+2025-08-16 01:57:38,895 - investment_advisor - INFO - log_api_request:61 - API GET /health - 200 (0.001s)
+2025-08-16 01:57:38,903 - investment_advisor - WARNING - log_security_event:76 - SECURITY WEAK_PASSWORD: Weak password attempted for email: alokagarwal629@gmail.com
+2025-08-16 01:57:38,905 - investment_advisor - INFO - log_api_request:61 - API POST /auth/register - 400 (0.004s)
+2025-08-16 01:57:49,573 - investment_advisor - INFO - log_api_request:61 - API GET /health - 200 (0.001s)
+2025-08-16 01:57:49,581 - investment_advisor - WARNING - log_security_event:76 - SECURITY WEAK_PASSWORD: Weak password attempted for email: alokagarwal629@gmail.com
+2025-08-16 01:57:49,583 - investment_advisor - INFO - log_api_request:61 - API POST /auth/register - 400 (0.003s)
+2025-08-16 01:58:11,385 - investment_advisor - INFO - log_api_request:61 - API GET /health - 200
+2025-08-16 01:58:11,900 - investment_advisor - INFO - register:65 - New user registered: 2 (alokagarwal629@gmail.com)
+2025-08-16 01:58:11,902 - investment_advisor - INFO - log_api_request:61 - API POST /auth/register - 200 (0.511s)
+2025-08-16 01:58:26,882 - investment_advisor - INFO - log_api_request:61 - API GET /health - 200 (0.001s)
+2025-08-16 01:58:27,170 - investment_advisor - INFO - login:98 - User logged in successfully: 2 (alokagarwal629@gmail.com)
+2025-08-16 01:58:27,173 - investment_advisor - INFO - log_api_request:61 - API POST /auth/token - 200 (0.285s)
+2025-08-16 01:58:29,634 - investment_advisor - INFO - log_api_request:61 - API GET /health - 200 (0.001s)
+2025-08-16 01:58:29,665 - investment_advisor - INFO - log_api_request:61 - API GET /api/v1/user/data - 200 (0.027s)
+2025-08-16 01:58:34,540 - investment_advisor - INFO - log_api_request:61 - API GET /health - 200 (0.001s)
+2025-08-16 01:58:34,673 - investment_advisor - INFO - log_api_request:61 - API POST /api/v1/risk-profile - 200 (0.124s)
+2025-08-16 01:58:37,102 - investment_advisor - INFO - log_api_request:61 - API GET /health - 200 (0.001s)
+2025-08-16 01:58:52,283 - investment_advisor - INFO - log_api_request:61 - API GET /health - 200
+2025-08-16 01:58:52,406 - investment_advisor - INFO - log_api_request:61 - API DELETE /api/v1/risk-profile/latest - 200 (0.114s)
+2025-08-16 01:58:54,841 - investment_advisor - INFO - log_api_request:61 - API GET /health - 200 (0.001s)
+2025-08-16 01:59:00,446 - investment_advisor - INFO - log_api_request:61 - API GET /health - 200 (0.001s)
+2025-08-16 01:59:00,582 - investment_advisor - INFO - log_api_request:61 - API POST /api/v1/risk-profile - 200 (0.128s)
+2025-08-16 01:59:03,005 - investment_advisor - INFO - log_api_request:61 - API GET /health - 200 (0.001s)
+2025-08-16 01:59:07,425 - investment_advisor - INFO - log_api_request:61 - API GET /health - 200 (0.001s)
+2025-08-16 01:59:14,847 - investment_advisor - INFO - log_api_request:61 - API GET /health - 200
+2025-08-16 01:59:14,859 - investment_advisor - INFO - fetch_stock_data:163 - Fetching stock data for symbol: TCS.NS
+2025-08-16 01:59:15,715 - investment_advisor - INFO - fetch_stock_data:182 - Successfully fetched data for TCS.NS in 0.85s
+2025-08-16 01:59:15,716 - investment_advisor - INFO - fetch_stock_data:163 - Fetching stock data for symbol: HDFCBANK.NS
+2025-08-16 01:59:16,068 - investment_advisor - INFO - fetch_stock_data:182 - Successfully fetched data for HDFCBANK.NS in 0.35s
+2025-08-16 01:59:16,789 - investment_advisor - INFO - log_api_request:61 - API POST /api/v1/analyze-portfolio - 200 (1.935s)
+2025-08-16 01:59:19,549 - investment_advisor - INFO - log_api_request:61 - API GET /health - 200 (0.001s)
+2025-08-16 02:00:57,601 - investment_advisor - INFO - lifespan:27 - Shutting down AI-Powered Risk & Scenario Advisor API
+2025-08-16 02:02:30,036 - investment_advisor - INFO - lifespan:22 - Starting AI-Powered Risk & Scenario Advisor API
+2025-08-16 02:02:30,047 - investment_advisor - INFO - lifespan:24 - Database initialized successfully
+2025-08-16 02:02:47,357 - investment_advisor - INFO - log_api_request:61 - API GET /health - 200 (0.001s)
+2025-08-16 02:02:54,914 - investment_advisor - WARNING - log_security_event:76 - SECURITY FAILED_LOGIN (IP: 127.0.0.1): Failed login attempt for email: alokagarwal629@gmail.com
+2025-08-16 02:02:54,918 - investment_advisor - INFO - log_api_request:61 - API POST /auth/token - 401 (0.371s)
+2025-08-16 02:03:20,711 - investment_advisor - INFO - lifespan:27 - Shutting down AI-Powered Risk & Scenario Advisor API
+2025-08-16 02:03:38,711 - investment_advisor - INFO - lifespan:22 - Starting AI-Powered Risk & Scenario Advisor API
+2025-08-16 02:03:38,720 - investment_advisor - INFO - lifespan:24 - Database initialized successfully
+2025-08-16 02:03:38,728 - investment_advisor - INFO - log_api_request:61 - API GET /health - 200
+2025-08-16 02:03:55,215 - investment_advisor - INFO - log_api_request:61 - API GET /health - 200 (0.001s)
+2025-08-16 02:03:55,543 - investment_advisor - INFO - login:98 - User logged in successfully: 2 (alokagarwal629@gmail.com)
+2025-08-16 02:03:55,546 - investment_advisor - INFO - log_api_request:61 - API POST /auth/token - 200 (0.325s)
+2025-08-16 02:03:57,981 - investment_advisor - INFO - log_api_request:61 - API GET /health - 200 (0.001s)
+2025-08-16 02:03:58,011 - investment_advisor - INFO - log_api_request:61 - API GET /api/v1/user/data - 200 (0.025s)
+2025-08-16 02:04:02,952 - investment_advisor - INFO - log_api_request:61 - API GET /health - 200
+2025-08-16 02:04:13,249 - investment_advisor - INFO - log_api_request:61 - API GET /health - 200 (0.001s)
+2025-08-16 02:04:13,413 - investment_advisor - INFO - log_api_request:61 - API DELETE /api/v1/portfolio/latest - 200 (0.155s)
+2025-08-16 02:04:15,837 - investment_advisor - INFO - log_api_request:61 - API GET /health - 200
+2025-08-16 02:04:25,603 - investment_advisor - INFO - log_api_request:61 - API GET /health - 200
+2025-08-16 02:04:26,132 - investment_advisor - INFO - log_api_request:61 - API GET /health - 200
+2025-08-16 02:04:26,145 - investment_advisor - INFO - fetch_stock_data:163 - Fetching stock data for symbol: TCS.NS
+2025-08-16 02:04:27,144 - investment_advisor - INFO - fetch_stock_data:182 - Successfully fetched data for TCS.NS in 1.00s
+2025-08-16 02:04:27,145 - investment_advisor - INFO - fetch_stock_data:163 - Fetching stock data for symbol: HDFCBANK.NS
+2025-08-16 02:04:27,553 - investment_advisor - INFO - fetch_stock_data:182 - Successfully fetched data for HDFCBANK.NS in 0.41s
+2025-08-16 02:04:28,246 - investment_advisor - INFO - log_api_request:61 - API POST /api/v1/analyze-portfolio - 200 (2.106s)
+2025-08-16 02:04:37,781 - investment_advisor - INFO - log_api_request:61 - API GET /health - 200
+2025-08-16 02:04:49,653 - investment_advisor - INFO - log_api_request:61 - API GET /health - 200 (0.001s)
+2025-08-16 02:04:56,578 - investment_advisor - INFO - log_api_request:61 - API GET /health - 200 (0.001s)
+2025-08-16 02:04:56,589 - investment_advisor - INFO - analyze_scenario:45 - Starting scenario analysis for user 2: RBI increases repo rate by 0.5%...
+2025-08-16 02:05:17,326 - investment_advisor - INFO - analyze_scenario:88 - Scenario analysis completed for user 2 in 20.74s
+2025-08-16 02:05:17,547 - investment_advisor - INFO - log_api_request:61 - API POST /api/v1/analyze-scenario - 200 (20.965s)
+2025-08-16 02:05:19,986 - investment_advisor - INFO - log_api_request:61 - API GET /health - 200
+2025-08-16 02:05:40,806 - investment_advisor - INFO - log_api_request:61 - API GET /health - 200 (0.001s)
+2025-08-16 02:05:44,823 - investment_advisor - INFO - log_api_request:61 - API GET /health - 200
+2025-08-16 02:05:45,035 - investment_advisor - INFO - log_api_request:61 - API POST /api/v1/export/pdf - 200 (0.205s)
+2025-08-16 02:05:45,045 - investment_advisor - INFO - log_api_request:61 - API GET /api/v1/export/history - 200 (0.007s)
+2025-08-16 02:06:17,488 - investment_advisor - INFO - log_api_request:61 - API GET /health - 200 (0.001s)
+2025-08-16 02:06:20,693 - investment_advisor - INFO - log_api_request:61 - API GET /health - 200 (0.001s)
+2025-08-16 02:07:24,641 - investment_advisor - INFO - log_api_request:61 - API GET /health - 200
+2025-08-16 02:08:23,318 - investment_advisor - INFO - log_api_request:61 - API GET /health - 200 (0.001s)
+2025-08-16 02:08:25,991 - investment_advisor - INFO - log_api_request:61 - API GET /health - 200 (0.001s)
+2025-08-16 02:09:15,060 - investment_advisor - INFO - lifespan:27 - Shutting down AI-Powered Risk & Scenario Advisor API
+2025-08-16 02:09:28,432 - investment_advisor - INFO - lifespan:22 - Starting AI-Powered Risk & Scenario Advisor API
+2025-08-16 02:09:28,440 - investment_advisor - INFO - lifespan:24 - Database initialized successfully
+2025-08-16 02:09:40,002 - investment_advisor - INFO - lifespan:27 - Shutting down AI-Powered Risk & Scenario Advisor API
+2025-08-16 02:14:53,937 - investment_advisor - INFO - lifespan:22 - Starting AI-Powered Risk & Scenario Advisor API
+2025-08-16 02:14:53,947 - investment_advisor - INFO - lifespan:24 - Database initialized successfully
+2025-08-16 02:15:34,308 - investment_advisor - INFO - log_api_request:61 - API GET /health - 200 (0.001s)
+2025-08-16 02:15:37,340 - investment_advisor - INFO - lifespan:22 - Starting AI-Powered Risk & Scenario Advisor API
+2025-08-16 02:15:37,351 - investment_advisor - INFO - lifespan:24 - Database initialized successfully
+2025-08-16 02:15:43,133 - investment_advisor - WARNING - log_security_event:76 - SECURITY FAILED_LOGIN (IP: 127.0.0.1): Failed login attempt for email: alokagarwal629@gmail.com
+2025-08-16 02:15:43,135 - investment_advisor - INFO - log_api_request:61 - API POST /auth/token - 401 (0.378s)
+2025-08-16 02:15:57,320 - investment_advisor - INFO - lifespan:27 - Shutting down AI-Powered Risk & Scenario Advisor API
+2025-08-16 02:15:57,352 - investment_advisor - INFO - lifespan:27 - Shutting down AI-Powered Risk & Scenario Advisor API
+2025-08-16 02:16:24,520 - investment_advisor - INFO - lifespan:22 - Starting AI-Powered Risk & Scenario Advisor API
+2025-08-16 02:16:24,552 - investment_advisor - INFO - lifespan:24 - Database initialized successfully
+2025-08-16 02:16:31,491 - investment_advisor - INFO - log_api_request:61 - API GET /health - 200 (0.001s)
+2025-08-16 02:16:42,274 - investment_advisor - INFO - log_api_request:61 - API GET /health - 200 (0.001s)
+2025-08-16 02:16:42,622 - investment_advisor - INFO - login:98 - User logged in successfully: 2 (alokagarwal629@gmail.com)
+2025-08-16 02:16:42,624 - investment_advisor - INFO - log_api_request:61 - API POST /auth/token - 200 (0.344s)
+2025-08-16 02:16:45,075 - investment_advisor - INFO - log_api_request:61 - API GET /health - 200
+2025-08-16 02:16:45,543 - investment_advisor - INFO - log_api_request:61 - API GET /api/v1/user/data - 200 (0.464s)
+2025-08-16 02:16:49,567 - investment_advisor - INFO - log_api_request:61 - API GET /health - 200 (0.001s)
+2025-08-16 02:17:02,296 - investment_advisor - INFO - log_api_request:61 - API GET /health - 200
+2025-08-16 02:17:06,912 - investment_advisor - INFO - log_api_request:61 - API GET /health - 200
+2025-08-16 02:17:07,030 - investment_advisor - INFO - log_api_request:61 - API GET /api/v1/export/download/1 - 200 (0.111s)

@@ -8,6 +8,10 @@ class RiskCategory(str, Enum):
     MODERATE = "Moderate"
     AGGRESSIVE = "Aggressive"
 
+class ExportType(str, Enum):
+    TEXT = "text"
+    PDF = "pdf"
+
 class User(SQLModel, table=True):
     id: Optional[int] = Field(default=None, primary_key=True)
     email: str = Field(unique=True, index=True)
@@ -20,6 +24,7 @@ class User(SQLModel, table=True):
     portfolios: List["Portfolio"] = Relationship(back_populates="user")
     risk_assessments: List["RiskAssessment"] = Relationship(back_populates="user")
     scenarios: List["Scenario"] = Relationship(back_populates="user")
+    exports: List["Export"] = Relationship(back_populates="user")
 
 class Portfolio(SQLModel, table=True):
     id: Optional[int] = Field(default=None, primary_key=True)
@@ -56,6 +61,7 @@ class RiskAssessment(SQLModel, table=True):
     category: RiskCategory
     description: str
     recommendations: str  # JSON string of recommendations list
+    answers: str  # JSON string of questionnaire answers
     created_at: datetime = Field(default_factory=datetime.utcnow)
     
     # Relationships
@@ -73,6 +79,20 @@ class Scenario(SQLModel, table=True):
     
     # Relationships
     user: User = Relationship(back_populates="scenarios")
+
+class Export(SQLModel, table=True):
+    id: Optional[int] = Field(default=None, primary_key=True)
+    user_id: int = Field(foreign_key="user.id")
+    export_type: ExportType
+    filename: str
+    file_path: str
+    include_risk_profile: bool = True
+    include_portfolio: bool = True
+    include_scenarios: bool = True
+    created_at: datetime = Field(default_factory=datetime.utcnow)
+    
+    # Relationships
+    user: User = Relationship(back_populates="exports")
 
 # Pydantic models for API requests/responses
 class UserCreate(SQLModel):
@@ -102,3 +122,10 @@ class ExportRequest(SQLModel):
     include_risk_profile: bool = True
     include_portfolio: bool = True
     include_scenarios: bool = True
+
+# Response models for user data retrieval
+class UserDataResponse(SQLModel):
+    risk_profile: Optional[dict] = None
+    portfolio: Optional[dict] = None
+    scenarios: List[dict] = []
+    exports: List[dict] = []
