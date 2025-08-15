@@ -221,17 +221,68 @@ LOG_LEVEL=INFO
 
 ## 🧪 Testing
 
-Run the persistence test to verify all functionality:
+The application includes a comprehensive unified test suite that consolidates all testing functionality:
 
+### Running Tests
+
+**Run all tests:**
 ```bash
-python test_persistence.py
+python test_all.py
 ```
 
-This test will:
-1. Register a test user
-2. Create risk assessment, portfolio, scenario, and export
-3. Verify data persistence
-4. Test all API endpoints
+**Run specific test categories:**
+```bash
+# Environment and dependencies
+python test_all.py environment
+python test_all.py dependencies
+python test_all.py database
+
+# Backend connectivity
+python test_all.py health
+
+# Authentication
+python test_all.py auth
+
+# Core features
+python test_all.py risk
+python test_all.py portfolio
+python test_all.py visualizations
+python test_all.py scenario
+python test_all.py export
+python test_all.py userdata
+```
+
+### Test Coverage
+
+The unified test suite covers:
+
+- **Environment Configuration**: API keys, environment variables
+- **Dependencies**: All required Python packages
+- **Database**: Connection, models, and schema
+- **Backend Health**: API availability and responsiveness
+- **Authentication**: User registration, login, and JWT tokens
+- **Risk Assessment**: Questionnaire, scoring, and persistence
+- **Portfolio Analysis**: Input parsing, data fetching, and visualizations
+- **Scenario Analysis**: AI-powered scenario generation and storage
+- **Export Functionality**: Text and PDF export with history
+- **User Data**: Complete data aggregation and retrieval
+
+### Test Results
+
+The test suite provides detailed output with:
+- ✅ Success indicators for each test
+- ❌ Error messages with specific failure reasons
+- 📊 Summary statistics (pass/fail counts, success rate)
+- 🔍 Detailed debugging information
+
+### Test Configuration
+
+Tests use the following configuration:
+- **Base URL**: `http://localhost:8000`
+- **Test User**: `test@example.com` / `TestPass123!`
+- **Existing User**: `alokagarwal629@gmail.com` / `TestPass123!`
+
+**Note**: Make sure the backend server is running before executing tests that require API connectivity.
 
 ## 🔒 Security Features
 

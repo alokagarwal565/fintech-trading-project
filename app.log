@@ -219,3 +219,24 @@ WHERE ? = riskassessment.user_id]
 2025-08-16 02:17:02,296 - investment_advisor - INFO - log_api_request:61 - API GET /health - 200
 2025-08-16 02:17:06,912 - investment_advisor - INFO - log_api_request:61 - API GET /health - 200
 2025-08-16 02:17:07,030 - investment_advisor - INFO - log_api_request:61 - API GET /api/v1/export/download/1 - 200 (0.111s)
+2025-08-16 02:26:09,624 - investment_advisor - INFO - lifespan:22 - Starting AI-Powered Risk & Scenario Advisor API
+2025-08-16 02:26:09,649 - investment_advisor - INFO - lifespan:24 - Database initialized successfully
+2025-08-16 02:26:17,059 - investment_advisor - INFO - log_api_request:61 - API GET /health - 200
+2025-08-16 02:26:23,989 - investment_advisor - INFO - log_api_request:61 - API GET /health - 200 (0.001s)
+2025-08-16 02:26:26,059 - investment_advisor - WARNING - log_security_event:76 - SECURITY DUPLICATE_REGISTRATION: Duplicate registration attempt for: test@example.com
+2025-08-16 02:26:26,062 - investment_advisor - INFO - log_api_request:61 - API POST /auth/register - 400 (0.020s)
+2025-08-16 02:26:28,409 - investment_advisor - INFO - login:98 - User logged in successfully: 1 (test@example.com)
+2025-08-16 02:26:28,411 - investment_advisor - INFO - log_api_request:61 - API POST /auth/token - 200 (0.309s)
+2025-08-16 02:26:30,476 - investment_advisor - INFO - log_api_request:61 - API GET /api/v1/user/data - 200 (0.018s)
+2025-08-16 02:26:32,821 - investment_advisor - WARNING - log_security_event:76 - SECURITY FAILED_LOGIN (IP: 127.0.0.1): Failed login attempt for email: alokagarwal629@gmail.com
+2025-08-16 02:26:32,823 - investment_advisor - INFO - log_api_request:61 - API POST /auth/token - 401 (0.303s)
+2025-08-16 02:26:35,148 - investment_advisor - WARNING - log_security_event:76 - SECURITY FAILED_LOGIN (IP: 127.0.0.1): Failed login attempt for email: alokagarwal629@gmail.com
+2025-08-16 02:26:35,150 - investment_advisor - INFO - log_api_request:61 - API POST /auth/token - 401 (0.286s)
+2025-08-16 02:26:37,465 - investment_advisor - WARNING - log_security_event:76 - SECURITY FAILED_LOGIN (IP: 127.0.0.1): Failed login attempt for email: alokagarwal629@gmail.com
+2025-08-16 02:26:37,467 - investment_advisor - INFO - log_api_request:61 - API POST /auth/token - 401 (0.275s)
+2025-08-16 02:26:39,794 - investment_advisor - WARNING - log_security_event:76 - SECURITY FAILED_LOGIN (IP: 127.0.0.1): Failed login attempt for email: alokagarwal629@gmail.com
+2025-08-16 02:26:39,796 - investment_advisor - INFO - log_api_request:61 - API POST /auth/token - 401 (0.280s)
+2025-08-16 02:26:42,116 - investment_advisor - WARNING - log_security_event:76 - SECURITY FAILED_LOGIN (IP: 127.0.0.1): Failed login attempt for email: alokagarwal629@gmail.com
+2025-08-16 02:26:42,118 - investment_advisor - INFO - log_api_request:61 - API POST /auth/token - 401 (0.279s)
+2025-08-16 02:26:44,441 - investment_advisor - WARNING - log_security_event:76 - SECURITY FAILED_LOGIN (IP: 127.0.0.1): Failed login attempt for email: alokagarwal629@gmail.com
+2025-08-16 02:26:44,443 - investment_advisor - INFO - log_api_request:61 - API POST /auth/token - 401 (0.281s)
