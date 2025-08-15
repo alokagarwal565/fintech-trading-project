@@ -3,6 +3,9 @@ import google.generativeai as genai
 from typing import Dict, List, Any
 from backend.models.models import User, Portfolio, Holding
 from sqlmodel import Session, select
+from backend.utils.retry import retry_with_backoff
+from backend.utils.logger import app_logger
+import time
 
 # Horizontal line for class definition
 # -----------------------------------
@@ -23,6 +26,7 @@ class ScenarioService:
 
         genai.configure(api_key=api_key)
 
+    @retry_with_backoff(max_retries=2, base_delay=2.0, exceptions=(Exception,))
     def analyze_scenario(self, scenario: str, user: User, session: Session, portfolio_id: int = None) -> Dict[str, Any]:
         """
         Analyzes how a market scenario might affect the user's portfolio using Gemini AI.
@@ -38,6 +42,9 @@ class ScenarioService:
             Dict[str, Any]: A dictionary containing the structured analysis from the AI.
         """
         try:
+            app_logger.info(f"Starting scenario analysis for user {user.id}: {scenario[:50]}...")
+            start_time = time.time()
+            
             # Get user's latest portfolio if portfolio_id not specified
             if portfolio_id:
                 portfolio_stmt = select(Portfolio).where(Portfolio.id == portfolio_id, Portfolio.user_id == user.id)
@@ -76,11 +83,16 @@ class ScenarioService:
             if response.text and response.text.strip():
                 # Parse the structured response
                 analysis_result = self._parse_ai_response(response.text)
+                
+                analysis_time = time.time() - start_time
+                app_logger.info(f"Scenario analysis completed for user {user.id} in {analysis_time:.2f}s")
+                
                 return analysis_result
             else:
                 raise Exception(f"Empty or invalid response from AI model")
 
         except Exception as e:
+            app_logger.error(f"Scenario analysis failed for user {user.id}: {str(e)}")
             return self._get_fallback_analysis(scenario, str(e))
 
     def _prepare_portfolio_context(self, holdings: List[Holding]) -> str:

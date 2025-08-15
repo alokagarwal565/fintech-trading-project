@@ -5,6 +5,9 @@ from sqlmodel import Session
 from backend.models.models import Portfolio, Holding, User
 import plotly.express as px
 import pandas as pd
+from backend.utils.retry import retry_with_backoff
+from backend.utils.logger import app_logger
+import time
 
 class PortfolioService:
     def __init__(self):
@@ -145,9 +148,10 @@ class PortfolioService:
         potential_symbol = clean_name.upper().replace(' ', '') + '.NS'
         return potential_symbol
     
+    @retry_with_backoff(max_retries=3, base_delay=1.0, exceptions=(Exception,))
     def fetch_stock_data(self, symbol: str) -> Dict[str, Any]:
         """
-        Fetches current stock data for a given symbol using yfinance.
+        Fetches current stock data for a given symbol using yfinance with retry logic.
         
         Args:
             symbol (str): The stock ticker symbol.
@@ -156,6 +160,9 @@ class PortfolioService:
             Dict[str, Any]: A dictionary containing stock information, or an error if invalid.
         """
         try:
+            app_logger.info(f"Fetching stock data for symbol: {symbol}")
+            start_time = time.time()
+            
             stock = yf.Ticker(symbol)
             info = stock.info
             
@@ -166,6 +173,13 @@ class PortfolioService:
                 hist = stock.history(period="1d")
                 if not hist.empty:
                     current_price = hist['Close'].iloc[-1]
+            
+            # Validate that we got a price
+            if not current_price or current_price <= 0:
+                raise ValueError(f"No valid price found for {symbol}")
+            
+            fetch_time = time.time() - start_time
+            app_logger.info(f"Successfully fetched data for {symbol} in {fetch_time:.2f}s")
             
             # Retrieve specific metrics required by the application
             return {
@@ -179,6 +193,7 @@ class PortfolioService:
                 'valid': True
             }
         except Exception as e:
+            app_logger.error(f"Failed to fetch stock data for {symbol}: {str(e)}")
             # Handle cases where the stock symbol is invalid or data cannot be fetched
             return {
                 'symbol': symbol,

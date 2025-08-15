@@ -80,8 +80,17 @@ The application follows a modern full-stack architecture:
 ### Prerequisites
 - Python 3.10 or higher
 - Google Gemini API key
+- Redis (optional, for rate limiting)
 
 ### Quick Start
+
+#### Option 1: Automated Setup (Recommended)
+```bash
+# Run the setup script
+python setup.py
+```
+
+#### Option 2: Manual Setup
 
 1. **Install dependencies**:
 ```bash
@@ -90,7 +99,7 @@ pip install -r requirements.txt
 
 2. **Set up environment variables**:
 ```bash
-cp .env.example .env
+cp env.example .env
 # Edit .env file with your API keys
 ```
 
@@ -105,6 +114,22 @@ python run_backend.py
 ```bash
 python run_frontend.py
 # Frontend will be available at http://localhost:8501
+```
+
+### Environment Variables
+
+Create a `.env` file with the following variables:
+
+```bash
+# Required
+GEMINI_API_KEY=your-gemini-api-key-here
+SECRET_KEY=your-super-secret-jwt-key
+
+# Optional (with defaults)
+API_BASE_URL=http://localhost:8000
+DATABASE_URL=sqlite:///./investment_advisor.db
+REDIS_URL=redis://localhost:6379
+LOG_LEVEL=INFO
 ```
 
 ## 🔐 Authentication
@@ -173,23 +198,32 @@ python run_frontend.py
 
 ## 🔒 Security Features
 
-- **JWT Authentication**: Secure token-based authentication
-- **Password Hashing**: Bcrypt password hashing
-- **CORS Protection**: Configured for frontend-backend communication
-- **Input Validation**: Pydantic models for request validation
-- **Rate Limiting**: API rate limiting capabilities
+- **JWT Authentication**: Secure token-based authentication with configurable expiration
+- **Password Hashing**: Bcrypt password hashing with strength validation
+- **Input Sanitization**: Protection against SQL injection, XSS, and path traversal
+- **Rate Limiting**: Redis-based rate limiting with per-user and per-IP tracking
+- **Security Headers**: Comprehensive security headers (XSS protection, content type options, etc.)
+- **CORS Protection**: Configurable CORS for frontend-backend communication
+- **Input Validation**: Pydantic models for request validation with custom validators
+- **Audit Logging**: Comprehensive security event logging
+- **Environment-based Configuration**: All secrets managed via environment variables
 
 ## 📊 Enhanced Features
 
 ### Compared to the original Streamlit-only version:
 
-- ✅ **User Authentication**: Secure user accounts
+- ✅ **User Authentication**: Secure user accounts with JWT tokens
 - ✅ **Data Persistence**: Analysis history saved to database
-- ✅ **RESTful API**: Clean API architecture
-- ✅ **Scalable Backend**: FastAPI for high performance
-- ✅ **Enhanced Security**: JWT tokens and password hashing
+- ✅ **RESTful API**: Clean API architecture with OpenAPI documentation
+- ✅ **Scalable Backend**: FastAPI for high performance with async support
+- ✅ **Enhanced Security**: Comprehensive security features with audit logging
+- ✅ **Rate Limiting**: Redis-based rate limiting for API protection
+- ✅ **Error Handling**: Robust error handling with retry logic
+- ✅ **Logging**: Comprehensive logging with rotation and monitoring
+- ✅ **Input Validation**: Advanced input sanitization and validation
+- ✅ **Performance**: Optimized API calls with caching and retry mechanisms
 - ✅ **Better UX**: Improved loading indicators and error handling
-- ✅ **API Documentation**: Auto-generated OpenAPI docs
+- ✅ **Production Ready**: Docker support and deployment guides
 
 ## 🤝 Contributing
 
@@ -211,9 +245,22 @@ This project is licensed under the MIT License.
 2. **Frontend can't connect**: Ensure backend is running on port 8000
 3. **Database errors**: Check file permissions for SQLite database
 4. **API key errors**: Verify GEMINI_API_KEY in .env file
+5. **Rate limiting errors**: Check Redis connection if using rate limiting
+6. **Authentication errors**: Verify SECRET_KEY is set in .env file
 
 ### Getting Help:
 
 - Check the API documentation at `http://localhost:8000/docs`
-- Review the logs in both terminal windows
+- Review the application logs in the `logs/` directory
+- Check the health endpoint: `http://localhost:8000/health`
 - Ensure all dependencies are installed correctly
+- Run the setup script: `python setup.py`
+
+### Production Deployment:
+
+For production deployment, see the comprehensive [Deployment Guide](DEPLOYMENT.md) which includes:
+- Docker containerization
+- Nginx configuration
+- SSL/TLS setup
+- Monitoring and logging
+- Security best practices

@@ -32,7 +32,7 @@ class APIClient:
             data["full_name"] = full_name
         
         response = self.client.post(
-            f"{self.base_base_url}/auth/register",
+            f"{self.base_url}/auth/register",
             json=data,
             headers=self.get_headers()
         )
