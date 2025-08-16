@@ -3,7 +3,6 @@
 [![Python](https://img.shields.io/badge/Python-3.10+-blue.svg)](https://www.python.org/downloads/)
 [![FastAPI](https://img.shields.io/badge/FastAPI-0.104+-green.svg)](https://fastapi.tiangolo.com/)
 [![Streamlit](https://img.shields.io/badge/Streamlit-1.28+-red.svg)](https://streamlit.io/)
-[![License](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 
 > **Professional-grade investment risk assessment and scenario analysis platform powered by AI**
 
@@ -532,10 +531,6 @@ export LOG_LEVEL=DEBUG
 tail -f logs/backend.log
 tail -f logs/frontend.log
 ```
-
-## 📄 License
-
-This project is licensed under the **MIT License** - see the [LICENSE](LICENSE) file for details.
 
 ## 🆘 Support
 

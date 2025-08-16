@@ -8,6 +8,7 @@ import subprocess
 import shutil
 import time
 import httpx
+import platform
 from pathlib import Path
 
 def check_python_version():
@@ -17,6 +18,54 @@ def check_python_version():
         sys.exit(1)
     print(f"✅ Python {sys.version_info.major}.{sys.version_info.minor} detected")
 
+def create_virtual_environment():
+    """Create virtual environment if it doesn't exist"""
+    venv_path = Path("venv")
+    
+    if venv_path.exists():
+        print("✅ Virtual environment already exists")
+        return True
+    
+    print("🐍 Creating virtual environment...")
+    try:
+        subprocess.check_call([sys.executable, "-m", "venv", "venv"])
+        print("✅ Virtual environment created successfully")
+        return True
+    except subprocess.CalledProcessError as e:
+        print(f"❌ Failed to create virtual environment: {e}")
+        return False
+
+def get_venv_python():
+    """Get the Python executable path from virtual environment"""
+    if platform.system() == "Windows":
+        return Path("venv/Scripts/python.exe")
+    else:
+        return Path("venv/bin/python")
+
+def get_venv_pip():
+    """Get the pip executable path from virtual environment"""
+    if platform.system() == "Windows":
+        return Path("venv/Scripts/pip.exe")
+    else:
+        return Path("venv/bin/pip")
+
+def install_dependencies():
+    """Install Python dependencies in virtual environment"""
+    print("📦 Installing Python dependencies in virtual environment...")
+    
+    venv_pip = get_venv_pip()
+    if not venv_pip.exists():
+        print("❌ Virtual environment pip not found. Please recreate the virtual environment.")
+        return False
+    
+    try:
+        subprocess.check_call([str(venv_pip), "install", "-r", "requirements.txt"])
+        print("✅ Dependencies installed successfully in virtual environment")
+        return True
+    except subprocess.CalledProcessError as e:
+        print(f"❌ Failed to install dependencies: {e}")
+        return False
+
 def create_env_file():
     """Create .env file from template"""
     env_file = Path(".env")
@@ -24,24 +73,16 @@ def create_env_file():
     
     if env_file.exists():
         print("✅ .env file already exists")
-        return
+        return True
     
     if env_example.exists():
         shutil.copy(env_example, env_file)
         print("✅ Environment file created from template")
         print("   Please edit .env with your actual API keys and configuration")
+        return True
     else:
         print("❌ env.example file not found")
-
-def install_dependencies():
-    """Install Python dependencies"""
-    print("📦 Installing Python dependencies...")
-    try:
-        subprocess.check_call([sys.executable, "-m", "pip", "install", "-r", "requirements.txt"])
-        print("✅ Dependencies installed successfully")
-    except subprocess.CalledProcessError as e:
-        print(f"❌ Failed to install dependencies: {e}")
-        sys.exit(1)
+        return False
 
 def check_redis():
     """Check if Redis is available"""
@@ -62,11 +103,17 @@ def create_directories():
     print("✅ Created necessary directories")
 
 def start_backend():
-    """Start the backend server"""
+    """Start the backend server using virtual environment Python"""
     print("🚀 Starting backend server...")
+    
+    venv_python = get_venv_python()
+    if not venv_python.exists():
+        print("❌ Virtual environment Python not found")
+        return None
+    
     try:
-        # Start backend in background
-        process = subprocess.Popen([sys.executable, "run_backend.py"], 
+        # Start backend in background using venv Python
+        process = subprocess.Popen([str(venv_python), "run_backend.py"], 
                                  stdout=subprocess.DEVNULL, 
                                  stderr=subprocess.DEVNULL)
         print("✅ Backend server started")
@@ -190,6 +237,24 @@ def setup_admin_user(api_base_url="http://localhost:8000"):
         print(f"❌ Unexpected error: {e}")
         return False
 
+def show_activation_instructions():
+    """Show instructions for activating virtual environment"""
+    print("\n🔧 Virtual Environment Activation Instructions:")
+    print("=" * 50)
+    
+    if platform.system() == "Windows":
+        print("📱 Windows (PowerShell/Command Prompt):")
+        print("   venv\\Scripts\\activate")
+        print("\n📱 Windows (Git Bash/WSL):")
+        print("   source venv/Scripts/activate")
+    else:
+        print("🐧 macOS/Linux:")
+        print("   source venv/bin/activate")
+    
+    print("\n💡 After activation, you can run:")
+    print("   python run_backend.py    # Start backend")
+    print("   python run_frontend.py   # Start frontend")
+
 def main():
     """Main setup function"""
     print("🚀 Setting up AI-Powered Risk & Scenario Advisor")
@@ -198,17 +263,31 @@ def main():
     # Check Python version
     check_python_version()
     
+    # Create virtual environment FIRST
+    print("\n🐍 Virtual Environment Setup:")
+    print("-" * 30)
+    if not create_virtual_environment():
+        print("❌ Failed to create virtual environment. Setup cannot continue.")
+        return False
+    
     # Create directories
     create_directories()
     
-    # Install dependencies
-    install_dependencies()
+    # Install dependencies in virtual environment
+    if not install_dependencies():
+        print("❌ Failed to install dependencies. Setup cannot continue.")
+        return False
     
     # Create .env file
-    create_env_file()
+    if not create_env_file():
+        print("❌ Failed to create environment file. Setup cannot continue.")
+        return False
     
     # Check Redis
     check_redis()
+    
+    # Show activation instructions
+    show_activation_instructions()
     
     # Ask user if they want to start backend and setup admin
     print("\n🔐 Admin Dashboard Setup:")
@@ -223,10 +302,11 @@ def main():
                 # Setup admin user
                 if setup_admin_user():
                     print("\n🎯 Next Steps:")
-                    print("1. Start frontend: python run_frontend.py")
-                    print("2. Login with your admin credentials")
-                    print("3. You'll be redirected to the Admin Dashboard")
-                    print("4. Regular users will see the normal app interface")
+                    print("1. Activate virtual environment (see instructions above)")
+                    print("2. Start frontend: python run_frontend.py")
+                    print("3. Login with your admin credentials")
+                    print("4. You'll be redirected to the Admin Dashboard")
+                    print("5. Regular users will see the normal app interface")
                 else:
                     print("\n❌ Admin setup failed. You can run this setup again later.")
             else:
@@ -240,11 +320,12 @@ def main():
         print("   You can do this later manually.")
     
     print("\n🎯 Manual Setup Steps (if needed):")
-    print("1. Edit .env file with your configuration")
-    print("2. Start backend: python run_backend.py")
-    print("3. Setup admin user: python setup.py (and choose 'y' for admin setup)")
-    print("4. Start frontend: python run_frontend.py")
-    print("5. Access the application at http://localhost:8501")
+    print("1. Activate virtual environment (see instructions above)")
+    print("2. Edit .env file with your configuration")
+    print("3. Start backend: python run_backend.py")
+    print("4. Setup admin user: python setup.py (and choose 'y' for admin setup)")
+    print("5. Start frontend: python run_frontend.py")
+    print("6. Access the application at http://localhost:8501")
     
     print("\n📚 For more information, see README.md")
     
