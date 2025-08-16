@@ -523,7 +523,7 @@ def add_custom_css():
             [data-theme="light"] .st-eb {
                 color: #222222; /* Dark gray for readability */
             }
-            
+
             /* --- ERROR STATE STYLES --- */
             .error-field {
                 border: 2px solid #ff4444 !important;
@@ -751,6 +751,653 @@ def add_custom_css():
                 font-weight: bold;
             }
             
+            /* Enhanced Scenario Analysis Styles */
+            .scenario-card {
+                background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+                border: 2px solid #dee2e6;
+                border-radius: 12px;
+                padding: 16px;
+                margin: 8px 0;
+                box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+                transition: transform 0.2s ease, box-shadow 0.2s ease;
+            }
+            
+            .scenario-card:hover {
+                transform: translateY(-2px);
+                box-shadow: 0 4px 16px rgba(0,0,0,0.15);
+            }
+            
+            .scenario-header-card {
+                background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+                color: white;
+                padding: 20px;
+                border-radius: 12px;
+                margin-bottom: 20px;
+                box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            }
+            
+            .insight-item {
+                background: linear-gradient(135deg, #e3f2fd 0%, #f3e5f5 100%);
+                border: 1px solid #e1bee7;
+                border-radius: 8px;
+                padding: 12px;
+                margin: 8px 0;
+                display: flex;
+                align-items: center;
+                transition: all 0.2s ease;
+            }
+            
+            .insight-item:hover {
+                transform: translateX(4px);
+                box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            }
+            
+            .insight-number {
+                background: #9c27b0;
+                color: white;
+                border-radius: 50%;
+                width: 24px;
+                height: 24px;
+                display: inline-flex;
+                align-items: center;
+                justify-content: center;
+                font-size: 12px;
+                font-weight: bold;
+                margin-right: 12px;
+                flex-shrink: 0;
+            }
+            
+            .recommendation-card {
+                background: linear-gradient(135deg, #e8f5e8 0%, #f1f8e9 100%);
+                border: 1px solid #c8e6c9;
+                border-radius: 8px;
+                padding: 16px;
+                margin: 12px 0;
+                position: relative;
+                transition: all 0.2s ease;
+            }
+            
+            .recommendation-card:hover {
+                transform: translateY(-2px);
+                box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+            }
+            
+            .priority-badge {
+                position: absolute;
+                top: -8px;
+                left: 16px;
+                background: #4caf50;
+                color: white;
+                padding: 4px 12px;
+                border-radius: 12px;
+                font-size: 12px;
+                font-weight: bold;
+            }
+            
+            .risk-badge {
+                background: var(--risk-bg);
+                border: 2px solid var(--risk-border);
+                border-radius: 20px;
+                padding: 12px 20px;
+                text-align: center;
+                margin: 10px 0;
+                transition: all 0.2s ease;
+            }
+            
+            .risk-badge:hover {
+                transform: scale(1.05);
+                box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+            }
+            
+            .analysis-section {
+                background-color: #f8f9fa;
+                border: 1px solid #dee2e6;
+                border-radius: 8px;
+                padding: 16px;
+                margin: 10px 0;
+                transition: all 0.2s ease;
+            }
+            
+            .analysis-section:hover {
+                border-color: #667eea;
+                box-shadow: 0 2px 8px rgba(102, 126, 234, 0.1);
+            }
+            
+            /* Enhanced Text Visibility and Contrast */
+            .scenario-text-content {
+                color: #2c3e50 !important;
+                font-weight: 500 !important;
+                line-height: 1.6 !important;
+                background-color: #ffffff !important;
+                padding: 16px !important;
+                border-radius: 8px !important;
+                border: 1px solid #e9ecef !important;
+                margin: 8px 0 !important;
+                box-shadow: 0 2px 4px rgba(0,0,0,0.05) !important;
+            }
+            
+            .scenario-text-content strong {
+                color: #1a365d !important;
+                font-weight: 700 !important;
+            }
+            
+            .scenario-text-content em {
+                color: #2d3748 !important;
+                font-style: italic !important;
+            }
+            
+            /* Enhanced Section Headers */
+            .section-header-enhanced {
+                color: #2c3e50 !important;
+                font-size: 18px !important;
+                font-weight: 700 !important;
+                margin: 20px 0 12px 0 !important;
+                padding: 12px 16px !important;
+                background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%) !important;
+                border-left: 4px solid #667eea !important;
+                border-radius: 6px !important;
+                display: flex !important;
+                align-items: center !important;
+                gap: 8px !important;
+            }
+            
+            .section-header-enhanced::before {
+                content: "📋";
+                font-size: 20px;
+            }
+            
+            /* Enhanced Button Styling */
+            .btn-primary-enhanced {
+                background: linear-gradient(135deg, #667eea 0%, #764ba2 100%) !important;
+                color: white !important;
+                border: none !important;
+                padding: 10px 20px !important;
+                border-radius: 8px !important;
+                font-weight: 600 !important;
+                transition: all 0.2s ease !important;
+                cursor: pointer !important;
+                box-shadow: 0 2px 4px rgba(102, 126, 234, 0.3) !important;
+            }
+            
+            .btn-primary-enhanced:hover {
+                transform: translateY(-1px) !important;
+                box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4) !important;
+            }
+            
+            .btn-danger-enhanced {
+                background: linear-gradient(135deg, #e53e3e 0%, #c53030 100%) !important;
+                color: white !important;
+                border: none !important;
+                padding: 8px 16px !important;
+                border-radius: 6px !important;
+                font-weight: 600 !important;
+                transition: all 0.2s ease !important;
+                cursor: pointer !important;
+                box-shadow: 0 2px 4px rgba(229, 62, 62, 0.3) !important;
+            }
+            
+            .btn-danger-enhanced:hover {
+                transform: translateY(-1px) !important;
+                box-shadow: 0 4px 12px rgba(229, 62, 62, 0.4) !important;
+            }
+            
+            .btn-success-enhanced {
+                background: linear-gradient(135deg, #38a169 0%, #2f855a 100%) !important;
+                color: white !important;
+                border: none !important;
+                padding: 8px 16px !important;
+                border-radius: 6px !important;
+                font-weight: 600 !important;
+                transition: all 0.2s ease !important;
+                cursor: pointer !important;
+                box-shadow: 0 2px 4px rgba(56, 161, 105, 0.3) !important;
+            }
+            
+            .btn-success-enhanced:hover {
+                transform: translateY(-1px) !important;
+                box-shadow: 0 4px 12px rgba(56, 161, 105, 0.4) !important;
+            }
+            
+            /* Enhanced Content Boxes */
+            .content-box-enhanced {
+                background: #ffffff !important;
+                border: 2px solid #e9ecef !important;
+                border-radius: 12px !important;
+                padding: 20px !important;
+                margin: 16px 0 !important;
+                box-shadow: 0 4px 12px rgba(0,0,0,0.08) !important;
+                transition: all 0.3s ease !important;
+            }
+            
+            .content-box-enhanced:hover {
+                border-color: #667eea !important;
+                box-shadow: 0 6px 20px rgba(102, 126, 234, 0.15) !important;
+                transform: translateY(-2px) !important;
+            }
+            
+            .content-box-enhanced h4 {
+                color: #2c3e50 !important;
+                font-size: 16px !important;
+                font-weight: 700 !important;
+                margin: 0 0 12px 0 !important;
+                padding-bottom: 8px !important;
+                border-bottom: 2px solid #e9ecef !important;
+            }
+            
+            .content-box-enhanced p {
+                color: #4a5568 !important;
+                font-size: 14px !important;
+                line-height: 1.7 !important;
+                margin: 8px 0 !important;
+            }
+            
+            /* Enhanced Table Styling */
+            .table-enhanced {
+                background: #ffffff !important;
+                border-radius: 12px !important;
+                overflow: hidden !important;
+                box-shadow: 0 4px 12px rgba(0,0,0,0.08) !important;
+                margin: 16px 0 !important;
+            }
+            
+            .table-enhanced th {
+                background: linear-gradient(135deg, #667eea 0%, #764ba2 100%) !important;
+                color: white !important;
+                font-weight: 700 !important;
+                padding: 16px 12px !important;
+                text-align: left !important;
+                border: none !important;
+            }
+            
+            .table-enhanced td {
+                padding: 12px !important;
+                border-bottom: 1px solid #e9ecef !important;
+                color: #4a5568 !important;
+                font-weight: 500 !important;
+            }
+            
+            .table-enhanced tr:hover {
+                background-color: #f8f9fa !important;
+            }
+            
+            /* Enhanced Risk Level Indicators */
+            .risk-indicator-low {
+                background: linear-gradient(135deg, #48bb78 0%, #38a169 100%) !important;
+                color: white !important;
+                padding: 6px 12px !important;
+                border-radius: 20px !important;
+                font-weight: 700 !important;
+                font-size: 12px !important;
+                text-align: center !important;
+                display: inline-block !important;
+                box-shadow: 0 2px 8px rgba(72, 187, 120, 0.3) !important;
+            }
+            
+            .risk-indicator-medium {
+                background: linear-gradient(135deg, #ed8936 0%, #dd6b20 100%) !important;
+                color: white !important;
+                padding: 6px 12px !important;
+                border-radius: 20px !important;
+                font-weight: 700 !important;
+                font-size: 12px !important;
+                text-align: center !important;
+                display: inline-block !important;
+                box-shadow: 0 2px 8px rgba(237, 137, 54, 0.3) !important;
+            }
+            
+            .risk-indicator-high {
+                background: linear-gradient(135deg, #e53e3e 0%, #c53030 100%) !important;
+                color: white !important;
+                padding: 6px 12px !important;
+                border-radius: 20px !important;
+                font-weight: 700 !important;
+                font-size: 12px !important;
+                text-align: center !important;
+                display: inline-block !important;
+                box-shadow: 0 2px 8px rgba(229, 62, 62, 0.3) !important;
+            }
+            
+            /* Enhanced Expandable Sections */
+            .expandable-section {
+                background: #ffffff !important;
+                border: 2px solid #e9ecef !important;
+                border-radius: 12px !important;
+                margin: 16px 0 !important;
+                overflow: hidden !important;
+                box-shadow: 0 4px 12px rgba(0,0,0,0.08) !important;
+            }
+            
+            .expandable-header {
+                background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%) !important;
+                padding: 16px 20px !important;
+                cursor: pointer !important;
+                display: flex !important;
+                align-items: center !important;
+                justify-content: space-between !important;
+                border-bottom: 1px solid #e9ecef !important;
+                transition: all 0.3s ease !important;
+            }
+            
+            .expandable-header:hover {
+                background: linear-gradient(135deg, #e9ecef 0%, #dee2e6 100%) !important;
+            }
+            
+            .expandable-header h4 {
+                color: #2c3e50 !important;
+                font-size: 16px !important;
+                font-weight: 700 !important;
+                margin: 0 !important;
+                display: flex !important;
+                align-items: center !important;
+                gap: 8px !important;
+            }
+            
+            .expandable-content {
+                padding: 20px !important;
+                background: #ffffff !important;
+            }
+            
+            /* Mobile Responsiveness */
+            @media (max-width: 768px) {
+                .scenario-card {
+                    padding: 12px;
+                    margin: 6px 0;
+                }
+                
+                .scenario-header-card {
+                    padding: 16px;
+                    margin-bottom: 16px;
+                }
+                
+                .insight-item {
+                    padding: 10px;
+                    margin: 6px 0;
+                }
+                
+                .insight-number {
+                    width: 20px;
+                    height: 20px;
+                    font-size: 11px;
+                    margin-right: 8px;
+                }
+                
+                .recommendation-card {
+                    padding: 12px;
+                    margin: 8px 0;
+                }
+                
+                .priority-badge {
+                    font-size: 11px;
+                    padding: 3px 8px;
+                }
+                
+                .risk-badge {
+                    padding: 10px 16px;
+                    margin: 8px 0;
+                }
+                
+                .content-box-enhanced {
+                    padding: 16px;
+                    margin: 12px 0;
+                }
+                
+                .section-header-enhanced {
+                    font-size: 16px;
+                    padding: 10px 12px;
+                }
+            }
+            
+            /* Dark Theme Enhancements */
+            [data-theme="dark"] .scenario-card {
+                background: linear-gradient(135deg, #2d3748 0%, #4a5568 100%);
+                border-color: #4a5568;
+                color: #e2e8f0;
+            }
+            
+            [data-theme="dark"] .insight-item {
+                background: linear-gradient(135deg, #2d3748 0%, #4a5568 100%);
+                border-color: #718096;
+                color: #e2e8f0;
+            }
+            
+            [data-theme="dark"] .recommendation-card {
+                background: linear-gradient(135deg, #2d3748 0%, #4a5568 100%);
+                border-color: #718096;
+                color: #e2e8f0;
+            }
+            
+            [data-theme="dark"] .analysis-section {
+                background-color: #2d3748;
+                border-color: #4a5568;
+                color: #e2e8f0;
+            }
+            
+            [data-theme="dark"] .scenario-text-content {
+                background-color: #2d3748 !important;
+                color: #e2e8f0 !important;
+                border-color: #4a5568 !important;
+            }
+            
+            [data-theme="dark"] .scenario-text-content strong {
+                color: #90cdf4 !important;
+            }
+            
+            [data-theme="dark"] .content-box-enhanced {
+                background: #2d3748 !important;
+                border-color: #4a5568 !important;
+                color: #e2e8f0 !important;
+            }
+            
+            [data-theme="dark"] .content-box-enhanced h4 {
+                color: #e2e8f0 !important;
+                border-bottom-color: #4a5568 !important;
+            }
+            
+            [data-theme="dark"] .content-box-enhanced p {
+                color: #cbd5e0 !important;
+            }
+            
+            [data-theme="dark"] .table-enhanced {
+                background: #2d3748 !important;
+            }
+            
+            [data-theme="dark"] .table-enhanced td {
+                color: #e2e8f0 !important;
+                border-bottom-color: #4a5568 !important;
+            }
+            
+            [data-theme="dark"] .table-enhanced tr:hover {
+                background-color: #4a5568 !important;
+            }
+            
+            /* Animation for expandable sections */
+            .st-expander {
+                transition: all 0.3s ease;
+            }
+            
+            .st-expander:hover {
+                transform: translateY(-1px);
+            }
+            
+            /* Button enhancements */
+            .scenario-button {
+                background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+                color: white;
+                border: none;
+                border-radius: 8px;
+                padding: 10px 20px;
+                font-weight: 500;
+                transition: all 0.2s ease;
+                cursor: pointer;
+            }
+            
+            .scenario-button:hover {
+                transform: translateY(-1px);
+                box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
+            }
+            
+            /* Additional Mobile and Dark Theme Enhancements */
+            @media (max-width: 480px) {
+                .scenario-card {
+                    padding: 10px;
+                    margin: 4px 0;
+                }
+                
+                .scenario-header-card {
+                    padding: 14px;
+                    margin-bottom: 14px;
+                }
+                
+                .insight-item {
+                    padding: 8px;
+                    margin: 4px 0;
+                }
+                
+                .insight-number {
+                    width: 18px;
+                    height: 18px;
+                    font-size: 10px;
+                    margin-right: 6px;
+                }
+                
+                .recommendation-card {
+                    padding: 10px;
+                    margin: 6px 0;
+                }
+                
+                .priority-badge {
+                    font-size: 10px;
+                    padding: 2px 6px;
+                }
+                
+                .risk-badge {
+                    padding: 8px 12px;
+                    margin: 6px 0;
+                }
+                
+                .content-box-enhanced {
+                    padding: 14px;
+                    margin: 10px 0;
+                }
+                
+                .section-header-enhanced {
+                    font-size: 15px;
+                    padding: 8px 10px;
+                }
+                
+                .btn-primary-enhanced,
+                .btn-danger-enhanced,
+                .btn-success-enhanced {
+                    padding: 8px 12px;
+                    font-size: 12px;
+                }
+            }
+            
+            /* Enhanced Dark Theme Support */
+            @media (prefers-color-scheme: dark) {
+                .scenario-card {
+                    background: linear-gradient(135deg, #2d3748 0%, #4a5568 100%);
+                    border-color: #4a5568;
+                    color: #e2e8f0;
+                }
+                
+                .insight-item {
+                    background: linear-gradient(135deg, #2d3748 0%, #4a5568 100%);
+                    border-color: #718096;
+                    color: #e2e8f0;
+                }
+                
+                .recommendation-card {
+                    background: linear-gradient(135deg, #2d3748 0%, #4a5568 100%);
+                    border-color: #718096;
+                    color: #e2e8f0;
+                }
+                
+                .analysis-section {
+                    background-color: #2d3748;
+                    border-color: #4a5568;
+                    color: #e2e8f0;
+                }
+                
+                .scenario-text-content {
+                    background-color: #2d3748 !important;
+                    color: #e2e8f0 !important;
+                    border-color: #4a5568 !important;
+                }
+                
+                .scenario-text-content strong {
+                    color: #90cdf4 !important;
+                }
+                
+                .content-box-enhanced {
+                    background: #2d3748 !important;
+                    border-color: #4a5568 !important;
+                    color: #e2e8f0 !important;
+                }
+                
+                .content-box-enhanced h4 {
+                    color: #e2e8f0 !important;
+                    border-bottom-color: #4a5568 !important;
+                }
+                
+                .content-box-enhanced p {
+                    color: #cbd5e0 !important;
+                }
+                
+                .table-enhanced {
+                    background: #2d3748 !important;
+                }
+                
+                .table-enhanced td {
+                    color: #e2e8f0 !important;
+                    border-bottom-color: #4a5568 !important;
+                }
+                
+                .table-enhanced tr:hover {
+                    background-color: #4a5568 !important;
+                }
+                
+                .section-header-enhanced {
+                    background: linear-gradient(135deg, #2d3748 0%, #4a5568 100%) !important;
+                    color: #e2e8f0 !important;
+                    border-left-color: #667eea !important;
+                }
+                
+                .expandable-header {
+                    background: linear-gradient(135deg, #2d3748 0%, #4a5568 100%) !important;
+                    border-bottom-color: #4a5568 !important;
+                }
+                
+                .expandable-header:hover {
+                    background: linear-gradient(135deg, #4a5568 0%, #718096 100%) !important;
+                }
+                
+                .expandable-header h4 {
+                    color: #e2e8f0 !important;
+                }
+                
+                .expandable-content {
+                    background: #2d3748 !important;
+                    color: #e2e8f0 !important;
+                }
+            }
+            
+            /* Print-friendly styles */
+            @media print {
+                .scenario-card,
+                .content-box-enhanced,
+                .insight-item,
+                .recommendation-card {
+                    break-inside: avoid;
+                    page-break-inside: avoid;
+                }
+                
+                .btn-primary-enhanced,
+                .btn-danger-enhanced,
+                .btn-success-enhanced {
+                    display: none !important;
+                }
+            }
         </style>
     """, unsafe_allow_html=True)
 
@@ -970,15 +1617,21 @@ def show_auth_page():
                 except Exception as e:
                     error_msg = str(e)
                     if "400 Bad Request" in error_msg:
-                        # Fallback for non-structured errors
-                        if "Password must be at least 8 characters" in error_msg:
-                            display_error_message("Password strength requirements not met. Please check the requirements above.", "weak_password")
-                        elif "Email already registered" in error_msg:
-                            display_error_message("This email is already registered. Please use a different email or login.", "duplicate_email")
+                        if "already registered" in error_msg.lower():
+                            display_error_message("This email is already registered. Please use another email or log in instead.", "duplicate_email")
+                            # Add a helpful button to switch to login tab
+                            st.markdown("**What would you like to do?**")
+                            col1, col2 = st.columns([1, 1])
+                            with col1:
+                                if st.button("🔐 Go to Login", key="go_to_login_alt", use_container_width=True):
+                                    st.session_state.active_tab = "Login"
+                                    st.rerun()
+                            with col2:
+                                if st.button("🔄 Try Different Email", key="try_different_email_alt", use_container_width=True):
+                                    st.session_state.reg_email = ""
+                                    st.rerun()
                         elif "Invalid email format" in error_msg:
                             display_error_message("Please enter a valid email address.", "invalid_email")
-                        else:
-                            display_error_message(f"Registration failed: {error_msg}", "general")
                     else:
                         display_error_message(f"Registration failed: {error_msg}", "general")
 
@@ -1248,174 +1901,644 @@ def show_portfolio_analysis():
         else:
             st.warning("Please enter your portfolio holdings.")
 
+def create_risk_chart(risk_level: str):
+    """
+    Create a simple chart visualization for risk assessment
+    """
+    import plotly.graph_objects as go
+    
+    # Define risk levels and their values
+    risk_levels = ['LOW', 'MEDIUM', 'HIGH']
+    risk_values = [1, 2, 3]
+    
+    # Determine current risk level
+    current_risk = 1  # Default to LOW
+    if "medium" in risk_level.lower():
+        current_risk = 2
+    elif "high" in risk_level.lower():
+        current_risk = 3
+    
+    # Create colors for the chart
+    colors = ['#28a745', '#ffc107', '#dc3545']
+    
+    # Create the chart
+    fig = go.Figure()
+    
+    # Add bars for each risk level
+    for i, (level, value, color) in enumerate(zip(risk_levels, risk_values, colors)):
+        opacity = 0.3 if value != current_risk else 1.0
+        fig.add_trace(go.Bar(
+            x=[level],
+            y=[value],
+            marker_color=color,
+            opacity=opacity,
+            showlegend=False,
+            text=[f"{level} RISK" if value == current_risk else ""],
+            textposition='middle',
+            textfont=dict(color='white', size=12, weight='bold')
+        ))
+    
+    # Update layout
+    fig.update_layout(
+        title="Risk Level Assessment",
+        xaxis_title="Risk Level",
+        yaxis_title="Risk Intensity",
+        yaxis=dict(range=[0, 3.5], showticklabels=False),
+        height=200,
+        margin=dict(l=20, r=20, t=40, b=20),
+        showlegend=False,
+        plot_bgcolor='rgba(0,0,0,0)',
+        paper_bgcolor='rgba(0,0,0,0)'
+    )
+    
+    # Update axes
+    fig.update_xaxes(showgrid=False, zeroline=False)
+    fig.update_yaxes(showgrid=False, zeroline=False)
+    
+    return fig
 
 def display_scenario_analysis(result: dict):
     """
-    Enhanced display function for scenario analysis results
+    Enhanced display function for scenario analysis results with improved UI/UX
     """
-    # Custom CSS for styling is now handled by the global function at the start of the app
-    # st.markdown("""...""", unsafe_allow_html=True) is no longer needed here.
-
-    # Overview Section
-    st.markdown(f'<div class="scenario-header">Scenario Analysis Results</div>',
-                unsafe_allow_html=True)
     
-    with st.expander("📝 Analysis Overview", expanded=True):
-        st.markdown(f'<div class="insight-box">{result["narrative"]}</div>',
-                    unsafe_allow_html=True)
-
-    # Key Insights
-    col1, col2 = st.columns([2,1])
+    # Scenario Header Card
+    st.markdown("""
+        <div style="
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 20px;
+            border-radius: 12px;
+            margin-bottom: 20px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        ">
+            <h2 style="margin: 0; color: white; font-size: 24px;">🔮 Scenario Analysis Results</h2>
+            <p style="margin: 8px 0 0 0; opacity: 0.9; font-size: 14px;">
+                AI-powered market scenario impact analysis completed
+            </p>
+        </div>
+    """, unsafe_allow_html=True)
+    
+    # Create two columns for better layout
+    col1, col2 = st.columns([2, 1])
     
     with col1:
-        st.markdown('<div class="section-header">Key Insights</div>',
-                    unsafe_allow_html=True)
-        for insight in result['insights']:
-            # The global CSS now handles the text color here
-            st.write(f'• {insight}')
+        # 📝 Analysis Overview Section
+        with st.expander("📝 Analysis Overview", expanded=True):
+            st.markdown(f"""
+                <div class="content-box-enhanced">
+                    <h4>📊 Analysis Summary</h4>
+                    <div class="scenario-text-content">
+                        {result["narrative"]}
+                    </div>
+                </div>
+            """, unsafe_allow_html=True)
+        
+        # 🔑 Key Insights Section
+        with st.expander("🔑 Key Insights", expanded=True):
+            st.markdown('<div class="section-header-enhanced">Key Insights & Analysis</div>', unsafe_allow_html=True)
+            for i, insight in enumerate(result['insights'], 1):
+                st.markdown(f"""
+                    <div class="content-box-enhanced">
+                        <div style="display: flex; align-items: flex-start; gap: 12px;">
+                            <span class="insight-number">{i}</span>
+                            <div class="scenario-text-content" style="flex: 1; margin: 0;">
+                                {insight}
+                            </div>
+                        </div>
+                    </div>
+                """, unsafe_allow_html=True)
+        
+        # ✅ Actionable Recommendations Section
+        with st.expander("✅ Actionable Recommendations", expanded=True):
+            st.markdown('<div class="section-header-enhanced">Priority Actions & Recommendations</div>', unsafe_allow_html=True)
+            for i, rec in enumerate(result['recommendations'], 1):
+                st.markdown(f"""
+                    <div class="content-box-enhanced">
+                        <div style="position: relative;">
+                            <div class="priority-badge" style="position: absolute; top: -8px; left: 16px; z-index: 10;">
+                                Priority {i}
+                            </div>
+                            <div class="scenario-text-content" style="margin-top: 8px;">
+                                {rec}
+                            </div>
+                        </div>
+                    </div>
+                """, unsafe_allow_html=True)
 
     with col2:
-        st.markdown('<div class="section-header">Risk Assessment</div>',
-                    unsafe_allow_html=True)
-        risk_level = "HIGH" if "high" in result['risk_assessment'].lower() else \
-                     "MEDIUM" if "medium" in result['risk_assessment'].lower() else "LOW"
-        risk_class = f"risk-{risk_level.lower()}"
-        st.markdown(f'<div class="{risk_class}">{risk_level} RISK</div>',
-                    unsafe_allow_html=True)
-        st.write(result['risk_assessment'])
+        # 📊 Risk Assessment Section
+        with st.expander("📊 Risk Assessment", expanded=True):
+            st.markdown('<div class="section-header-enhanced">Risk Level & Impact</div>', unsafe_allow_html=True)
+            
+            # Determine risk level and color
+            risk_text = result['risk_assessment'].lower()
+            if "high" in risk_text:
+                risk_level = "HIGH RISK"
+                risk_color = "#dc3545"
+                risk_bg = "#f8d7da"
+                risk_icon = "🔴"
+                risk_class = "risk-indicator-high"
+            elif "medium" in risk_text:
+                risk_level = "MEDIUM RISK"
+                risk_color = "#ffc107"
+                risk_bg = "#fff3cd"
+                risk_icon = "🟡"
+                risk_class = "risk-indicator-medium"
+            else:
+                risk_level = "LOW RISK"
+                risk_color = "#28a745"
+                risk_bg = "#d4edda"
+                risk_icon = "🟢"
+                risk_class = "risk-indicator-low"
+            
+            # Risk Level Badge
+            st.markdown(f"""
+                <div class="content-box-enhanced">
+                    <h4>Risk Level Assessment</h4>
+                    <div class="{risk_class}">
+                        {risk_icon} {risk_level}
+                    </div>
+                </div>
+            """, unsafe_allow_html=True)
 
-    # Recommendations
-    st.markdown('<div class="section-header">Actionable Recommendations</div>',
-                unsafe_allow_html=True)
+            # Risk Chart Visualization
+            try:
+                risk_chart = create_risk_chart(result['risk_assessment'])
+                st.plotly_chart(risk_chart, use_container_width=True, config={'displayModeBar': False})
+            except Exception as e:
+                st.markdown("""
+                    <div class="content-box-enhanced">
+                        <h4>📊 Risk Visualization</h4>
+                        <p style="color: #6c757d; font-style: italic;">Risk chart visualization could not be generated</p>
+                    </div>
+                """, unsafe_allow_html=True)
+            
+            # Risk Assessment Details
+            st.markdown(f"""
+                <div class="content-box-enhanced">
+                    <h4>Detailed Risk Analysis</h4>
+                    <div class="scenario-text-content">
+                        {result['risk_assessment']}
+                    </div>
+                </div>
+            """, unsafe_allow_html=True)
+        
+        # 📈 Portfolio Impact Section (if available)
+        if 'portfolio_impact' in result:
+            with st.expander("📈 Portfolio Impact", expanded=False):
+                st.markdown(f"""
+                    <div class="content-box-enhanced">
+                        <h4>Portfolio Impact Analysis</h4>
+                        <div class="scenario-text-content">
+                            {result['portfolio_impact']}
+                        </div>
+                    </div>
+                """, unsafe_allow_html=True)
+        
+        # 📋 Analysis Summary
+        with st.expander("📋 Quick Summary", expanded=False):
+            st.markdown(f"""
+                <div class="content-box-enhanced">
+                    <h4>Analysis Summary</h4>
+                    <ul style="margin: 0; padding-left: 20px; color: #4a5568;">
+                        <li><strong>Insights:</strong> {len(result['insights'])} key points identified</li>
+                        <li><strong>Recommendations:</strong> {len(result['recommendations'])} actionable steps</li>
+                        <li><strong>Risk Level:</strong> {risk_level.lower().replace(' risk', '')}</li>
+                        <li><strong>Analysis Type:</strong> AI-powered scenario analysis</li>
+                    </ul>
+                </div>
+            """, unsafe_allow_html=True)
     
-    for i, rec in enumerate(result['recommendations'], 1):
+    # Bottom section for additional details
+    st.markdown("---")
+    
+    # 📊 Summary Statistics Section
+    st.markdown('<div class="section-header-enhanced">📊 Analysis Metrics</div>', unsafe_allow_html=True)
+    
+    # Create metrics in columns
+    col1, col2, col3, col4 = st.columns(4)
+    
+    with col1:
+        st.metric(
+            label="🔑 Key Insights",
+            value=len(result['insights']),
+            help="Number of key insights identified"
+        )
+    
+    with col2:
+        st.metric(
+            label="✅ Recommendations",
+            value=len(result['recommendations']),
+            help="Number of actionable recommendations"
+        )
+    
+    with col3:
+        st.metric(
+            label="⚠️ Risk Level",
+            value=f"{risk_icon} {risk_level}",
+            help="Current risk assessment level"
+        )
+    
+    with col4:
+        # Calculate narrative length as a complexity indicator
+        narrative_length = len(result['narrative'])
+        if narrative_length < 200:
+            complexity = "Simple"
+        elif narrative_length < 500:
+            complexity = "Moderate"
+        else:
+            complexity = "Complex"
+        
+        st.metric(
+            label="📝 Analysis Complexity",
+            value=complexity,
+            help="Based on narrative length and detail"
+        )
+    
+    st.markdown("---")
+    
+    # 📊 Detailed Analysis (Collapsible)
+    with st.expander("📊 Detailed Analysis & Methodology", expanded=False):
         st.markdown(f"""
-            <div class="insight-box">
-                <strong>{i}.</strong> {rec}
+            <div class="content-box-enhanced">
+                <h4>Analysis Methodology</h4>
+                <p>This analysis was conducted using Google Gemini AI, which analyzed the market scenario 
+                in the context of your portfolio composition, sector allocation, and risk profile. 
+                The AI considered multiple factors including market correlations, sector sensitivities, 
+                and economic indicators to provide comprehensive insights.</p>
+                <div style="
+                    background: #e9ecef;
+                    border-radius: 6px;
+                    padding: 12px;
+                    margin: 12px 0;
+                    font-size: 13px;
+                    color: #6c757d;
+                ">
+                    <strong>Note:</strong> This analysis is for informational purposes only and should not 
+                    be considered as financial advice. Always consult with a qualified financial advisor 
+                    before making investment decisions.
+                </div>
             </div>
         """, unsafe_allow_html=True)
 
-
 def show_scenario_analysis():
+    """Enhanced Scenario Analysis section with improved UI/UX"""
+    
     st.header("🔮 AI-Powered Scenario Analysis")
     
-    # Display existing scenarios if any
-    if st.session_state.scenario_results:
+    # Check if user has saved scenarios
+    if hasattr(st.session_state, 'scenario_results') and st.session_state.scenario_results:
         st.success(f"✅ You have {len(st.session_state.scenario_results)} saved scenario analyses!")
         
-        # Show recent scenarios
-        st.subheader("📋 Recent Scenario Analyses")
-        for i, result in enumerate(st.session_state.scenario_results[:3]):  # Show last 3
-            with st.expander(f"Scenario {len(st.session_state.scenario_results)-i}: {result['scenario'][:50]}...", expanded=False):
-                st.write(f"**Analyzed on:** {result['timestamp'].strftime('%Y-%m-%d %H:%M:%S')}")
-                st.write("**Scenario:**", result['scenario'])
+        # Recent Scenario Analyses Section
+        st.subheader("📊 Recent Scenario Analyses")
+        
+        # Display scenarios in a grid layout
+        if len(st.session_state.scenario_results) > 0:
+            # Create columns for grid layout
+            cols = st.columns(min(3, len(st.session_state.scenario_results)))
+            
+            for i, result in enumerate(st.session_state.scenario_results):
+                col_idx = i % 3
                 
-                # Delete button for each scenario
-                col1, col2 = st.columns([3, 1])
-                with col1:
-                    display_scenario_analysis(result['analysis'])
-                with col2:
-                    if st.button(f"🗑️ Delete", key=f"delete_scenario_{i}"):
-                        try:
-                            # Find the scenario ID from the backend
-                            scenarios = api_client.get_user_scenarios(st.session_state.access_token)
-                            if scenarios.get('scenarios'):
-                                # Find the matching scenario by timestamp
-                                target_timestamp = result['timestamp'].isoformat()
-                                for scenario in scenarios['scenarios']:
-                                    if scenario['created_at'].startswith(target_timestamp[:10]):
-                                        api_client.delete_scenario(scenario['scenario_id'], st.session_state.access_token)
-                                        st.session_state.scenario_results.pop(i)
-                                        st.success("Scenario deleted successfully!")
-                                        st.rerun()
-                                        break
-                        except Exception as e:
-                            st.error(f"❌ Error deleting scenario: {str(e)}")
+                with cols[col_idx]:
+                    # Determine risk level and styling
+                    risk_text = result['analysis']['risk_assessment'].lower()
+                    # Initialize with default values to prevent UnboundLocalError
+                    risk_color = "#28a745"  # Default to green (low risk)
+                    risk_bg = "#d4edda"
+                    risk_icon = "🟢"
+                    risk_text_short = "LOW"
+                    
+                    if "high" in risk_text:
+                        risk_color = "#dc3545"
+                        risk_bg = "#f8d7da"
+                        risk_icon = "🔴"
+                        risk_text_short = "HIGH"
+                    elif "medium" in risk_text:
+                        risk_color = "#ffc107"
+                        risk_bg = "#fff3cd"
+                        risk_icon = "🟡"
+                        risk_text_short = "MEDIUM"
+                    # else: keep default values (low risk)
+                    
+                    # Scenario Card using Streamlit components instead of raw HTML
+                    with st.container():
+                        # Add a border and background to make it look like a card
+                        st.markdown("""
+                            <style>
+                            .scenario-card-container {
+                                border: 2px solid #e9ecef;
+                                border-radius: 12px;
+                                padding: 16px;
+                                margin: 8px 0;
+                                background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+                                box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+                            }
+                            </style>
+                        """, unsafe_allow_html=True)
+                        
+                        # Card header with scenario number and risk badge
+                        col_header1, col_header2 = st.columns([3, 1])
+                        with col_header1:
+                            st.markdown(f"**🔮 Scenario {len(st.session_state.scenario_results)-i}**")
+                        with col_header2:
+                            if risk_text_short == "HIGH":
+                                st.markdown("🔴 **HIGH**", help="High Risk Scenario")
+                            elif risk_text_short == "MEDIUM":
+                                st.markdown("🟡 **MEDIUM**", help="Medium Risk Scenario")
+                            else:
+                                st.markdown("🟢 **LOW**", help="Low Risk Scenario")
+                        
+                        # Date information
+                        st.markdown(f"**Date:** {result['timestamp'].strftime('%Y-%m-%d %H:%M')}")
+                        
+                        # Scenario description
+                        st.markdown("**Scenario:**")
+                        scenario_text = result['scenario'][:60] + "..." if len(result['scenario']) > 60 else result['scenario']
+                        st.info(scenario_text)
+                        
+                        # Action buttons
+                        col_btn1, col_btn2 = st.columns(2)
+                        with col_btn1:
+                            if st.button("📊 View Full", key=f"view_{i}", use_container_width=True):
+                                st.session_state.selected_scenario = i
+                                st.rerun()
+                        with col_btn2:
+                            if st.button("🗑️ Delete", key=f"delete_{i}", use_container_width=True, type="secondary"):
+                                try:
+                                    # Find the scenario ID from the backend
+                                    scenarios = api_client.get_user_scenarios(st.session_state.access_token)
+                                    if scenarios.get('scenarios'):
+                                        # Find the matching scenario by timestamp
+                                        target_timestamp = result['timestamp'].isoformat()
+                                        for scenario in scenarios['scenarios']:
+                                            if scenario['created_at'].startswith(target_timestamp[:10]):
+                                                api_client.delete_scenario(scenario['scenario_id'], st.session_state.access_token)
+                                                st.session_state.scenario_results.pop(i)
+                                                st.success("Scenario deleted successfully!")
+                                                st.rerun()
+                                                break
+                                except Exception as e:
+                                    st.error(f"❌ Error deleting scenario: {str(e)}")
+                        
+                        # Add some spacing between cards
+                        st.markdown("---")
         
         st.markdown("---")
-    
-    st.write("Analyze how different market scenarios might affect your portfolio.")
-    
-    # Scenario selection
-    scenario_type = st.radio(
-        "Choose scenario type:",
-        ["Predefined Scenarios", "Custom Scenario"]
-    )
-    
-    if scenario_type == "Predefined Scenarios":
-        predefined_scenarios = [
-            "RBI increases repo rate by 0.5%",
-            "Oil prices surge by 20% due to geopolitical tensions",
-            "US Federal Reserve cuts interest rates",
-            "Major IT company announces poor quarterly results",
-            "Government announces new infrastructure spending",
-            "Global recession fears increase",
-            "New technology disrupts traditional banking",
-            "Inflation rises to 7%"
-        ]
         
-        selected_scenario = st.selectbox(
-            "Select a scenario:",
-            predefined_scenarios
-        )
-        scenario_text = selected_scenario
-    
-    else:
-        scenario_text = st.text_area(
-            "Describe your custom scenario:",
-            placeholder="Example: What if cryptocurrency becomes mainstream and affects traditional banking stocks?",
-            height=100
-        )
-    
-    if st.button("Analyze Scenario Impact"):
-        if scenario_text.strip():
-            try:
-                with st.spinner("🤖 AI is analyzing the scenario impact..."):
-                    result = api_client.analyze_scenario(scenario_text, 
-                                                         st.session_state.access_token)
-                    
-                    st.success("✅ Scenario analysis complete!")
-                    
-                    # Display the analysis using the new function
-                    display_scenario_analysis(result)
-                    
-                    # Store result
-                    scenario_result = {
-                        'timestamp': datetime.now(),
-                        'scenario': scenario_text,
-                        'analysis': {
-                            'narrative': result['narrative'],
-                            'insights': result['insights'],
-                            'recommendations': result['recommendations'],
-                            'risk_assessment': result['risk_assessment']
-                        }
-                    }
-                    st.session_state.scenario_results.append(scenario_result)
-                    
+        # Show full analysis if a scenario is selected
+        if 'selected_scenario' in st.session_state:
+            selected_idx = st.session_state.selected_scenario
+            if selected_idx < len(st.session_state.scenario_results):
+                selected_result = st.session_state.scenario_results[selected_idx]
+                
+                st.subheader(f"📊 Full Analysis: Scenario {len(st.session_state.scenario_results)-selected_idx}")
+                
+                # Close button
+                if st.button("❌ Close Full Analysis"):
+                    del st.session_state.selected_scenario
                     st.rerun()
                 
-            except Exception as e:
-                st.error(f"❌ Error in scenario analysis: {str(e)}")
-        else:
-            st.warning("Please enter a scenario to analyze.")
+                # Display full analysis
+                display_scenario_analysis(selected_result['analysis'])
+                
+                st.markdown("---")
+        
+        # Scenario Comparison Section (if multiple scenarios exist)
+        if len(st.session_state.scenario_results) > 1:
+            st.subheader("📊 Scenario Comparison")
+            st.write("Compare the risk levels and characteristics of your analyzed scenarios.")
+            
+            # Create comparison data
+            comparison_data = []
+            for i, result in enumerate(st.session_state.scenario_results):
+                risk_text = result['analysis']['risk_assessment'].lower()
+                if "high" in risk_text:
+                    risk_level = "HIGH"
+                    risk_score = 3
+                elif "medium" in risk_text:
+                    risk_level = "MEDIUM"
+                    risk_score = 2
+                else:
+                    risk_level = "LOW"
+                    risk_score = 1
+                
+                comparison_data.append({
+                    "Scenario": f"Scenario {len(st.session_state.scenario_results)-i}",
+                    "Date": result['timestamp'].strftime('%Y-%m-%d'),
+                    "Risk Level": risk_level,
+                    "Risk Score": risk_score,
+                    "Insights Count": len(result['analysis']['insights']),
+                    "Recommendations Count": len(result['analysis']['recommendations']),
+                    "Description": result['scenario'][:40] + "..." if len(result['scenario']) > 40 else result['scenario']
+                })
+            
+            # Display comparison table with enhanced styling
+            if comparison_data:
+                df_comparison = pd.DataFrame(comparison_data)
+                
+                # Apply enhanced table styling
+                st.markdown("""
+                    <div class="table-enhanced">
+                        <style>
+                            .dataframe {
+                                background: #ffffff !important;
+                                border-radius: 12px !important;
+                                overflow: hidden !important;
+                                box-shadow: 0 4px 12px rgba(0,0,0,0.08) !important;
+                            }
+                            .dataframe th {
+                                background: linear-gradient(135deg, #667eea 0%, #764ba2 100%) !important;
+                                color: white !important;
+                                font-weight: 700 !important;
+                                padding: 16px 12px !important;
+                                text-align: left !important;
+                                border: none !important;
+                            }
+                            .dataframe td {
+                                padding: 12px !important;
+                                border-bottom: 1px solid #e9ecef !important;
+                                color: #4a5568 !important;
+                                font-weight: 500 !important;
+                            }
+                            .dataframe tr:hover {
+                                background-color: #f8f9fa !important;
+                            }
+                        </style>
+                    </div>
+                """, unsafe_allow_html=True)
+                
+                st.dataframe(
+                    df_comparison,
+                    use_container_width=True,
+                    column_config={
+                        "Risk Score": st.column_config.NumberColumn(
+                            "Risk Score",
+                            help="1=Low, 2=Medium, 3=High",
+                            min_value=1,
+                            max_value=3
+                        )
+                    }
+                )
+                
+                # Risk distribution chart
+                try:
+                    risk_counts = df_comparison['Risk Level'].value_counts()
+                    fig_risk_dist = go.Figure(data=[
+                        go.Pie(
+                            labels=risk_counts.index,
+                            values=risk_counts.values,
+                            hole=0.4,
+                            marker_colors=['#28a745', '#ffc107', '#dc3545'],
+                            textinfo='label+percent',
+                            textfont_size=14
+                        )
+                    ])
+                    
+                    fig_risk_dist.update_layout(
+                        title="Risk Level Distribution Across Scenarios",
+                        height=300,
+                        showlegend=True,
+                        margin=dict(l=20, r=20, t=40, b=20)
+                    )
+                    
+                    st.plotly_chart(fig_risk_dist, use_container_width=True, config={'displayModeBar': False})
+                    
+                except Exception as e:
+                    st.markdown("""
+                        <div class="content-box-enhanced">
+                            <h4>📊 Risk Distribution Chart</h4>
+                            <p style="color: #6c757d; font-style: italic;">Risk distribution chart could not be generated</p>
+                        </div>
+                    """, unsafe_allow_html=True)
+        
+        st.markdown("---")
+    else:
+        # No scenarios exist yet
+        st.info("ℹ️ No saved scenario analyses found. Create your first scenario analysis below!")
+        st.markdown("---")
     
-    # Show all previous analyses in a table format
-    if len(st.session_state.scenario_results) > 3:
-        st.subheader("📊 All Scenario Analyses")
-        
-        # Create a summary table
-        scenario_summary = []
-        for i, result in enumerate(st.session_state.scenario_results):
-            scenario_summary.append({
-                "ID": len(st.session_state.scenario_results) - i,
-                "Date": result['timestamp'].strftime('%Y-%m-%d %H:%M'),
-                "Scenario": result['scenario'][:50] + "..." if len(result['scenario']) > 50 else result['scenario'],
-                "Risk Level": result['analysis']['risk_assessment'].split()[0] if result['analysis']['risk_assessment'] else "N/A"
-            })
-        
-        df = pd.DataFrame(scenario_summary)
-        st.dataframe(df, use_container_width=True)
-
+    # New Scenario Analysis Section
+    st.subheader("🔮 Analyze New Scenario")
+    st.write("Analyze how different market scenarios might affect your portfolio.")
+    
+    # Tip box
+    st.info("💡 **Tip:** You can analyze multiple scenarios and compare their impacts on your portfolio. Each analysis is automatically saved for future reference.")
+    
+    # Scenario input options
+    col1, col2 = st.columns(2)
+    
+    with col1:
+        scenario_type = st.radio(
+            "Choose scenario type:",
+            ["Predefined Scenarios", "Custom Scenario"],
+            horizontal=True
+        )
+    
+    with col2:
+        if scenario_type == "Predefined Scenarios":
+            predefined_scenarios = [
+                "Major IT company announces poor quarterly results",
+                "RBI increases repo rate by 0.5%",
+                "Global oil prices surge by 20%",
+                "New government policy affects real estate sector",
+                "Major banking sector merger announcement",
+                "Technology sector faces regulatory scrutiny"
+            ]
+            
+            selected_scenario = st.selectbox(
+                "Select a scenario:",
+                predefined_scenarios,
+                help="Choose from common market scenarios"
+            )
+            
+            # Show scenario description
+            scenario_descriptions = {
+                "Major IT company announces poor quarterly results": "Technology sector scenario - Affects IT stocks, software companies, and tech-dependent sectors",
+                "RBI increases repo rate by 0.5%": "Monetary Policy Scenario - Affects banking, real estate, and interest-sensitive sectors",
+                "Global oil prices surge by 20%": "Energy sector scenario - Affects oil companies, transportation, and energy-dependent industries",
+                "New government policy affects real estate sector": "Policy scenario - Affects real estate, construction, and related financial services",
+                "Major banking sector merger announcement": "Financial sector scenario - Affects banking stocks, financial services, and market sentiment",
+                "Technology sector faces regulatory scrutiny": "Regulatory scenario - Affects tech companies, compliance costs, and sector valuations"
+            }
+            
+            if selected_scenario in scenario_descriptions:
+                st.markdown(f"""
+                    <div style="
+                        background: linear-gradient(135deg, #d4edda 0%, #c3e6cb 100%);
+                        border: 1px solid #28a745;
+                        border-radius: 8px;
+                        padding: 12px;
+                        margin: 8px 0;
+                    ">
+                        <strong style="color: #155724;">📋 Scenario Details:</strong><br>
+                        <span style="color: #155724; font-size: 13px;">{scenario_descriptions[selected_scenario]}</span>
+                    </div>
+                """, unsafe_allow_html=True)
+        else:
+            selected_scenario = st.text_area(
+                "Describe your custom scenario:",
+                placeholder="e.g., A major company in the pharmaceutical sector announces breakthrough drug approval...",
+                height=100,
+                help="Describe any market scenario you want to analyze"
+            )
+    
+    # Analysis button
+    if st.button("🤖 Analyze Scenario Impact", type="primary", use_container_width=True):
+        if selected_scenario and selected_scenario.strip():
+            # Check if user is authenticated
+            if 'access_token' not in st.session_state or not st.session_state.access_token:
+                st.error("❌ Please log in first to analyze scenarios.")
+                return
+            
+            with st.spinner("🔮 AI is analyzing your scenario..."):
+                try:
+                    # Call the scenario analysis API with the required token parameter
+                    response = api_client.analyze_scenario(selected_scenario, st.session_state.access_token)
+                    
+                    if response and 'narrative' in response:
+                        # Store the result
+                        if 'scenario_results' not in st.session_state:
+                            st.session_state.scenario_results = []
+                        
+                        result_entry = {
+                            'scenario': selected_scenario,
+                            'analysis': response,  # Store the entire response as analysis
+                            'timestamp': datetime.now()
+                        }
+                        
+                        st.session_state.scenario_results.insert(0, result_entry)
+                        
+                        # Show success message
+                        st.success("✅ Scenario analysis completed successfully!")
+                        
+                        # Display the results
+                        st.markdown("---")
+                        st.subheader("📊 Analysis Results")
+                        display_scenario_analysis(response)
+                        
+                        # Rerun to refresh the display
+                        st.rerun()
+                    else:
+                        st.error("❌ Failed to analyze scenario. Please try again.")
+                        
+                except Exception as e:
+                    error_msg = str(e)
+                    if "401" in error_msg or "Unauthorized" in error_msg:
+                        st.error("❌ Authentication expired. Please log in again.")
+                        # Clear the session and redirect to login
+                        st.session_state.clear()
+                        st.rerun()
+                    elif "500" in error_msg or "Internal Server Error" in error_msg:
+                        st.error("❌ Server error occurred. Please try again later.")
+                    elif "timeout" in error_msg.lower():
+                        st.error("❌ Request timed out. Please try again.")
+                    else:
+                        st.error(f"❌ Error analyzing scenario: {error_msg}")
+        else:
+            st.warning("⚠️ Please enter a scenario to analyze.")
 
 def show_export_options():
     st.header("📋 Export Your Analysis Results")
