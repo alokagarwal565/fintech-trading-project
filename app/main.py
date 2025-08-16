@@ -1680,6 +1680,10 @@ def show_auth_page():
     if 'active_tab' not in st.session_state:
         st.session_state.active_tab = "Login"
     
+    # Initialize form key for registration form
+    if 'form_key' not in st.session_state:
+        st.session_state.form_key = 0
+    
     # Create tabs
     tab1, tab2 = st.tabs(["Login", "Register"])
     
@@ -1722,77 +1726,93 @@ def show_auth_page():
     with tab2:
         st.subheader("Create New Account")
         
-        # Registration form with real-time password validation
-        reg_email = st.text_input("Email", key="reg_email")
-        reg_password = st.text_input("Password", type="password", key="reg_password")
+        # Use form keys that can be safely cleared
+        if "registration_success" not in st.session_state:
+            st.session_state.registration_success = False
         
-        # Real-time password validation
-        if reg_password:
-            with st.container():
-                st.markdown("---")
-                st.markdown("**🔒 Password Strength Check**")
-                password_valid = display_password_validation(reg_password, st)
-                st.markdown("---")
-        
-        reg_full_name = st.text_input("Full Name (Optional)", key="reg_full_name")
-        
-        # Registration button with validation
-        if st.button("Register", key="register_btn"):
-            if not reg_email or not reg_password:
-                st.warning("Please enter both email and password.")
-            elif reg_password and not password_valid:
-                display_error_message("Your password is too weak. Please fulfill all requirements.", "weak_password")
-            else:
-                try:
-                    with st.spinner("Creating account..."):
-                        result = api_client.register_user(reg_email, reg_password, reg_full_name)
-                        st.success("✅ Account created successfully! Please login.")
-                    # Clear form
-                    st.session_state.reg_email = ""
-                    st.session_state.reg_password = ""
-                    st.session_state.reg_full_name = ""
-                    st.rerun()
-                except APIError as e:
-                    # Handle structured API errors
-                    if e.error_type == "duplicate_email":
-                        display_error_message(e.message, "duplicate_email")
-                        # Add a helpful button to switch to login tab
-                        st.markdown("**What would you like to do?**")
-                        col1, col2 = st.columns([1, 1])
-                        with col1:
-                            if st.button("🔐 Go to Login", key="go_to_login", use_container_width=True):
-                                st.session_state.active_tab = "Login"
-                                st.rerun()
-                        with col2:
-                            if st.button("🔄 Try Different Email", key="try_different_email", use_container_width=True):
-                                st.session_state.reg_email = ""
-                                st.rerun()
-                    elif e.error_type == "invalid_email":
-                        display_error_message(e.message, "invalid_email")
-                    elif e.error_type == "weak_password":
-                        display_error_message(e.message, "weak_password")
-                    else:
-                        display_error_message(e.message, "general")
-                except Exception as e:
-                    error_msg = str(e)
-                    if "400 Bad Request" in error_msg:
-                        if "already registered" in error_msg.lower():
-                            display_error_message("This email is already registered. Please use another email or log in instead.", "duplicate_email")
+        if st.session_state.registration_success:
+            st.success("✅ Account created successfully! Please login.")
+            # Reset the success flag
+            st.session_state.registration_success = False
+            # Clear form by using unique keys that can be safely reset
+            if "form_key" not in st.session_state:
+                st.session_state.form_key = 0
+            st.session_state.form_key += 1
+        else:
+            # Registration form with real-time password validation
+            reg_email = st.text_input("Email", key=f"reg_email_{st.session_state.form_key}")
+            reg_password = st.text_input("Password", type="password", key=f"reg_password_{st.session_state.form_key}")
+            
+            # Real-time password validation
+            if reg_password:
+                with st.container():
+                    st.markdown("---")
+                    st.markdown("**🔒 Password Strength Check**")
+                    password_valid = display_password_validation(reg_password, st)
+                    st.markdown("---")
+            
+            reg_full_name = st.text_input("Full Name (Optional)", key=f"reg_full_name_{st.session_state.form_key}")
+            
+            # Registration button with validation
+            if st.button("Register", key=f"register_btn_{st.session_state.form_key}"):
+                if not reg_email or not reg_password:
+                    st.warning("Please enter both email and password.")
+                elif reg_password and not password_valid:
+                    display_error_message("Your password is too weak. Please fulfill all requirements.", "weak_password")
+                else:
+                    try:
+                        with st.spinner("Creating account..."):
+                            result = api_client.register_user(reg_email, reg_password, reg_full_name)
+                            # Set success flag instead of trying to clear session state
+                            st.session_state.registration_success = True
+                            st.rerun()
+                    except APIError as e:
+                        # Handle structured API errors
+                        if e.error_type == "duplicate_email":
+                            display_error_message(e.message, "duplicate_email")
                             # Add a helpful button to switch to login tab
                             st.markdown("**What would you like to do?**")
                             col1, col2 = st.columns([1, 1])
                             with col1:
-                                if st.button("🔐 Go to Login", key="go_to_login_alt", use_container_width=True):
+                                if st.button("🔐 Go to Login", key="go_to_login", use_container_width=True):
                                     st.session_state.active_tab = "Login"
                                     st.rerun()
                             with col2:
-                                if st.button("🔄 Try Different Email", key="try_different_email_alt", use_container_width=True):
-                                    st.session_state.reg_email = ""
+                                if st.button("🔄 Try Different Email", key="try_different_email", use_container_width=True):
+                                    # Reset form key to clear form
+                                    if "form_key" not in st.session_state:
+                                        st.session_state.form_key = 0
+                                    st.session_state.form_key += 1
                                     st.rerun()
-                        elif "Invalid email format" in error_msg:
-                            display_error_message("Please enter a valid email address.", "invalid_email")
-                    else:
-                        display_error_message(f"Registration failed: {error_msg}", "general")
+                        elif e.error_type == "invalid_email":
+                            display_error_message(e.message, "invalid_email")
+                        elif e.error_type == "weak_password":
+                            display_error_message(e.message, "weak_password")
+                        else:
+                            display_error_message(e.message, "general")
+                    except Exception as e:
+                        error_msg = str(e)
+                        if "400 Bad Request" in error_msg:
+                            if "already registered" in error_msg.lower():
+                                display_error_message("This email is already registered. Please use another email or log in instead.", "duplicate_email")
+                                # Add a helpful button to switch to login tab
+                                st.markdown("**What would you like to do?**")
+                                col1, col2 = st.columns([1, 1])
+                                with col1:
+                                    if st.button("🔐 Go to Login", key="go_to_login_alt", use_container_width=True):
+                                        st.session_state.active_tab = "Login"
+                                        st.rerun()
+                                with col2:
+                                    if st.button("🔄 Try Different Email", key="try_different_email_alt", use_container_width=True):
+                                        # Reset form key to clear form
+                                        if "form_key" not in st.session_state:
+                                            st.session_state.form_key = 0
+                                        st.session_state.form_key += 1
+                                        st.rerun()
+                            elif "Invalid email format" in error_msg:
+                                display_error_message("Please enter a valid email address.", "invalid_email")
+                        else:
+                            display_error_message(f"Registration failed: {error_msg}", "general")
 
 def show_risk_profiling():
     st.header("🎯 Risk Tolerance Assessment")
