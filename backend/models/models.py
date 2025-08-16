@@ -80,6 +80,9 @@ class Scenario(SQLModel, table=True):
     insights: str  # JSON string of insights list
     recommendations: str  # JSON string of recommendations list
     risk_assessment: str
+    risk_details: Optional[str] = None  # JSON string of risk details
+    portfolio_impact: Optional[str] = None  # JSON string of portfolio impact analysis
+    portfolio_composition: Optional[str] = None  # JSON string of portfolio composition analysis
     created_at: datetime = Field(default_factory=datetime.utcnow)
     
     # Relationships

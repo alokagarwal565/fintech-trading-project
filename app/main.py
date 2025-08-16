@@ -1419,15 +1419,26 @@ def load_user_data():
             if user_data.get('scenarios'):
                 st.session_state.scenario_results = []
                 for scenario in user_data['scenarios']:
+                    # Create analysis structure with all available fields
+                    analysis = {
+                        'narrative': scenario['narrative'],
+                        'insights': scenario['insights'],
+                        'recommendations': scenario['recommendations'],
+                        'risk_assessment': scenario['risk_assessment']
+                    }
+                    
+                    # Add additional fields if they exist in the scenario data
+                    if 'risk_details' in scenario:
+                        analysis['risk_details'] = scenario['risk_details']
+                    if 'portfolio_impact' in scenario:
+                        analysis['portfolio_impact'] = scenario['portfolio_impact']
+                    if 'portfolio_composition' in scenario:
+                        analysis['portfolio_composition'] = scenario['portfolio_composition']
+                    
                     scenario_result = {
                         'timestamp': datetime.fromisoformat(scenario['created_at'].replace('Z', '+00:00')),
                         'scenario': scenario['scenario_text'],
-                        'analysis': {
-                            'narrative': scenario['narrative'],
-                            'insights': scenario['insights'],
-                            'recommendations': scenario['recommendations'],
-                            'risk_assessment': scenario['risk_assessment']
-                        }
+                        'analysis': analysis
                     }
                     st.session_state.scenario_results.append(scenario_result)
             
@@ -1959,7 +1970,7 @@ def create_risk_chart(risk_level: str):
 
 def display_scenario_analysis(result: dict):
     """
-    Enhanced display function for scenario analysis results with improved UI/UX
+    Enhanced display function for scenario analysis results with dynamic portfolio-aware analysis
     """
     
     # Scenario Header Card
@@ -1972,22 +1983,22 @@ def display_scenario_analysis(result: dict):
             margin-bottom: 20px;
             box-shadow: 0 4px 15px rgba(0,0,0,0.1);
         ">
-            <h2 style="margin: 0; color: white; font-size: 24px;">🔮 Scenario Analysis Results</h2>
+            <h2 style="margin: 0; color: white; font-size: 24px;">🔮 Dynamic Scenario Analysis Results</h2>
             <p style="margin: 8px 0 0 0; opacity: 0.9; font-size: 14px;">
-                AI-powered market scenario impact analysis completed
+                Portfolio-aware AI analysis with dynamic risk assessment
             </p>
         </div>
     """, unsafe_allow_html=True)
     
-    # Create two columns for better layout
-    col1, col2 = st.columns([2, 1])
+    # Create three columns for better layout
+    col1, col2, col3 = st.columns([2, 1, 1])
     
     with col1:
         # 📝 Analysis Overview Section
         with st.expander("📝 Analysis Overview", expanded=True):
             st.markdown(f"""
                 <div class="content-box-enhanced">
-                    <h4>📊 Analysis Summary</h4>
+                    <h4>📊 Dynamic Analysis Summary</h4>
                     <div class="scenario-text-content">
                         {result["narrative"]}
                     </div>
@@ -1996,7 +2007,7 @@ def display_scenario_analysis(result: dict):
         
         # 🔑 Key Insights Section
         with st.expander("🔑 Key Insights", expanded=True):
-            st.markdown('<div class="section-header-enhanced">Key Insights & Analysis</div>', unsafe_allow_html=True)
+            st.markdown('<div class="section-header-enhanced">Portfolio-Specific Insights</div>', unsafe_allow_html=True)
             for i, insight in enumerate(result['insights'], 1):
                 st.markdown(f"""
                     <div class="content-box-enhanced">
@@ -2011,7 +2022,7 @@ def display_scenario_analysis(result: dict):
         
         # ✅ Actionable Recommendations Section
         with st.expander("✅ Actionable Recommendations", expanded=True):
-            st.markdown('<div class="section-header-enhanced">Priority Actions & Recommendations</div>', unsafe_allow_html=True)
+            st.markdown('<div class="section-header-enhanced">Portfolio-Specific Actions</div>', unsafe_allow_html=True)
             for i, rec in enumerate(result['recommendations'], 1):
                 st.markdown(f"""
                     <div class="content-box-enhanced">
@@ -2027,26 +2038,26 @@ def display_scenario_analysis(result: dict):
                 """, unsafe_allow_html=True)
 
     with col2:
-        # 📊 Risk Assessment Section
-        with st.expander("📊 Risk Assessment", expanded=True):
-            st.markdown('<div class="section-header-enhanced">Risk Level & Impact</div>', unsafe_allow_html=True)
+        # 📊 Enhanced Risk Assessment Section
+        with st.expander("📊 Dynamic Risk Assessment", expanded=True):
+            st.markdown('<div class="section-header-enhanced">Portfolio-Specific Risk Analysis</div>', unsafe_allow_html=True)
+            
+            # Get risk details if available
+            risk_details = result.get('risk_details', {})
+            risk_level = result['risk_assessment']
             
             # Determine risk level and color
-            risk_text = result['risk_assessment'].lower()
-            if "high" in risk_text:
-                risk_level = "HIGH RISK"
+            if risk_level in ['CRITICAL', 'HIGH']:
                 risk_color = "#dc3545"
                 risk_bg = "#f8d7da"
                 risk_icon = "🔴"
                 risk_class = "risk-indicator-high"
-            elif "medium" in risk_text:
-                risk_level = "MEDIUM RISK"
+            elif risk_level == 'MEDIUM':
                 risk_color = "#ffc107"
                 risk_bg = "#fff3cd"
                 risk_icon = "🟡"
                 risk_class = "risk-indicator-medium"
             else:
-                risk_level = "LOW RISK"
                 risk_color = "#28a745"
                 risk_bg = "#d4edda"
                 risk_icon = "🟢"
@@ -2057,130 +2068,98 @@ def display_scenario_analysis(result: dict):
                 <div class="content-box-enhanced">
                     <h4>Risk Level Assessment</h4>
                     <div class="{risk_class}">
-                        {risk_icon} {risk_level}
+                        {risk_icon} {risk_level} RISK
                     </div>
                 </div>
             """, unsafe_allow_html=True)
-
-            # Risk Chart Visualization
-            try:
-                risk_chart = create_risk_chart(result['risk_assessment'])
-                st.plotly_chart(risk_chart, use_container_width=True, config={'displayModeBar': False})
-            except Exception as e:
-                st.markdown("""
-                    <div class="content-box-enhanced">
-                        <h4>📊 Risk Visualization</h4>
-                        <p style="color: #6c757d; font-style: italic;">Risk chart visualization could not be generated</p>
-                    </div>
-                """, unsafe_allow_html=True)
             
-            # Risk Assessment Details
-            st.markdown(f"""
-                <div class="content-box-enhanced">
-                    <h4>Detailed Risk Analysis</h4>
-                    <div class="scenario-text-content">
-                        {result['risk_assessment']}
-                    </div>
-                </div>
-            """, unsafe_allow_html=True)
-        
-        # 📈 Portfolio Impact Section (if available)
-        if 'portfolio_impact' in result:
-            with st.expander("📈 Portfolio Impact", expanded=False):
+            # Risk Score if available
+            if 'score' in risk_details:
                 st.markdown(f"""
                     <div class="content-box-enhanced">
-                        <h4>Portfolio Impact Analysis</h4>
-                        <div class="scenario-text-content">
-                            {result['portfolio_impact']}
+                        <h4>Risk Score</h4>
+                        <div style="font-size: 24px; font-weight: bold; color: {risk_color};">
+                            {risk_details['score']:.1f}/100
                         </div>
                     </div>
                 """, unsafe_allow_html=True)
-        
-        # 📋 Analysis Summary
-        with st.expander("📋 Quick Summary", expanded=False):
-            st.markdown(f"""
-                <div class="content-box-enhanced">
-                    <h4>Analysis Summary</h4>
-                    <ul style="margin: 0; padding-left: 20px; color: #4a5568;">
-                        <li><strong>Insights:</strong> {len(result['insights'])} key points identified</li>
-                        <li><strong>Recommendations:</strong> {len(result['recommendations'])} actionable steps</li>
-                        <li><strong>Risk Level:</strong> {risk_level.lower().replace(' risk', '')}</li>
-                        <li><strong>Analysis Type:</strong> AI-powered scenario analysis</li>
-                    </ul>
-                </div>
-            """, unsafe_allow_html=True)
-    
-    # Bottom section for additional details
-    st.markdown("---")
-    
-    # 📊 Summary Statistics Section
-    st.markdown('<div class="section-header-enhanced">📊 Analysis Metrics</div>', unsafe_allow_html=True)
-    
-    # Create metrics in columns
-    col1, col2, col3, col4 = st.columns(4)
-    
-    with col1:
-        st.metric(
-            label="🔑 Key Insights",
-            value=len(result['insights']),
-            help="Number of key insights identified"
-        )
-    
-    with col2:
-        st.metric(
-            label="✅ Recommendations",
-            value=len(result['recommendations']),
-            help="Number of actionable recommendations"
-        )
-    
+            
+            # Primary Risk Factors
+            if 'primary_factors' in risk_details and risk_details['primary_factors']:
+                st.markdown("""
+                    <div class="content-box-enhanced">
+                        <h4>Primary Risk Factors</h4>
+                    </div>
+                """, unsafe_allow_html=True)
+                for factor in risk_details['primary_factors']:
+                    st.markdown(f"""
+                        <div class="content-box-enhanced" style="margin-top: 8px;">
+                            <div style="color: #dc3545;">⚠️ {factor}</div>
+                        </div>
+                    """, unsafe_allow_html=True)
+
     with col3:
-        st.metric(
-            label="⚠️ Risk Level",
-            value=f"{risk_icon} {risk_level}",
-            help="Current risk assessment level"
-        )
-    
-    with col4:
-        # Calculate narrative length as a complexity indicator
-        narrative_length = len(result['narrative'])
-        if narrative_length < 200:
-            complexity = "Simple"
-        elif narrative_length < 500:
-            complexity = "Moderate"
-        else:
-            complexity = "Complex"
-        
-        st.metric(
-            label="📝 Analysis Complexity",
-            value=complexity,
-            help="Based on narrative length and detail"
-        )
-    
-    st.markdown("---")
-    
-    # 📊 Detailed Analysis (Collapsible)
-    with st.expander("📊 Detailed Analysis & Methodology", expanded=False):
-        st.markdown(f"""
-            <div class="content-box-enhanced">
-                <h4>Analysis Methodology</h4>
-                <p>This analysis was conducted using Google Gemini AI, which analyzed the market scenario 
-                in the context of your portfolio composition, sector allocation, and risk profile. 
-                The AI considered multiple factors including market correlations, sector sensitivities, 
-                and economic indicators to provide comprehensive insights.</p>
-                <div style="
-                    background: #e9ecef;
-                    border-radius: 6px;
-                    padding: 12px;
-                    margin: 12px 0;
-                    font-size: 13px;
-                    color: #6c757d;
-                ">
-                    <strong>Note:</strong> This analysis is for informational purposes only and should not 
-                    be considered as financial advice. Always consult with a qualified financial advisor 
-                    before making investment decisions.
-                </div>
-            </div>
-        """, unsafe_allow_html=True)
+        # 📈 Portfolio Impact Analysis
+        with st.expander("📈 Portfolio Impact", expanded=True):
+            st.markdown('<div class="section-header-enhanced">Scenario Impact Analysis</div>', unsafe_allow_html=True)
+            
+            portfolio_impact = result.get('portfolio_impact', {})
+            portfolio_composition = result.get('portfolio_composition', {})
+            
+            # Impact Severity
+            if 'impact_severity' in portfolio_impact:
+                severity = portfolio_impact['impact_severity']
+                severity_color = "#dc3545" if severity == "HIGH" else "#ffc107" if severity == "MEDIUM" else "#28a745"
+                st.markdown(f"""
+                    <div class="content-box-enhanced">
+                        <h4>Impact Severity</h4>
+                        <div style="font-size: 18px; font-weight: bold; color: {severity_color};">
+                            {severity}
+                        </div>
+                    </div>
+                """, unsafe_allow_html=True)
+            
+            # Portfolio Composition Summary
+            if portfolio_composition:
+                st.markdown("""
+                    <div class="content-box-enhanced">
+                        <h4>Portfolio Composition</h4>
+                    </div>
+                """, unsafe_allow_html=True)
+                
+                # Diversification Level
+                if 'diversification_level' in portfolio_composition:
+                    div_level = portfolio_composition['diversification_level']
+                    div_color = "#dc3545" if "CONCENTRATION" in div_level else "#ffc107" if "MODERATE" in div_level else "#28a745"
+                    st.markdown(f"""
+                        <div style="color: {div_color}; font-weight: bold; margin: 8px 0;">
+                            {div_level.replace('_', ' ').title()}
+                        </div>
+                    """, unsafe_allow_html=True)
+                
+                # Key Stats
+                if 'num_holdings' in portfolio_composition and 'num_sectors' in portfolio_composition:
+                    st.markdown(f"""
+                        <div style="font-size: 12px; color: #6c757d; margin: 8px 0;">
+                            {portfolio_composition['num_holdings']} holdings across {portfolio_composition['num_sectors']} sectors
+                        </div>
+                    """, unsafe_allow_html=True)
+            
+            # Affected Sectors
+            if 'affected_sectors' in portfolio_impact and portfolio_impact['affected_sectors']:
+                st.markdown("""
+                    <div class="content-box-enhanced">
+                        <h4>Most Affected Sectors</h4>
+                    </div>
+                """, unsafe_allow_html=True)
+                for sector_risk in portfolio_impact['affected_sectors'][:3]:  # Show top 3
+                    risk_color = "#dc3545" if sector_risk['risk_level'] == "HIGH" else "#ffc107" if sector_risk['risk_level'] == "MEDIUM" else "#28a745"
+                    st.markdown(f"""
+                        <div style="margin: 4px 0; font-size: 12px;">
+                            <span style="color: {risk_color}; font-weight: bold;">{sector_risk['sector']}</span>
+                            <span style="color: #6c757d;"> ({sector_risk['weight']:.1f}%)</span>
+                        </div>
+                    """, unsafe_allow_html=True)
 
 def show_scenario_analysis():
     """Enhanced Scenario Analysis section with improved UI/UX"""
@@ -2203,25 +2182,25 @@ def show_scenario_analysis():
                 col_idx = i % 3
                 
                 with cols[col_idx]:
-                    # Determine risk level and styling
-                    risk_text = result['analysis']['risk_assessment'].lower()
-                    # Initialize with default values to prevent UnboundLocalError
-                    risk_color = "#28a745"  # Default to green (low risk)
-                    risk_bg = "#d4edda"
-                    risk_icon = "🟢"
-                    risk_text_short = "LOW"
+                    # Get risk level from the new dynamic structure
+                    risk_level = result['analysis'].get('risk_assessment', 'LOW')
                     
-                    if "high" in risk_text:
+                    # Determine risk styling based on actual risk level
+                    if risk_level in ['CRITICAL', 'HIGH']:
                         risk_color = "#dc3545"
                         risk_bg = "#f8d7da"
                         risk_icon = "🔴"
-                        risk_text_short = "HIGH"
-                    elif "medium" in risk_text:
+                        risk_text_short = "HIGH" if risk_level == "HIGH" else "CRITICAL"
+                    elif risk_level == 'MEDIUM':
                         risk_color = "#ffc107"
                         risk_bg = "#fff3cd"
                         risk_icon = "🟡"
                         risk_text_short = "MEDIUM"
-                    # else: keep default values (low risk)
+                    else:  # LOW or MINIMAL
+                        risk_color = "#28a745"
+                        risk_bg = "#d4edda"
+                        risk_icon = "🟢"
+                        risk_text_short = "LOW"
                     
                     # Scenario Card using Streamlit components instead of raw HTML
                     with st.container():
@@ -2244,7 +2223,9 @@ def show_scenario_analysis():
                         with col_header1:
                             st.markdown(f"**🔮 Scenario {len(st.session_state.scenario_results)-i}**")
                         with col_header2:
-                            if risk_text_short == "HIGH":
+                            if risk_text_short == "CRITICAL":
+                                st.markdown("🔴 **CRITICAL**", help="Critical Risk Scenario")
+                            elif risk_text_short == "HIGH":
                                 st.markdown("🔴 **HIGH**", help="High Risk Scenario")
                             elif risk_text_short == "MEDIUM":
                                 st.markdown("🟡 **MEDIUM**", help="Medium Risk Scenario")
@@ -2311,27 +2292,28 @@ def show_scenario_analysis():
             st.subheader("📊 Scenario Comparison")
             st.write("Compare the risk levels and characteristics of your analyzed scenarios.")
             
-            # Create comparison data
+            # Create comparison data with actual risk scores
             comparison_data = []
             for i, result in enumerate(st.session_state.scenario_results):
-                risk_text = result['analysis']['risk_assessment'].lower()
-                if "high" in risk_text:
-                    risk_level = "HIGH"
-                    risk_score = 3
-                elif "medium" in risk_text:
-                    risk_level = "MEDIUM"
-                    risk_score = 2
+                risk_level = result['analysis'].get('risk_assessment', 'LOW')
+                risk_details = result['analysis'].get('risk_details', {})
+                actual_risk_score = risk_details.get('score', 0)
+                
+                # Convert risk level to display format
+                if risk_level in ['CRITICAL', 'HIGH']:
+                    display_risk_level = risk_level
+                elif risk_level == 'MEDIUM':
+                    display_risk_level = 'MEDIUM'
                 else:
-                    risk_level = "LOW"
-                    risk_score = 1
+                    display_risk_level = 'LOW'
                 
                 comparison_data.append({
                     "Scenario": f"Scenario {len(st.session_state.scenario_results)-i}",
                     "Date": result['timestamp'].strftime('%Y-%m-%d'),
-                    "Risk Level": risk_level,
-                    "Risk Score": risk_score,
-                    "Insights Count": len(result['analysis']['insights']),
-                    "Recommendations Count": len(result['analysis']['recommendations']),
+                    "Risk Level": display_risk_level,
+                    "Risk Score": actual_risk_score,
+                    "Insights Count": len(result['analysis'].get('insights', [])),
+                    "Recommendations Count": len(result['analysis'].get('recommendations', [])),
                     "Description": result['scenario'][:40] + "..." if len(result['scenario']) > 40 else result['scenario']
                 })
             
@@ -2376,45 +2358,42 @@ def show_scenario_analysis():
                     column_config={
                         "Risk Score": st.column_config.NumberColumn(
                             "Risk Score",
-                            help="1=Low, 2=Medium, 3=High",
-                            min_value=1,
-                            max_value=3
+                            help="Actual calculated risk score (0-100)",
+                            min_value=0,
+                            max_value=100,
+                            format="%.1f"
                         )
                     }
                 )
                 
-                # Risk distribution chart
-                try:
-                    risk_counts = df_comparison['Risk Level'].value_counts()
-                    fig_risk_dist = go.Figure(data=[
+                # Risk Level Distribution Chart
+                st.subheader("📊 Risk Level Distribution Across Scenarios")
+                
+                # Count risk levels
+                risk_counts = {}
+                for data in comparison_data:
+                    risk_level = data['Risk Level']
+                    risk_counts[risk_level] = risk_counts.get(risk_level, 0) + 1
+                
+                if risk_counts:
+                    # Create pie chart
+                    fig = go.Figure(data=[
                         go.Pie(
-                            labels=risk_counts.index,
-                            values=risk_counts.values,
+                            labels=list(risk_counts.keys()),
+                            values=list(risk_counts.values()),
                             hole=0.4,
-                            marker_colors=['#28a745', '#ffc107', '#dc3545'],
-                            textinfo='label+percent',
-                            textfont_size=14
+                            marker_colors=['#dc3545', '#ffc107', '#28a745', '#6c757d']  # Red, Yellow, Green, Grey
                         )
                     ])
                     
-                    fig_risk_dist.update_layout(
-                        title="Risk Level Distribution Across Scenarios",
-                        height=300,
+                    fig.update_layout(
+                        title="Risk Level Distribution",
                         showlegend=True,
-                        margin=dict(l=20, r=20, t=40, b=20)
+                        height=400,
+                        margin=dict(t=50, b=50, l=50, r=50)
                     )
                     
-                    st.plotly_chart(fig_risk_dist, use_container_width=True, config={'displayModeBar': False})
-                    
-                except Exception as e:
-                    st.markdown("""
-                        <div class="content-box-enhanced">
-                            <h4>📊 Risk Distribution Chart</h4>
-                            <p style="color: #6c757d; font-style: italic;">Risk distribution chart could not be generated</p>
-                        </div>
-                    """, unsafe_allow_html=True)
-        
-        st.markdown("---")
+                    st.plotly_chart(fig, use_container_width=True, config={'displayModeBar': False})
     else:
         # No scenarios exist yet
         st.info("ℹ️ No saved scenario analyses found. Create your first scenario analysis below!")

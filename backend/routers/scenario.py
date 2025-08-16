@@ -15,7 +15,7 @@ async def analyze_scenario(
     session: Session = Depends(get_session)
 ):
     """
-    Analyze market scenario impact on user's portfolio
+    Analyze market scenario impact on user's portfolio with dynamic portfolio-aware analysis
     """
     try:
         service = ScenarioService()
@@ -26,20 +26,24 @@ async def analyze_scenario(
             request.portfolio_id
         )
         
-        # Save to database
+        # Save to database with enhanced data
         scenario = Scenario(
             user_id=current_user.id,
             scenario_text=request.scenario_text,
             analysis_narrative=result['narrative'],
             insights=json.dumps(result['insights']),
             recommendations=json.dumps(result['recommendations']),
-            risk_assessment=result['risk_assessment']
+            risk_assessment=result['risk_assessment'],
+            risk_details=json.dumps(result.get('risk_details', {})),
+            portfolio_impact=json.dumps(result.get('portfolio_impact', {})),
+            portfolio_composition=json.dumps(result.get('portfolio_composition', {}))
         )
         
         session.add(scenario)
         session.commit()
         session.refresh(scenario)
         
+        # Return enhanced response with portfolio analysis data
         return {
             "scenario_id": scenario.id,
             "scenario_text": request.scenario_text,
@@ -47,6 +51,9 @@ async def analyze_scenario(
             "insights": result['insights'],
             "recommendations": result['recommendations'],
             "risk_assessment": result['risk_assessment'],
+            "risk_details": result.get('risk_details', {}),
+            "portfolio_impact": result.get('portfolio_impact', {}),
+            "portfolio_composition": result.get('portfolio_composition', {}),
             "created_at": scenario.created_at.isoformat()
         }
         
@@ -70,7 +77,7 @@ async def get_user_scenarios(
         
         scenarios_data = []
         for scenario in scenarios:
-            scenarios_data.append({
+            scenario_data = {
                 "scenario_id": scenario.id,
                 "scenario_text": scenario.scenario_text,
                 "narrative": scenario.analysis_narrative,
@@ -78,7 +85,17 @@ async def get_user_scenarios(
                 "recommendations": json.loads(scenario.recommendations),
                 "risk_assessment": scenario.risk_assessment,
                 "created_at": scenario.created_at.isoformat()
-            })
+            }
+            
+            # Add new fields if they exist
+            if scenario.risk_details:
+                scenario_data["risk_details"] = json.loads(scenario.risk_details)
+            if scenario.portfolio_impact:
+                scenario_data["portfolio_impact"] = json.loads(scenario.portfolio_impact)
+            if scenario.portfolio_composition:
+                scenario_data["portfolio_composition"] = json.loads(scenario.portfolio_composition)
+            
+            scenarios_data.append(scenario_data)
         
         return {
             "scenarios": scenarios_data,
@@ -108,7 +125,7 @@ async def get_scenario(
         if not scenario:
             raise HTTPException(status_code=404, detail="Scenario not found")
         
-        return {
+        scenario_data = {
             "scenario_id": scenario.id,
             "scenario_text": scenario.scenario_text,
             "narrative": scenario.analysis_narrative,
@@ -117,6 +134,16 @@ async def get_scenario(
             "risk_assessment": scenario.risk_assessment,
             "created_at": scenario.created_at.isoformat()
         }
+        
+        # Add new fields if they exist
+        if scenario.risk_details:
+            scenario_data["risk_details"] = json.loads(scenario.risk_details)
+        if scenario.portfolio_impact:
+            scenario_data["portfolio_impact"] = json.loads(scenario.portfolio_impact)
+        if scenario.portfolio_composition:
+            scenario_data["portfolio_composition"] = json.loads(scenario.portfolio_composition)
+        
+        return scenario_data
         
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Error fetching scenario: {str(e)}")

@@ -1106,3 +1106,179 @@ WHERE ? = riskassessment.user_id]
 2025-08-16 16:33:51,230 - investment_advisor - INFO - log_api_request:61 - API GET /health - 200 (0.001s)
 2025-08-16 16:34:00,719 - investment_advisor - INFO - log_api_request:61 - API GET /health - 200 (0.001s)
 2025-08-16 16:34:03,202 - investment_advisor - INFO - log_api_request:61 - API GET /health - 200 (0.001s)
+2025-08-16 16:36:17,497 - investment_advisor - INFO - lifespan:22 - Starting AI-Powered Risk & Scenario Advisor API
+2025-08-16 16:36:17,503 - investment_advisor - INFO - lifespan:24 - Database initialized successfully
+2025-08-16 16:36:30,754 - investment_advisor - INFO - log_api_request:61 - API GET /health - 200 (0.001s)
+2025-08-16 16:36:35,953 - investment_advisor - INFO - log_api_request:61 - API GET /health - 200 (0.001s)
+2025-08-16 16:36:40,012 - investment_advisor - INFO - log_api_request:61 - API GET /health - 200 (0.002s)
+2025-08-16 16:36:40,938 - investment_advisor - INFO - login:111 - User logged in successfully: 2 (alokagarwal629@gmail.com) with role: USER
+2025-08-16 16:36:40,942 - investment_advisor - INFO - log_api_request:61 - API POST /auth/token - 200 (0.918s)
+2025-08-16 16:36:44,297 - investment_advisor - INFO - log_api_request:61 - API GET /health - 200 (0.001s)
+2025-08-16 16:36:45,732 - investment_advisor - INFO - log_api_request:61 - API GET /api/v1/user/data - 200 (1.424s)
+2025-08-16 16:36:50,606 - investment_advisor - INFO - log_api_request:61 - API GET /health - 200 (0.001s)
+2025-08-16 16:36:59,077 - investment_advisor - INFO - log_api_request:61 - API GET /health - 200 (0.001s)
+2025-08-16 16:36:59,421 - investment_advisor - INFO - log_api_request:61 - API DELETE /api/v1/portfolio/latest - 200 (0.302s)
+2025-08-16 16:37:01,829 - investment_advisor - INFO - log_api_request:61 - API GET /health - 200
+2025-08-16 16:37:06,702 - investment_advisor - INFO - log_api_request:61 - API GET /health - 200 (0.001s)
+2025-08-16 16:37:20,168 - investment_advisor - INFO - log_api_request:61 - API GET /health - 200 (0.001s)
+2025-08-16 16:38:02,443 - investment_advisor - INFO - log_api_request:61 - API GET /health - 200 (0.001s)
+2025-08-16 16:38:02,462 - investment_advisor - INFO - fetch_stock_data:163 - Fetching stock data for symbol: TCS.NS
+2025-08-16 16:38:05,784 - investment_advisor - INFO - fetch_stock_data:182 - Successfully fetched data for TCS.NS in 3.32s
+2025-08-16 16:38:05,786 - investment_advisor - INFO - fetch_stock_data:163 - Fetching stock data for symbol: INFY.NS
+2025-08-16 16:38:06,532 - investment_advisor - INFO - fetch_stock_data:182 - Successfully fetched data for INFY.NS in 0.75s
+2025-08-16 16:38:06,533 - investment_advisor - INFO - fetch_stock_data:163 - Fetching stock data for symbol: WIPRO.NS
+2025-08-16 16:38:07,431 - investment_advisor - INFO - fetch_stock_data:182 - Successfully fetched data for WIPRO.NS in 0.90s
+2025-08-16 16:38:07,431 - investment_advisor - INFO - fetch_stock_data:163 - Fetching stock data for symbol: HCLTECH.NS
+2025-08-16 16:38:08,187 - investment_advisor - INFO - fetch_stock_data:182 - Successfully fetched data for HCLTECH.NS in 0.75s
+2025-08-16 16:38:08,188 - investment_advisor - INFO - fetch_stock_data:163 - Fetching stock data for symbol: TECHM.NS
+2025-08-16 16:38:09,032 - investment_advisor - INFO - fetch_stock_data:182 - Successfully fetched data for TECHM.NS in 0.84s
+2025-08-16 16:38:09,033 - investment_advisor - INFO - fetch_stock_data:163 - Fetching stock data for symbol: LT.NS
+2025-08-16 16:38:09,892 - investment_advisor - INFO - fetch_stock_data:182 - Successfully fetched data for LT.NS in 0.86s
+2025-08-16 16:38:09,893 - investment_advisor - INFO - fetch_stock_data:163 - Fetching stock data for symbol: PERSISTENTSYSTEMS.NS
+2025-08-16 16:38:13,582 - investment_advisor - ERROR - fetch_stock_data:196 - Failed to fetch stock data for PERSISTENTSYSTEMS.NS: No valid price found for PERSISTENTSYSTEMS.NS
+2025-08-16 16:38:13,583 - investment_advisor - INFO - fetch_stock_data:163 - Fetching stock data for symbol: MPHASIS.NS
+2025-08-16 16:38:14,213 - investment_advisor - INFO - fetch_stock_data:182 - Successfully fetched data for MPHASIS.NS in 0.63s
+2025-08-16 16:38:14,214 - investment_advisor - INFO - fetch_stock_data:163 - Fetching stock data for symbol: COFORGE.NS
+2025-08-16 16:38:14,988 - investment_advisor - INFO - fetch_stock_data:182 - Successfully fetched data for COFORGE.NS in 0.77s
+2025-08-16 16:38:14,989 - investment_advisor - INFO - fetch_stock_data:163 - Fetching stock data for symbol: KPITTECHNOLOGIES.NS
+2025-08-16 16:38:18,759 - investment_advisor - ERROR - fetch_stock_data:196 - Failed to fetch stock data for KPITTECHNOLOGIES.NS: No valid price found for KPITTECHNOLOGIES.NS
+2025-08-16 16:38:19,444 - investment_advisor - INFO - log_api_request:61 - API POST /api/v1/analyze-portfolio - 200 (16.990s)
+2025-08-16 16:38:46,867 - investment_advisor - INFO - log_api_request:61 - API GET /health - 200 (0.001s)
+2025-08-16 16:39:04,777 - investment_advisor - INFO - log_api_request:61 - API GET /health - 200
+2025-08-16 16:39:10,548 - investment_advisor - INFO - log_api_request:61 - API GET /health - 200 (0.001s)
+2025-08-16 16:39:10,609 - investment_advisor - INFO - analyze_scenario:45 - Starting scenario analysis for user 2: Major IT company announces poor quarterly results...
+2025-08-16 16:39:28,749 - investment_advisor - INFO - analyze_scenario:88 - Scenario analysis completed for user 2 in 18.14s
+2025-08-16 16:39:29,058 - investment_advisor - INFO - log_api_request:61 - API POST /api/v1/analyze-scenario - 200 (18.457s)
+2025-08-16 16:39:31,546 - investment_advisor - INFO - log_api_request:61 - API GET /health - 200 (0.001s)
+2025-08-16 16:39:37,698 - investment_advisor - INFO - log_api_request:61 - API GET /health - 200 (0.001s)
+2025-08-16 16:39:40,244 - investment_advisor - INFO - log_api_request:61 - API GET /health - 200 (0.001s)
+2025-08-16 16:41:53,974 - investment_advisor - INFO - log_api_request:61 - API GET /health - 200 (0.001s)
+2025-08-16 16:50:11,561 - investment_advisor - INFO - lifespan:22 - Starting AI-Powered Risk & Scenario Advisor API
+2025-08-16 16:50:11,571 - investment_advisor - INFO - lifespan:24 - Database initialized successfully
+2025-08-16 16:50:23,138 - investment_advisor - INFO - lifespan:27 - Shutting down AI-Powered Risk & Scenario Advisor API
+2025-08-16 16:50:36,717 - investment_advisor - INFO - lifespan:22 - Starting AI-Powered Risk & Scenario Advisor API
+2025-08-16 16:50:36,731 - investment_advisor - INFO - lifespan:24 - Database initialized successfully
+2025-08-16 16:50:45,626 - investment_advisor - INFO - lifespan:27 - Shutting down AI-Powered Risk & Scenario Advisor API
+2025-08-16 16:51:07,423 - investment_advisor - INFO - lifespan:22 - Starting AI-Powered Risk & Scenario Advisor API
+2025-08-16 16:51:07,431 - investment_advisor - INFO - lifespan:24 - Database initialized successfully
+2025-08-16 16:51:07,440 - investment_advisor - INFO - log_api_request:61 - API GET /health - 200
+2025-08-16 16:51:17,266 - investment_advisor - INFO - log_api_request:61 - API GET /health - 200 (0.001s)
+2025-08-16 16:51:23,925 - investment_advisor - INFO - log_api_request:61 - API GET /health - 200 (0.001s)
+2025-08-16 16:51:24,261 - investment_advisor - INFO - login:111 - User logged in successfully: 2 (alokagarwal629@gmail.com) with role: USER
+2025-08-16 16:51:24,263 - investment_advisor - INFO - log_api_request:61 - API POST /auth/token - 200 (0.333s)
+2025-08-16 16:51:26,723 - investment_advisor - INFO - log_api_request:61 - API GET /health - 200
+2025-08-16 16:51:27,188 - investment_advisor - INFO - log_api_request:61 - API GET /api/v1/user/data - 200 (0.462s)
+2025-08-16 16:51:31,338 - investment_advisor - INFO - log_api_request:61 - API GET /health - 200 (0.001s)
+2025-08-16 16:51:38,112 - investment_advisor - INFO - log_api_request:61 - API GET /health - 200 (0.001s)
+2025-08-16 16:51:38,159 - investment_advisor - INFO - analyze_scenario:44 - Starting scenario analysis for user 2: Major IT company announces poor quarterly results...
+2025-08-16 16:51:57,092 - investment_advisor - INFO - analyze_scenario:81 - Scenario analysis completed for user 2 in 18.93s
+2025-08-16 16:51:57,409 - investment_advisor - INFO - log_api_request:61 - API POST /api/v1/analyze-scenario - 200 (19.255s)
+2025-08-16 16:51:59,926 - investment_advisor - INFO - log_api_request:61 - API GET /health - 200 (0.001s)
+2025-08-16 16:52:08,112 - investment_advisor - INFO - log_api_request:61 - API GET /health - 200 (0.001s)
+2025-08-16 16:52:10,562 - investment_advisor - INFO - log_api_request:61 - API GET /health - 200 (0.001s)
+2025-08-16 16:57:28,374 - investment_advisor - INFO - lifespan:27 - Shutting down AI-Powered Risk & Scenario Advisor API
+2025-08-16 16:57:41,341 - investment_advisor - INFO - lifespan:22 - Starting AI-Powered Risk & Scenario Advisor API
+2025-08-16 16:57:41,351 - investment_advisor - INFO - lifespan:24 - Database initialized successfully
+2025-08-16 16:58:02,989 - investment_advisor - INFO - lifespan:27 - Shutting down AI-Powered Risk & Scenario Advisor API
+2025-08-16 16:58:20,477 - investment_advisor - INFO - lifespan:22 - Starting AI-Powered Risk & Scenario Advisor API
+2025-08-16 16:58:20,486 - investment_advisor - INFO - lifespan:24 - Database initialized successfully
+2025-08-16 16:58:33,519 - investment_advisor - INFO - lifespan:22 - Starting AI-Powered Risk & Scenario Advisor API
+2025-08-16 16:58:33,530 - investment_advisor - INFO - lifespan:24 - Database initialized successfully
+2025-08-16 16:58:41,790 - investment_advisor - INFO - lifespan:27 - Shutting down AI-Powered Risk & Scenario Advisor API
+2025-08-16 16:58:54,780 - investment_advisor - INFO - lifespan:22 - Starting AI-Powered Risk & Scenario Advisor API
+2025-08-16 16:58:54,792 - investment_advisor - INFO - lifespan:24 - Database initialized successfully
+2025-08-16 16:59:00,107 - investment_advisor - INFO - lifespan:27 - Shutting down AI-Powered Risk & Scenario Advisor API
+2025-08-16 16:59:10,957 - investment_advisor - INFO - lifespan:22 - Starting AI-Powered Risk & Scenario Advisor API
+2025-08-16 16:59:10,970 - investment_advisor - INFO - lifespan:24 - Database initialized successfully
+2025-08-16 16:59:16,477 - investment_advisor - INFO - lifespan:27 - Shutting down AI-Powered Risk & Scenario Advisor API
+2025-08-16 16:59:28,914 - investment_advisor - INFO - lifespan:22 - Starting AI-Powered Risk & Scenario Advisor API
+2025-08-16 16:59:28,924 - investment_advisor - INFO - lifespan:24 - Database initialized successfully
+2025-08-16 16:59:34,330 - investment_advisor - INFO - lifespan:27 - Shutting down AI-Powered Risk & Scenario Advisor API
+2025-08-16 16:59:46,717 - investment_advisor - INFO - lifespan:22 - Starting AI-Powered Risk & Scenario Advisor API
+2025-08-16 16:59:46,732 - investment_advisor - INFO - lifespan:24 - Database initialized successfully
+2025-08-16 16:59:56,765 - investment_advisor - INFO - lifespan:27 - Shutting down AI-Powered Risk & Scenario Advisor API
+2025-08-16 17:00:10,345 - investment_advisor - INFO - lifespan:22 - Starting AI-Powered Risk & Scenario Advisor API
+2025-08-16 17:00:10,356 - investment_advisor - INFO - lifespan:24 - Database initialized successfully
+2025-08-16 17:00:21,886 - investment_advisor - INFO - lifespan:22 - Starting AI-Powered Risk & Scenario Advisor API
+2025-08-16 17:00:21,899 - investment_advisor - INFO - lifespan:24 - Database initialized successfully
+2025-08-16 17:00:23,880 - investment_advisor - INFO - lifespan:27 - Shutting down AI-Powered Risk & Scenario Advisor API
+2025-08-16 17:00:40,295 - investment_advisor - INFO - lifespan:22 - Starting AI-Powered Risk & Scenario Advisor API
+2025-08-16 17:00:40,305 - investment_advisor - INFO - lifespan:24 - Database initialized successfully
+2025-08-16 17:00:47,286 - investment_advisor - INFO - lifespan:27 - Shutting down AI-Powered Risk & Scenario Advisor API
+2025-08-16 17:01:00,615 - investment_advisor - INFO - lifespan:22 - Starting AI-Powered Risk & Scenario Advisor API
+2025-08-16 17:01:00,649 - investment_advisor - INFO - lifespan:24 - Database initialized successfully
+2025-08-16 17:01:18,544 - investment_advisor - INFO - lifespan:22 - Starting AI-Powered Risk & Scenario Advisor API
+2025-08-16 17:01:18,555 - investment_advisor - INFO - lifespan:24 - Database initialized successfully
+2025-08-16 17:01:19,075 - investment_advisor - INFO - login:111 - User logged in successfully: 1 (test@example.com) with role: USER
+2025-08-16 17:01:19,078 - investment_advisor - INFO - log_api_request:61 - API POST /auth/token - 200 (0.510s)
+2025-08-16 17:01:21,125 - investment_advisor - INFO - analyze_scenario:44 - Starting scenario analysis for user 1: Major IT company announces poor quarterly results...
+2025-08-16 17:01:21,134 - investment_advisor - ERROR - analyze_scenario:94 - Scenario analysis failed for user 1: No portfolio found for analysis
+2025-08-16 17:01:21,545 - investment_advisor - INFO - log_api_request:61 - API POST /api/v1/analyze-scenario - 200 (0.436s)
+2025-08-16 17:01:23,615 - investment_advisor - INFO - log_api_request:61 - API GET /api/v1/scenarios - 200 (0.009s)
+2025-08-16 17:01:31,791 - investment_advisor - INFO - lifespan:27 - Shutting down AI-Powered Risk & Scenario Advisor API
+2025-08-16 17:01:46,029 - investment_advisor - INFO - lifespan:22 - Starting AI-Powered Risk & Scenario Advisor API
+2025-08-16 17:01:46,042 - investment_advisor - INFO - lifespan:24 - Database initialized successfully
+2025-08-16 17:01:48,567 - investment_advisor - INFO - lifespan:27 - Shutting down AI-Powered Risk & Scenario Advisor API
+2025-08-16 17:02:02,946 - investment_advisor - INFO - lifespan:22 - Starting AI-Powered Risk & Scenario Advisor API
+2025-08-16 17:02:02,956 - investment_advisor - INFO - lifespan:24 - Database initialized successfully
+2025-08-16 17:02:21,213 - investment_advisor - INFO - lifespan:22 - Starting AI-Powered Risk & Scenario Advisor API
+2025-08-16 17:02:21,313 - investment_advisor - INFO - lifespan:24 - Database initialized successfully
+2025-08-16 17:02:27,859 - investment_advisor - INFO - log_api_request:61 - API GET /health - 200
+2025-08-16 17:02:33,868 - investment_advisor - INFO - log_api_request:61 - API GET /health - 200
+2025-08-16 17:02:40,741 - investment_advisor - INFO - log_api_request:61 - API GET /health - 200 (0.002s)
+2025-08-16 17:02:42,125 - investment_advisor - INFO - login:111 - User logged in successfully: 2 (alokagarwal629@gmail.com) with role: USER
+2025-08-16 17:02:42,132 - investment_advisor - INFO - log_api_request:61 - API POST /auth/token - 200 (1.358s)
+2025-08-16 17:02:45,676 - investment_advisor - INFO - log_api_request:61 - API GET /health - 200 (0.001s)
+2025-08-16 17:02:46,318 - investment_advisor - INFO - log_api_request:61 - API GET /api/v1/user/data - 200 (0.637s)
+2025-08-16 17:02:50,918 - investment_advisor - INFO - log_api_request:61 - API GET /health - 200 (0.001s)
+2025-08-16 17:02:57,914 - investment_advisor - INFO - log_api_request:61 - API GET /health - 200 (0.001s)
+2025-08-16 17:03:08,709 - investment_advisor - INFO - log_api_request:61 - API GET /health - 200 (0.001s)
+2025-08-16 17:03:11,139 - investment_advisor - INFO - log_api_request:61 - API GET /health - 200 (0.001s)
+2025-08-16 17:03:24,896 - investment_advisor - INFO - log_api_request:61 - API GET /health - 200 (0.001s)
+2025-08-16 17:03:24,951 - investment_advisor - INFO - analyze_scenario:44 - Starting scenario analysis for user 2: Major IT company announces poor quarterly results...
+2025-08-16 17:03:40,232 - investment_advisor - INFO - analyze_scenario:81 - Scenario analysis completed for user 2 in 15.28s
+2025-08-16 17:03:40,234 - investment_advisor - INFO - log_api_request:61 - API POST /api/v1/analyze-scenario - 500 (15.287s)
+2025-08-16 17:05:54,696 - investment_advisor - INFO - lifespan:27 - Shutting down AI-Powered Risk & Scenario Advisor API
+2025-08-16 17:06:11,344 - investment_advisor - INFO - lifespan:22 - Starting AI-Powered Risk & Scenario Advisor API
+2025-08-16 17:06:11,353 - investment_advisor - INFO - lifespan:24 - Database initialized successfully
+2025-08-16 17:06:19,784 - investment_advisor - INFO - lifespan:22 - Starting AI-Powered Risk & Scenario Advisor API
+2025-08-16 17:06:19,804 - investment_advisor - INFO - lifespan:24 - Database initialized successfully
+2025-08-16 17:06:43,907 - investment_advisor - INFO - lifespan:27 - Shutting down AI-Powered Risk & Scenario Advisor API
+2025-08-16 17:06:56,145 - investment_advisor - INFO - lifespan:22 - Starting AI-Powered Risk & Scenario Advisor API
+2025-08-16 17:06:56,156 - investment_advisor - INFO - lifespan:24 - Database initialized successfully
+2025-08-16 17:07:03,286 - investment_advisor - INFO - lifespan:27 - Shutting down AI-Powered Risk & Scenario Advisor API
+2025-08-16 17:07:17,382 - investment_advisor - INFO - lifespan:22 - Starting AI-Powered Risk & Scenario Advisor API
+2025-08-16 17:07:17,393 - investment_advisor - INFO - lifespan:24 - Database initialized successfully
+2025-08-16 17:07:25,789 - investment_advisor - INFO - lifespan:27 - Shutting down AI-Powered Risk & Scenario Advisor API
+2025-08-16 17:07:39,528 - investment_advisor - INFO - lifespan:22 - Starting AI-Powered Risk & Scenario Advisor API
+2025-08-16 17:07:39,541 - investment_advisor - INFO - lifespan:24 - Database initialized successfully
+2025-08-16 17:07:52,093 - investment_advisor - INFO - lifespan:22 - Starting AI-Powered Risk & Scenario Advisor API
+2025-08-16 17:07:52,101 - investment_advisor - INFO - lifespan:24 - Database initialized successfully
+2025-08-16 17:07:52,451 - investment_advisor - WARNING - log_security_event:76 - SECURITY FAILED_LOGIN (IP: 127.0.0.1): Failed login attempt for email: alokagarwal629@gmail.com
+2025-08-16 17:07:52,455 - investment_advisor - INFO - log_api_request:61 - API POST /auth/token - 401 (0.343s)
+2025-08-16 17:08:04,463 - investment_advisor - INFO - lifespan:27 - Shutting down AI-Powered Risk & Scenario Advisor API
+2025-08-16 17:08:38,175 - investment_advisor - INFO - lifespan:22 - Starting AI-Powered Risk & Scenario Advisor API
+2025-08-16 17:08:38,212 - investment_advisor - INFO - lifespan:24 - Database initialized successfully
+2025-08-16 17:08:44,252 - investment_advisor - INFO - log_api_request:61 - API GET /health - 200 (0.001s)
+2025-08-16 17:08:50,132 - investment_advisor - INFO - log_api_request:61 - API GET /health - 200 (0.001s)
+2025-08-16 17:08:53,875 - investment_advisor - INFO - log_api_request:61 - API GET /health - 200 (0.001s)
+2025-08-16 17:08:54,272 - investment_advisor - INFO - login:111 - User logged in successfully: 2 (alokagarwal629@gmail.com) with role: USER
+2025-08-16 17:08:54,274 - investment_advisor - INFO - log_api_request:61 - API POST /auth/token - 200 (0.392s)
+2025-08-16 17:08:56,722 - investment_advisor - INFO - log_api_request:61 - API GET /health - 200 (0.001s)
+2025-08-16 17:08:57,208 - investment_advisor - INFO - log_api_request:61 - API GET /api/v1/user/data - 200 (0.482s)
+2025-08-16 17:09:01,293 - investment_advisor - INFO - log_api_request:61 - API GET /health - 200 (0.001s)
+2025-08-16 17:09:05,647 - investment_advisor - INFO - log_api_request:61 - API GET /health - 200 (0.001s)
+2025-08-16 17:09:05,663 - investment_advisor - INFO - log_api_request:61 - API GET /api/v1/scenarios - 200 (0.008s)
+2025-08-16 17:09:06,063 - investment_advisor - INFO - log_api_request:61 - API DELETE /api/v1/scenarios/11 - 200 (0.397s)
+2025-08-16 17:09:08,485 - investment_advisor - INFO - log_api_request:61 - API GET /health - 200 (0.001s)
+2025-08-16 17:09:11,723 - investment_advisor - INFO - log_api_request:61 - API GET /health - 200 (0.001s)
+2025-08-16 17:09:11,738 - investment_advisor - INFO - log_api_request:61 - API GET /api/v1/scenarios - 200 (0.008s)
+2025-08-16 17:09:12,165 - investment_advisor - INFO - log_api_request:61 - API DELETE /api/v1/scenarios/10 - 200 (0.424s)
+2025-08-16 17:09:14,595 - investment_advisor - INFO - log_api_request:61 - API GET /health - 200
+2025-08-16 17:09:25,778 - investment_advisor - INFO - log_api_request:61 - API GET /health - 200 (0.001s)
+2025-08-16 17:09:25,816 - investment_advisor - INFO - analyze_scenario:44 - Starting scenario analysis for user 2: Major IT company announces poor quarterly results...
+2025-08-16 17:09:42,825 - investment_advisor - INFO - analyze_scenario:81 - Scenario analysis completed for user 2 in 17.01s
+2025-08-16 17:09:43,164 - investment_advisor - INFO - log_api_request:61 - API POST /api/v1/analyze-scenario - 200 (17.353s)
+2025-08-16 17:09:45,595 - investment_advisor - INFO - log_api_request:61 - API GET /health - 200
+2025-08-16 17:09:51,756 - investment_advisor - INFO - log_api_request:61 - API GET /health - 200 (0.001s)
+2025-08-16 17:09:54,206 - investment_advisor - INFO - log_api_request:61 - API GET /health - 200 (0.002s)
