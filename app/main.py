@@ -17,6 +17,55 @@ load_dotenv()
 # API Configuration
 API_BASE_URL = os.getenv("API_BASE_URL", "http://localhost:8000")
 
+def is_valid_content(content: str, min_length: int = 10) -> bool:
+    """
+    Validate if content is meaningful and not empty HTML tags.
+    
+    Args:
+        content: The content to validate
+        min_length: Minimum length for content to be considered valid
+        
+    Returns:
+        bool: True if content is valid, False otherwise
+    """
+    if not content or not isinstance(content, str):
+        return False
+    
+    # Clean HTML tags
+    clean_content = re.sub(r'<[^>]*>', '', content).strip()
+    
+    # Check for empty or invalid content
+    if not clean_content or len(clean_content) < min_length:
+        return False
+    
+    # Check for common empty HTML patterns
+    empty_patterns = ['<div></div>', '</div></div>', '<p></p>', '<span></span>']
+    if clean_content in empty_patterns:
+        return False
+    
+    return True
+
+def clean_and_validate_content(content: str, min_length: int = 10) -> Optional[str]:
+    """
+    Clean and validate content, returning None if invalid.
+    
+    Args:
+        content: The content to clean and validate
+        min_length: Minimum length for content to be considered valid
+        
+    Returns:
+        str or None: Cleaned content if valid, None if invalid
+    """
+    if not is_valid_content(content, min_length):
+        return None
+    
+    # Clean HTML tags and entities
+    decoded_content = html.unescape(content)
+    clean_content = re.sub(r'<[^>]*>', '', decoded_content)
+    clean_content = re.sub(r'\s+', ' ', clean_content).strip()
+    
+    return clean_content if len(clean_content) >= min_length else None
+
 def validate_password_strength(password: str) -> Tuple[bool, Dict[str, bool], str]:
     """
     Validate password strength and return detailed feedback
@@ -2189,191 +2238,232 @@ def display_scenario_analysis(result: dict):
     
     with col1:
         # 📝 Analysis Overview Section
-        with st.expander("📝 Analysis Overview", expanded=True):
-            # Clean the narrative content by removing HTML tags more thoroughly
-            import re
-            
-            # First decode any HTML entities
-            decoded_narrative = html.unescape(result["narrative"])
-            # Then remove all HTML tags
-            clean_narrative = re.sub(r'<[^>]*>', '', decoded_narrative)
-            # Remove any extra whitespace
-            clean_narrative = re.sub(r'\s+', ' ', clean_narrative).strip()
-            
-            st.markdown(f"""
-                <div class="content-box-enhanced">
-                    <h4>📊 Dynamic Analysis Summary</h4>
-                    <div class="scenario-text-content">
-                        {clean_narrative}
+        narrative = result.get("narrative", "")
+        clean_narrative = clean_and_validate_content(narrative, min_length=20)
+        
+        if clean_narrative:
+            with st.expander("📝 Analysis Overview", expanded=True):
+                st.markdown(f"""
+                    <div class="content-box-enhanced">
+                        <h4>📊 Dynamic Analysis Summary</h4>
+                        <div class="scenario-text-content">
+                            {clean_narrative}
+                        </div>
                     </div>
-                </div>
-            """, unsafe_allow_html=True)
+                """, unsafe_allow_html=True)
         
         # 🔑 Key Insights Section
-        with st.expander("🔑 Key Insights", expanded=True):
-            st.markdown('<div class="section-header-enhanced">Portfolio-Specific Insights</div>', unsafe_allow_html=True)
-            for i, insight in enumerate(result['insights'], 1):
-                # Clean HTML tags from insight more thoroughly
-                decoded_insight = html.unescape(insight)
-                clean_insight = re.sub(r'<[^>]*>', '', decoded_insight)
-                clean_insight = re.sub(r'\s+', ' ', clean_insight).strip()
-                
-                st.markdown(f"""
-                    <div class="content-box-enhanced">
-                        <div style="display: flex; align-items: flex-start; gap: 12px;">
-                            <span class="insight-number">{i}</span>
-                            <div class="scenario-text-content" style="flex: 1; margin: 0;">
-                                {clean_insight}
+        insights = result.get('insights', [])
+        valid_insights = []
+        
+        # Filter out empty or invalid insights
+        for insight in insights:
+            clean_insight = clean_and_validate_content(insight, min_length=10)
+            if clean_insight:
+                valid_insights.append(clean_insight)
+        
+        # Only render the section if there are valid insights
+        if valid_insights:
+            with st.expander("🔑 Key Insights", expanded=True):
+                st.markdown('<div class="section-header-enhanced">Portfolio-Specific Insights</div>', unsafe_allow_html=True)
+                for i, clean_insight in enumerate(valid_insights, 1):
+                    st.markdown(f"""
+                        <div class="content-box-enhanced">
+                            <div style="display: flex; align-items: flex-start; gap: 12px;">
+                                <span class="insight-number">{i}</span>
+                                <div class="scenario-text-content" style="flex: 1; margin: 0;">
+                                    {clean_insight}
+                                </div>
                             </div>
                         </div>
-                    </div>
-                """, unsafe_allow_html=True)
+                    """, unsafe_allow_html=True)
         
         # ✅ Actionable Recommendations Section
-        with st.expander("✅ Actionable Recommendations", expanded=True):
-            st.markdown('<div class="section-header-enhanced">Portfolio-Specific Actions</div>', unsafe_allow_html=True)
-            for i, rec in enumerate(result['recommendations'], 1):
-                # Clean HTML tags from recommendation more thoroughly
-                decoded_rec = html.unescape(rec)
-                clean_rec = re.sub(r'<[^>]*>', '', decoded_rec)
-                clean_rec = re.sub(r'\s+', ' ', clean_rec).strip()
-                
-                st.markdown(f"""
-                    <div class="content-box-enhanced">
-                        <div style="position: relative;">
-                            <div class="priority-badge" style="position: absolute; top: -8px; left: 16px; z-index: 10;">
-                                Priority {i}
-                            </div>
-                            <div class="scenario-text-content" style="margin-top: 8px;">
-                                {clean_rec}
+        recommendations = result.get('recommendations', [])
+        valid_recommendations = []
+        
+        # Filter out empty or invalid recommendations
+        for rec in recommendations:
+            clean_rec = clean_and_validate_content(rec, min_length=10)
+            if clean_rec:
+                valid_recommendations.append(clean_rec)
+        
+        # Only render the section if there are valid recommendations
+        if valid_recommendations:
+            with st.expander("✅ Actionable Recommendations", expanded=True):
+                st.markdown('<div class="section-header-enhanced">Portfolio-Specific Actions</div>', unsafe_allow_html=True)
+                for i, clean_rec in enumerate(valid_recommendations, 1):
+                    st.markdown(f"""
+                        <div class="content-box-enhanced">
+                            <div style="position: relative;">
+                                <div class="priority-badge" style="position: absolute; top: -8px; left: 16px; z-index: 10;">
+                                    Priority {i}
+                                </div>
+                                <div class="scenario-text-content" style="margin-top: 8px;">
+                                    {clean_rec}
+                                </div>
                             </div>
                         </div>
-                    </div>
-                """, unsafe_allow_html=True)
+                    """, unsafe_allow_html=True)
 
     with col2:
         # 📊 Enhanced Risk Assessment Section
-        with st.expander("📊 Dynamic Risk Assessment", expanded=True):
-            st.markdown('<div class="section-header-enhanced">Portfolio-Specific Risk Analysis</div>', unsafe_allow_html=True)
-            
-            # Get risk details if available
-            risk_details = result.get('risk_details', {})
-            risk_level = result['risk_assessment']
-            
-            # Determine risk level and color
-            if risk_level in ['CRITICAL', 'HIGH']:
-                risk_color = "#dc3545"
-                risk_bg = "#f8d7da"
-                risk_icon = "🔴"
-                risk_class = "risk-indicator-high"
-            elif risk_level == 'MEDIUM':
-                risk_color = "#ffc107"
-                risk_bg = "#fff3cd"
-                risk_icon = "🟡"
-                risk_class = "risk-indicator-medium"
-            else:
-                risk_color = "#28a745"
-                risk_bg = "#d4edda"
-                risk_icon = "🟢"
-                risk_class = "risk-indicator-low"
-            
-            # Risk Level Badge
-            st.markdown(f"""
-                <div class="content-box-enhanced">
-                    <h4>Risk Level Assessment</h4>
-                    <div class="{risk_class}">
-                        {risk_icon} {risk_level} RISK
-                    </div>
-                </div>
-            """, unsafe_allow_html=True)
-            
-            # Risk Score if available
-            if 'score' in risk_details:
+        risk_level = result.get('risk_assessment', '')
+        risk_details = result.get('risk_details', {})
+        
+        # Only render if there's a valid risk assessment
+        if risk_level and isinstance(risk_level, str) and risk_level.strip():
+            with st.expander("📊 Dynamic Risk Assessment", expanded=True):
+                st.markdown('<div class="section-header-enhanced">Portfolio-Specific Risk Analysis</div>', unsafe_allow_html=True)
+                
+                # Determine risk level and color
+                if risk_level in ['CRITICAL', 'HIGH']:
+                    risk_color = "#dc3545"
+                    risk_bg = "#f8d7da"
+                    risk_icon = "🔴"
+                    risk_class = "risk-indicator-high"
+                elif risk_level == 'MEDIUM':
+                    risk_color = "#ffc107"
+                    risk_bg = "#fff3cd"
+                    risk_icon = "🟡"
+                    risk_class = "risk-indicator-medium"
+                else:
+                    risk_color = "#28a745"
+                    risk_bg = "#d4edda"
+                    risk_icon = "🟢"
+                    risk_class = "risk-indicator-low"
+                
+                # Risk Level Badge
                 st.markdown(f"""
                     <div class="content-box-enhanced">
-                        <h4>Risk Score</h4>
-                        <div style="font-size: 24px; font-weight: bold; color: {risk_color};">
-                            {risk_details['score']:.1f}/100
+                        <h4>Risk Level Assessment</h4>
+                        <div class="{risk_class}">
+                            {risk_icon} {risk_level} RISK
                         </div>
                     </div>
                 """, unsafe_allow_html=True)
-            
-            # Primary Risk Factors
-            if 'primary_factors' in risk_details and risk_details['primary_factors']:
-                st.markdown("""
-                    <div class="content-box-enhanced">
-                        <h4>Primary Risk Factors</h4>
-                    </div>
-                """, unsafe_allow_html=True)
-                for factor in risk_details['primary_factors']:
+                
+                # Risk Score if available
+                if risk_details and isinstance(risk_details, dict) and 'score' in risk_details:
                     st.markdown(f"""
-                        <div class="content-box-enhanced" style="margin-top: 8px;">
-                            <div style="color: #dc3545;">⚠️ {factor}</div>
+                        <div class="content-box-enhanced">
+                            <h4>Risk Score</h4>
+                            <div style="font-size: 24px; font-weight: bold; color: {risk_color};">
+                                {risk_details['score']:.1f}/100
+                            </div>
                         </div>
                     """, unsafe_allow_html=True)
+                
+                # Primary Risk Factors
+                if (risk_details and isinstance(risk_details, dict) and 
+                    'primary_factors' in risk_details and 
+                    risk_details['primary_factors'] and 
+                    isinstance(risk_details['primary_factors'], list)):
+                    
+                    valid_factors = [factor for factor in risk_details['primary_factors'] 
+                                   if factor and isinstance(factor, str) and factor.strip()]
+                    
+                    if valid_factors:
+                        st.markdown("""
+                            <div class="content-box-enhanced">
+                                <h4>Primary Risk Factors</h4>
+                            </div>
+                        """, unsafe_allow_html=True)
+                        for factor in valid_factors:
+                            st.markdown(f"""
+                                <div class="content-box-enhanced" style="margin-top: 8px;">
+                                    <div style="color: #dc3545;">⚠️ {factor}</div>
+                                </div>
+                            """, unsafe_allow_html=True)
 
     with col3:
         # 📈 Portfolio Impact Analysis
-        with st.expander("📈 Portfolio Impact", expanded=True):
-            st.markdown('<div class="section-header-enhanced">Scenario Impact Analysis</div>', unsafe_allow_html=True)
-            
-            portfolio_impact = result.get('portfolio_impact', {})
-            portfolio_composition = result.get('portfolio_composition', {})
-            
-            # Impact Severity
-            if 'impact_severity' in portfolio_impact:
-                severity = portfolio_impact['impact_severity']
-                severity_color = "#dc3545" if severity == "HIGH" else "#ffc107" if severity == "MEDIUM" else "#28a745"
-                st.markdown(f"""
-                    <div class="content-box-enhanced">
-                        <h4>Impact Severity</h4>
-                        <div style="font-size: 18px; font-weight: bold; color: {severity_color};">
-                            {severity}
-                        </div>
-                    </div>
-                """, unsafe_allow_html=True)
-            
-            # Portfolio Composition Summary
-            if portfolio_composition:
-                st.markdown("""
-                    <div class="content-box-enhanced">
-                        <h4>Portfolio Composition</h4>
-                    </div>
-                """, unsafe_allow_html=True)
+        portfolio_impact = result.get('portfolio_impact', {})
+        portfolio_composition = result.get('portfolio_composition', {})
+        
+        # Check if there's meaningful portfolio impact data
+        has_impact_data = (portfolio_impact and isinstance(portfolio_impact, dict) and 
+                          ('impact_severity' in portfolio_impact or 'affected_sectors' in portfolio_impact))
+        has_composition_data = (portfolio_composition and isinstance(portfolio_composition, dict) and
+                               ('diversification_level' in portfolio_composition or 
+                                'num_holdings' in portfolio_composition))
+        
+        if has_impact_data or has_composition_data:
+            with st.expander("📈 Portfolio Impact", expanded=True):
+                st.markdown('<div class="section-header-enhanced">Scenario Impact Analysis</div>', unsafe_allow_html=True)
                 
-                # Diversification Level
-                if 'diversification_level' in portfolio_composition:
-                    div_level = portfolio_composition['diversification_level']
-                    div_color = "#dc3545" if "CONCENTRATION" in div_level else "#ffc107" if "MODERATE" in div_level else "#28a745"
+                # Impact Severity
+                if (portfolio_impact and isinstance(portfolio_impact, dict) and 
+                    'impact_severity' in portfolio_impact and 
+                    portfolio_impact['impact_severity']):
+                    severity = portfolio_impact['impact_severity']
+                    severity_color = "#dc3545" if severity == "HIGH" else "#ffc107" if severity == "MEDIUM" else "#28a745"
                     st.markdown(f"""
-                        <div style="color: {div_color}; font-weight: bold; margin: 8px 0;">
-                            {div_level.replace('_', ' ').title()}
+                        <div class="content-box-enhanced">
+                            <h4>Impact Severity</h4>
+                            <div style="font-size: 18px; font-weight: bold; color: {severity_color};">
+                                {severity}
+                            </div>
                         </div>
                     """, unsafe_allow_html=True)
                 
-                # Key Stats
-                if 'num_holdings' in portfolio_composition and 'num_sectors' in portfolio_composition:
-                    st.markdown(f"""
-                        <div style="font-size: 12px; color: #6c757d; margin: 8px 0;">
-                            {portfolio_composition['num_holdings']} holdings across {portfolio_composition['num_sectors']} sectors
+                # Portfolio Composition Summary
+                if (portfolio_composition and isinstance(portfolio_composition, dict) and
+                    ('diversification_level' in portfolio_composition or 
+                     'num_holdings' in portfolio_composition)):
+                    
+                    st.markdown("""
+                        <div class="content-box-enhanced">
+                            <h4>Portfolio Composition</h4>
                         </div>
                     """, unsafe_allow_html=True)
-            
-            # Affected Sectors
-            if 'affected_sectors' in portfolio_impact and portfolio_impact['affected_sectors']:
-                st.markdown("""
-                    <div class="content-box-enhanced">
-                        <h4>Most Affected Sectors</h4>
-                    </div>
-                """, unsafe_allow_html=True)
-                for sector_risk in portfolio_impact['affected_sectors'][:3]:  # Show top 3
-                    risk_color = "#dc3545" if sector_risk['risk_level'] == "HIGH" else "#ffc107" if sector_risk['risk_level'] == "MEDIUM" else "#28a745"
-                    st.markdown(f"""
-                        <div style="margin: 4px 0; font-size: 12px;">
-                            <span style="color: {risk_color}; font-weight: bold;">{sector_risk['sector']}</span>
-                            <span style="color: #6c757d;"> ({sector_risk['weight']:.1f}%)</span>
-                        </div>
-                    """, unsafe_allow_html=True)
+                    
+                    # Diversification Level
+                    if ('diversification_level' in portfolio_composition and 
+                        portfolio_composition['diversification_level']):
+                        div_level = portfolio_composition['diversification_level']
+                        div_color = "#dc3545" if "CONCENTRATION" in div_level else "#ffc107" if "MODERATE" in div_level else "#28a745"
+                        st.markdown(f"""
+                            <div style="color: {div_color}; font-weight: bold; margin: 8px 0;">
+                                {div_level.replace('_', ' ').title()}
+                            </div>
+                        """, unsafe_allow_html=True)
+                    
+                    # Key Stats
+                    if ('num_holdings' in portfolio_composition and 
+                        'num_sectors' in portfolio_composition and
+                        portfolio_composition['num_holdings'] and 
+                        portfolio_composition['num_sectors']):
+                        st.markdown(f"""
+                            <div style="font-size: 12px; color: #6c757d; margin: 8px 0;">
+                                {portfolio_composition['num_holdings']} holdings across {portfolio_composition['num_sectors']} sectors
+                            </div>
+                        """, unsafe_allow_html=True)
+                
+                # Affected Sectors
+                if (portfolio_impact and isinstance(portfolio_impact, dict) and
+                    'affected_sectors' in portfolio_impact and 
+                    portfolio_impact['affected_sectors'] and
+                    isinstance(portfolio_impact['affected_sectors'], list)):
+                    
+                    valid_sectors = [sector for sector in portfolio_impact['affected_sectors'] 
+                                   if sector and isinstance(sector, dict) and 
+                                   'sector' in sector and 'risk_level' in sector]
+                    
+                    if valid_sectors:
+                        st.markdown("""
+                            <div class="content-box-enhanced">
+                                <h4>Most Affected Sectors</h4>
+                            </div>
+                        """, unsafe_allow_html=True)
+                        for sector_risk in valid_sectors[:3]:  # Show top 3
+                            risk_color = "#dc3545" if sector_risk['risk_level'] == "HIGH" else "#ffc107" if sector_risk['risk_level'] == "MEDIUM" else "#28a745"
+                            st.markdown(f"""
+                                <div style="margin: 4px 0; font-size: 12px;">
+                                    <span style="color: {risk_color}; font-weight: bold;">{sector_risk['sector']}</span>
+                                    <span style="color: #6c757d;"> ({sector_risk.get('weight', 0):.1f}%)</span>
+                                </div>
+                            """, unsafe_allow_html=True)
 
 def show_scenario_analysis():
     """Enhanced Scenario Analysis section with improved UI/UX"""

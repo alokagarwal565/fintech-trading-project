@@ -563,10 +563,33 @@ IMPORTANT: Base your analysis on the actual portfolio composition and scenario i
             if len(recommendations) < 3:
                 recommendations.extend(self._generate_portfolio_specific_recommendations(portfolio_analysis, risk_assessment))
 
+            # Filter out empty or invalid content
+            valid_insights = []
+            for insight in insights:
+                if insight and isinstance(insight, str) and insight.strip():
+                    # Clean HTML tags and check for meaningful content
+                    clean_insight = re.sub(r'<[^>]*>', '', insight).strip()
+                    if clean_insight and len(clean_insight) > 10:
+                        valid_insights.append(insight)
+            
+            valid_recommendations = []
+            for rec in recommendations:
+                if rec and isinstance(rec, str) and rec.strip():
+                    # Clean HTML tags and check for meaningful content
+                    clean_rec = re.sub(r'<[^>]*>', '', rec).strip()
+                    if clean_rec and len(clean_rec) > 10:
+                        valid_recommendations.append(rec)
+            
+            # Ensure narrative is valid
+            if narrative and isinstance(narrative, str):
+                clean_narrative = re.sub(r'<[^>]*>', '', narrative).strip()
+                if not clean_narrative or len(clean_narrative) < 20:
+                    narrative = "Analysis completed successfully. Please review the insights and recommendations below."
+
             return {
                 'narrative': narrative,
-                'insights': insights[:6],
-                'recommendations': recommendations[:6]
+                'insights': valid_insights[:6],
+                'recommendations': valid_recommendations[:6]
             }
 
         except Exception as e:
@@ -591,13 +614,24 @@ IMPORTANT: Base your analysis on the actual portfolio composition and scenario i
                 current_section = 'insights'
             elif '[ACTIONABLE RECOMMENDATIONS]' in line.upper() or '[RECOMMENDATIONS]' in line.upper():
                 current_section = 'recommendations'
-            elif line.startswith(('•', '-', '*', '1.', '2.', '3.', '4.', '5.')):
-                if current_section == 'insights':
-                    sections['insights'].append(line.lstrip('•-*123456789. '))
-                elif current_section == 'recommendations':
-                    sections['recommendations'].append(line.lstrip('•-*123456789. '))
-            elif current_section == 'overview':
+            elif line.startswith(('•', '-', '*', '1.', '2.', '3.', '4.', '5.', '6.', '7.', '8.', '9.')):
+                clean_line = line.lstrip('•-*123456789. ')
+                if clean_line and len(clean_line) > 5:  # Only add if there's meaningful content
+                    if current_section == 'insights':
+                        sections['insights'].append(clean_line)
+                    elif current_section == 'recommendations':
+                        sections['recommendations'].append(clean_line)
+            elif current_section == 'overview' and line and len(line) > 5:
                 sections['overview'] += line + '\n'
+        
+        # Clean up sections
+        sections['overview'] = sections['overview'].strip()
+        
+        # Filter out any remaining empty or invalid items
+        sections['insights'] = [insight for insight in sections['insights'] 
+                              if insight and isinstance(insight, str) and len(insight.strip()) > 10]
+        sections['recommendations'] = [rec for rec in sections['recommendations'] 
+                                     if rec and isinstance(rec, str) and len(rec.strip()) > 10]
         
         return sections
 
@@ -648,16 +682,21 @@ IMPORTANT: Base your analysis on the actual portfolio composition and scenario i
         return {
             'narrative': f"Unable to complete AI analysis for scenario: '{scenario}'. Error: {error}. Please try again later or consult with a financial advisor for scenario analysis.",
             'insights': [
-                "AI analysis temporarily unavailable",
-                "Consider general market volatility factors",
-                "Review portfolio diversification",
-                "Monitor relevant economic indicators"
+                "AI analysis temporarily unavailable - please retry the analysis",
+                "Consider general market volatility factors in your decision making",
+                "Review your portfolio diversification to ensure proper risk management",
+                "Monitor relevant economic indicators for scenario-related developments"
             ],
             'recommendations': [
-                "Retry analysis when AI service is available",
-                "Consult financial news for scenario-related updates",
-                "Review portfolio risk management strategies",
-                "Consider professional financial advice"
+                "Retry the scenario analysis when AI service is available",
+                "Consult financial news sources for scenario-related market updates",
+                "Review your portfolio risk management strategies and asset allocation",
+                "Consider seeking professional financial advice for complex scenarios"
             ],
-            'risk_assessment': "Cannot assess risk without AI analysis. Please retry or seek professional advice."
+            'risk_assessment': "MEDIUM",
+            'risk_details': {
+                'score': 50.0,
+                'confidence': 'LOW',
+                'primary_factors': ['AI analysis unavailable', 'Limited scenario assessment']
+            }
         }

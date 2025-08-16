@@ -5,6 +5,7 @@ from backend.models.models import User, Portfolio, Holding, RiskAssessment, Scen
 import json
 import io
 import time
+import re
 from reportlab.lib import colors
 from reportlab.lib.pagesizes import A4
 from reportlab.platypus import SimpleDocTemplate, Table, TableStyle, Paragraph, Spacer, PageBreak
@@ -85,17 +86,35 @@ class ExportService:
                 content.append(scenario.analysis_narrative)
                 content.append("")
                 
-                insights = json.loads(scenario.insights)
-                if insights:
+                insights = json.loads(scenario.insights) if scenario.insights else []
+                valid_insights = []
+                for insight in insights:
+                    if insight and isinstance(insight, str) and insight.strip():
+                        # Clean up any markdown-like syntax and HTML tags
+                        clean_insight = insight.replace('###', '').replace('**', '').replace('*', '')
+                        clean_insight = re.sub(r'<[^>]*>', '', clean_insight).strip()
+                        if clean_insight and len(clean_insight) > 10:
+                            valid_insights.append(clean_insight)
+                
+                if valid_insights:
                     content.append("Key Insights:")
-                    for insight in insights:
+                    for insight in valid_insights:
                         content.append(f"• {insight}")
                     content.append("")
                 
-                recommendations = json.loads(scenario.recommendations)
-                if recommendations:
+                recommendations = json.loads(scenario.recommendations) if scenario.recommendations else []
+                valid_recommendations = []
+                for rec in recommendations:
+                    if rec and isinstance(rec, str) and rec.strip():
+                        # Clean up any markdown-like syntax and HTML tags
+                        clean_rec = rec.replace('###', '').replace('**', '').replace('*', '')
+                        clean_rec = re.sub(r'<[^>]*>', '', clean_rec).strip()
+                        if clean_rec and len(clean_rec) > 10:
+                            valid_recommendations.append(clean_rec)
+                
+                if valid_recommendations:
                     content.append("Recommendations:")
-                    for rec in recommendations:
+                    for rec in valid_recommendations:
                         content.append(f"• {rec}")
                     content.append("")
                 
@@ -773,12 +792,19 @@ class ExportService:
                     # Key Insights with proper bullet formatting
                     try:
                         insights = json.loads(scenario.insights) if scenario.insights else []
-                        if insights:
-                            story.append(Paragraph("Key Insights:", subheading_style))
-                            for insight in insights:
-                                # Clean up any markdown-like syntax
+                        valid_insights = []
+                        for insight in insights:
+                            if insight and isinstance(insight, str) and insight.strip():
+                                # Clean up any markdown-like syntax and HTML tags
                                 clean_insight = insight.replace('###', '').replace('**', '').replace('*', '')
-                                story.append(Paragraph(f"• {clean_insight}", normal_style))
+                                clean_insight = re.sub(r'<[^>]*>', '', clean_insight).strip()
+                                if clean_insight and len(clean_insight) > 10:
+                                    valid_insights.append(clean_insight)
+                        
+                        if valid_insights:
+                            story.append(Paragraph("Key Insights:", subheading_style))
+                            for insight in valid_insights:
+                                story.append(Paragraph(f"• {insight}", normal_style))
                             story.append(Spacer(1, 15))
                     except:
                         pass
@@ -786,12 +812,19 @@ class ExportService:
                     # Recommendations with proper bullet formatting
                     try:
                         recommendations = json.loads(scenario.recommendations) if scenario.recommendations else []
-                        if recommendations:
-                            story.append(Paragraph("Recommendations:", subheading_style))
-                            for rec in recommendations:
-                                # Clean up any markdown-like syntax
+                        valid_recommendations = []
+                        for rec in recommendations:
+                            if rec and isinstance(rec, str) and rec.strip():
+                                # Clean up any markdown-like syntax and HTML tags
                                 clean_rec = rec.replace('###', '').replace('**', '').replace('*', '')
-                                story.append(Paragraph(f"• {clean_rec}", normal_style))
+                                clean_rec = re.sub(r'<[^>]*>', '', clean_rec).strip()
+                                if clean_rec and len(clean_rec) > 10:
+                                    valid_recommendations.append(clean_rec)
+                        
+                        if valid_recommendations:
+                            story.append(Paragraph("Recommendations:", subheading_style))
+                            for rec in valid_recommendations:
+                                story.append(Paragraph(f"• {rec}", normal_style))
                             story.append(Spacer(1, 15))
                     except:
                         pass
