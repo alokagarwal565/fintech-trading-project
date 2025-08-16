@@ -456,16 +456,16 @@ class ScenarioService:
         try:
             # Create comprehensive prompt with portfolio data
             prompt = self._create_dynamic_prompt(scenario, portfolio_analysis, impact_analysis, risk_assessment)
-            
+
             # Get AI analysis
             model = genai.GenerativeModel("gemini-2.5-flash")
             response = model.generate_content(contents=prompt)
-            
+
             if response.text and response.text.strip():
                 return self._parse_ai_response(response.text, portfolio_analysis, impact_analysis, risk_assessment)
             else:
                 raise Exception("Empty response from AI model")
-                
+
         except Exception as e:
             app_logger.error(f"AI analysis failed: {e}")
             return self._get_fallback_analysis(scenario, str(e))
@@ -562,13 +562,13 @@ IMPORTANT: Base your analysis on the actual portfolio composition and scenario i
             
             if len(recommendations) < 3:
                 recommendations.extend(self._generate_portfolio_specific_recommendations(portfolio_analysis, risk_assessment))
-            
+
             return {
                 'narrative': narrative,
                 'insights': insights[:6],
                 'recommendations': recommendations[:6]
             }
-            
+
         except Exception as e:
             app_logger.error(f"Error parsing AI response: {e}")
             return self._get_fallback_analysis("", str(e))

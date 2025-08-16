@@ -9,6 +9,7 @@ import asyncio
 from typing import Optional, Dict, Any, Tuple
 import json
 import plotly.graph_objects as go
+import html
 
 # Load environment variables
 load_dotenv()
@@ -1398,6 +1399,153 @@ def add_custom_css():
                     display: none !important;
                 }
             }
+            
+            /* Override Streamlit's default light backgrounds */
+            .scenario-card-container .stMarkdown {
+                background: transparent !important;
+            }
+            
+            /* Ensure text is visible on dark background */
+            .scenario-card-container strong {
+                color: #ffffff !important;
+            }
+            
+            .scenario-card-container {
+                color: #ffffff !important;
+            }
+            
+            /* Override Streamlit's default info box styling for dark theme */
+            .scenario-card-container .stInfo {
+                background-color: #1e1e1e !important;
+                border: 1px solid #4a4a4a !important;
+                color: #ffffff !important;
+            }
+            
+            /* Ensure all text elements in scenario cards are visible */
+            .scenario-card-container p,
+            .scenario-card-container div,
+            .scenario-card-container span {
+                color: #ffffff !important;
+            }
+            
+            /* Remove ALL white backgrounds from Streamlit components */
+            .scenario-card-container .stAlert,
+            .scenario-card-container .stAlert > div,
+            .scenario-card-container .stAlert > div > div,
+            .scenario-card-container .stInfo,
+            .scenario-card-container .stInfo > div,
+            .scenario-card-container .stInfo > div > div,
+            .scenario-card-container .stSuccess,
+            .scenario-card-container .stSuccess > div,
+            .scenario-card-container .stSuccess > div > div,
+            .scenario-card-container .stWarning,
+            .scenario-card-container .stWarning > div,
+            .scenario-card-container .stWarning > div > div,
+            .scenario-card-container .stError,
+            .scenario-card-container .stError > div,
+            .scenario-card-container .stError > div > div {
+                background-color: transparent !important;
+                background: transparent !important;
+            }
+            
+            /* Override Streamlit's default container backgrounds */
+            .scenario-card-container .stContainer,
+            .scenario-card-container .stContainer > div {
+                background: transparent !important;
+            }
+            
+            /* Remove any remaining white backgrounds */
+            .scenario-card-container * {
+                background-color: transparent !important;
+                background: transparent !important;
+            }
+            
+            /* Force dark theme for all elements within scenario cards */
+            .scenario-card-container .stMarkdown,
+            .scenario-card-container .stMarkdown > div,
+            .scenario-card-container .stMarkdown > div > div {
+                background: transparent !important;
+                background-color: transparent !important;
+            }
+            
+            /* Specific styling for Streamlit info boxes to match dark theme */
+            .scenario-card-container .stInfo {
+                background: linear-gradient(135deg, #1e1e1e 0%, #2a2a2a 100%) !important;
+                background-color: #1e1e1e !important;
+                border: 1px solid #4a4a4a !important;
+                color: #ffffff !important;
+                border-radius: 8px !important;
+                padding: 12px !important;
+            }
+            
+            /* Override any Streamlit default styling that might create white backgrounds */
+            .scenario-card-container .stInfo > div,
+            .scenario-card-container .stInfo > div > div,
+            .scenario-card-container .stInfo > div > div > div {
+                background: transparent !important;
+                background-color: transparent !important;
+            }
+            
+            /* Ensure buttons also have dark theme */
+            .scenario-card-container .stButton > button {
+                background-color: #007bff !important;
+                color: #ffffff !important;
+                border: 1px solid #0056b3 !important;
+            }
+            
+            .scenario-card-container .stButton > button:hover {
+                background-color: #0056b3 !important;
+            }
+            
+            /* Additional overrides to remove any remaining white backgrounds */
+            .scenario-card-container .stAlert,
+            .scenario-card-container .stAlert > div,
+            .scenario-card-container .stAlert > div > div,
+            .scenario-card-container .stAlert > div > div > div {
+                background: transparent !important;
+                background-color: transparent !important;
+            }
+            
+            /* Override any Streamlit default styling */
+            .scenario-card-container .stMarkdown > div,
+            .scenario-card-container .stMarkdown > div > div,
+            .scenario-card-container .stMarkdown > div > div > div {
+                background: transparent !important;
+                background-color: transparent !important;
+            }
+            
+            /* Force dark theme for all nested elements */
+            .scenario-card-container * {
+                background: transparent !important;
+                background-color: transparent !important;
+            }
+            
+            /* Specific override for info boxes */
+            .scenario-card-container .stInfo,
+            .scenario-card-container .stInfo > div,
+            .scenario-card-container .stInfo > div > div,
+            .scenario-card-container .stInfo > div > div > div {
+                background: linear-gradient(135deg, #1e1e1e 0%, #2a2a2a 100%) !important;
+                background-color: #1e1e1e !important;
+            }
+            
+            /* Final aggressive override to remove ALL white backgrounds */
+            .scenario-card-container,
+            .scenario-card-container *,
+            .scenario-card-container * *,
+            .scenario-card-container * * * {
+                background: transparent !important;
+                background-color: transparent !important;
+            }
+            
+            /* Exception: Only allow dark backgrounds for specific elements */
+            .scenario-card-container {
+                background: linear-gradient(135deg, #2d2d2d 0%, #3a3a3a 100%) !important;
+            }
+            
+            .scenario-card-container .stInfo {
+                background: linear-gradient(135deg, #1e1e1e 0%, #2a2a2a 100%) !important;
+            }
         </style>
     """, unsafe_allow_html=True)
 
@@ -1599,11 +1747,11 @@ def show_auth_page():
                     with st.spinner("Creating account..."):
                         result = api_client.register_user(reg_email, reg_password, reg_full_name)
                         st.success("✅ Account created successfully! Please login.")
-                        # Clear form
-                        st.session_state.reg_email = ""
-                        st.session_state.reg_password = ""
-                        st.session_state.reg_full_name = ""
-                        st.rerun()
+                    # Clear form
+                    st.session_state.reg_email = ""
+                    st.session_state.reg_password = ""
+                    st.session_state.reg_full_name = ""
+                    st.rerun()
                 except APIError as e:
                     # Handle structured API errors
                     if e.error_type == "duplicate_email":
@@ -1996,11 +2144,21 @@ def display_scenario_analysis(result: dict):
     with col1:
         # 📝 Analysis Overview Section
         with st.expander("📝 Analysis Overview", expanded=True):
+            # Clean the narrative content by removing HTML tags more thoroughly
+            import re
+            
+            # First decode any HTML entities
+            decoded_narrative = html.unescape(result["narrative"])
+            # Then remove all HTML tags
+            clean_narrative = re.sub(r'<[^>]*>', '', decoded_narrative)
+            # Remove any extra whitespace
+            clean_narrative = re.sub(r'\s+', ' ', clean_narrative).strip()
+            
             st.markdown(f"""
                 <div class="content-box-enhanced">
                     <h4>📊 Dynamic Analysis Summary</h4>
                     <div class="scenario-text-content">
-                        {result["narrative"]}
+                        {clean_narrative}
                     </div>
                 </div>
             """, unsafe_allow_html=True)
@@ -2009,12 +2167,17 @@ def display_scenario_analysis(result: dict):
         with st.expander("🔑 Key Insights", expanded=True):
             st.markdown('<div class="section-header-enhanced">Portfolio-Specific Insights</div>', unsafe_allow_html=True)
             for i, insight in enumerate(result['insights'], 1):
+                # Clean HTML tags from insight more thoroughly
+                decoded_insight = html.unescape(insight)
+                clean_insight = re.sub(r'<[^>]*>', '', decoded_insight)
+                clean_insight = re.sub(r'\s+', ' ', clean_insight).strip()
+                
                 st.markdown(f"""
                     <div class="content-box-enhanced">
                         <div style="display: flex; align-items: flex-start; gap: 12px;">
                             <span class="insight-number">{i}</span>
                             <div class="scenario-text-content" style="flex: 1; margin: 0;">
-                                {insight}
+                                {clean_insight}
                             </div>
                         </div>
                     </div>
@@ -2024,6 +2187,11 @@ def display_scenario_analysis(result: dict):
         with st.expander("✅ Actionable Recommendations", expanded=True):
             st.markdown('<div class="section-header-enhanced">Portfolio-Specific Actions</div>', unsafe_allow_html=True)
             for i, rec in enumerate(result['recommendations'], 1):
+                # Clean HTML tags from recommendation more thoroughly
+                decoded_rec = html.unescape(rec)
+                clean_rec = re.sub(r'<[^>]*>', '', decoded_rec)
+                clean_rec = re.sub(r'\s+', ' ', clean_rec).strip()
+                
                 st.markdown(f"""
                     <div class="content-box-enhanced">
                         <div style="position: relative;">
@@ -2031,7 +2199,7 @@ def display_scenario_analysis(result: dict):
                                 Priority {i}
                             </div>
                             <div class="scenario-text-content" style="margin-top: 8px;">
-                                {rec}
+                                {clean_rec}
                             </div>
                         </div>
                     </div>
@@ -2166,6 +2334,21 @@ def show_scenario_analysis():
     
     st.header("🔮 AI-Powered Scenario Analysis")
     
+    # Automatically refresh data when page loads to ensure latest data
+    if 'scenario_data_refreshed' not in st.session_state:
+        load_user_data()
+        st.session_state.scenario_data_refreshed = True
+    
+    # Add refresh button to reload data
+    col1, col2 = st.columns([3, 1])
+    with col1:
+        st.write("")  # Spacer
+    with col2:
+        if st.button("🔄 Refresh Data", help="Reload latest scenario data"):
+            load_user_data()
+            st.session_state.scenario_data_refreshed = True
+            st.rerun()
+    
     # Check if user has saved scenarios
     if hasattr(st.session_state, 'scenario_results') and st.session_state.scenario_results:
         st.success(f"✅ You have {len(st.session_state.scenario_results)} saved scenario analyses!")
@@ -2173,231 +2356,184 @@ def show_scenario_analysis():
         # Recent Scenario Analyses Section
         st.subheader("📊 Recent Scenario Analyses")
         
-        # Display scenarios in a grid layout
+        # Display scenarios in a simple row-based grid
         if len(st.session_state.scenario_results) > 0:
-            # Create columns for grid layout
-            cols = st.columns(min(3, len(st.session_state.scenario_results)))
+            # Simple CSS for clean cards
+            st.markdown("""
+                <style>
+                .scenario-grid {
+                    display: grid;
+                    grid-template-columns: repeat(3, 1fr);
+                    gap: 20px;
+                    margin: 20px 0;
+                }
+                .scenario-card {
+                    background: #2d2d2d;
+                    border: 1px solid #4a4a4a;
+                    border-radius: 8px;
+                    padding: 16px;
+                    color: white;
+                }
+                .scenario-header {
+                    display: flex;
+                    justify-content: space-between;
+                    align-items: center;
+                    margin-bottom: 12px;
+                }
+                .scenario-title {
+                    font-size: 16px;
+                    font-weight: bold;
+                    color: white;
+                }
+                .risk-badge {
+                    padding: 4px 8px;
+                    border-radius: 12px;
+                    font-size: 11px;
+                    font-weight: bold;
+                }
+                .risk-critical { background: #dc3545; color: white; }
+                .risk-high { background: #fd7e14; color: white; }
+                .risk-medium { background: #ffc107; color: black; }
+                .risk-low { background: #28a745; color: white; }
+                .scenario-date {
+                    color: #cccccc;
+                    font-size: 12px;
+                    margin-bottom: 8px;
+                }
+                .scenario-text {
+                    color: white;
+                    margin-bottom: 16px;
+                    line-height: 1.4;
+                }
+                </style>
+            """, unsafe_allow_html=True)
+            
+            # Create the grid container
+            st.markdown('<div class="scenario-grid">', unsafe_allow_html=True)
             
             for i, result in enumerate(st.session_state.scenario_results):
-                col_idx = i % 3
+                # Get risk level
+                risk_level = result['analysis'].get('risk_assessment', 'LOW')
                 
-                with cols[col_idx]:
-                    # Get risk level from the new dynamic structure
-                    risk_level = result['analysis'].get('risk_assessment', 'LOW')
-                    
-                    # Determine risk styling based on actual risk level
+                # Determine risk class and text
+                if isinstance(risk_level, str):
                     if risk_level in ['CRITICAL', 'HIGH']:
-                        risk_color = "#dc3545"
-                        risk_bg = "#f8d7da"
-                        risk_icon = "🔴"
+                        risk_class = "risk-high" if risk_level == "HIGH" else "risk-critical"
                         risk_text_short = "HIGH" if risk_level == "HIGH" else "CRITICAL"
                     elif risk_level == 'MEDIUM':
-                        risk_color = "#ffc107"
-                        risk_bg = "#fff3cd"
-                        risk_icon = "🟡"
+                        risk_class = "risk-medium"
                         risk_text_short = "MEDIUM"
-                    else:  # LOW or MINIMAL
-                        risk_color = "#28a745"
-                        risk_bg = "#d4edda"
-                        risk_icon = "🟢"
+                    else:
+                        risk_class = "risk-low"
                         risk_text_short = "LOW"
-                    
-                    # Scenario Card using Streamlit components instead of raw HTML
-                    with st.container():
-                        # Add a border and background to make it look like a card
-                        st.markdown("""
-                            <style>
-                            .scenario-card-container {
-                                border: 2px solid #e9ecef;
-                                border-radius: 12px;
-                                padding: 16px;
-                                margin: 8px 0;
-                                background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
-                                box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-                            }
-                            </style>
-                        """, unsafe_allow_html=True)
-                        
-                        # Card header with scenario number and risk badge
-                        col_header1, col_header2 = st.columns([3, 1])
-                        with col_header1:
-                            st.markdown(f"**🔮 Scenario {len(st.session_state.scenario_results)-i}**")
-                        with col_header2:
-                            if risk_text_short == "CRITICAL":
-                                st.markdown("🔴 **CRITICAL**", help="Critical Risk Scenario")
-                            elif risk_text_short == "HIGH":
-                                st.markdown("🔴 **HIGH**", help="High Risk Scenario")
-                            elif risk_text_short == "MEDIUM":
-                                st.markdown("🟡 **MEDIUM**", help="Medium Risk Scenario")
-                            else:
-                                st.markdown("🟢 **LOW**", help="Low Risk Scenario")
-                        
-                        # Date information
-                        st.markdown(f"**Date:** {result['timestamp'].strftime('%Y-%m-%d %H:%M')}")
-                        
-                        # Scenario description
-                        st.markdown("**Scenario:**")
-                        scenario_text = result['scenario'][:60] + "..." if len(result['scenario']) > 60 else result['scenario']
-                        st.info(scenario_text)
-                        
-                        # Action buttons
-                        col_btn1, col_btn2 = st.columns(2)
-                        with col_btn1:
-                            if st.button("📊 View Full", key=f"view_{i}", use_container_width=True):
-                                st.session_state.selected_scenario = i
-                                st.rerun()
-                        with col_btn2:
-                            if st.button("🗑️ Delete", key=f"delete_{i}", use_container_width=True, type="secondary"):
-                                try:
-                                    # Find the scenario ID from the backend
-                                    scenarios = api_client.get_user_scenarios(st.session_state.access_token)
-                                    if scenarios.get('scenarios'):
-                                        # Find the matching scenario by timestamp
-                                        target_timestamp = result['timestamp'].isoformat()
-                                        for scenario in scenarios['scenarios']:
-                                            if scenario['created_at'].startswith(target_timestamp[:10]):
-                                                api_client.delete_scenario(scenario['scenario_id'], st.session_state.access_token)
-                                                st.session_state.scenario_results.pop(i)
-                                                st.success("Scenario deleted successfully!")
-                                                st.rerun()
-                                                break
-                                except Exception as e:
-                                    st.error(f"❌ Error deleting scenario: {str(e)}")
-                        
-                        # Add some spacing between cards
-                        st.markdown("---")
-        
-        st.markdown("---")
-        
-        # Show full analysis if a scenario is selected
-        if 'selected_scenario' in st.session_state:
-            selected_idx = st.session_state.selected_scenario
-            if selected_idx < len(st.session_state.scenario_results):
-                selected_result = st.session_state.scenario_results[selected_idx]
-                
-                st.subheader(f"📊 Full Analysis: Scenario {len(st.session_state.scenario_results)-selected_idx}")
-                
-                # Close button
-                if st.button("❌ Close Full Analysis"):
-                    del st.session_state.selected_scenario
-                    st.rerun()
-                
-                # Display full analysis
-                display_scenario_analysis(selected_result['analysis'])
-                
-                st.markdown("---")
-        
-        # Scenario Comparison Section (if multiple scenarios exist)
-        if len(st.session_state.scenario_results) > 1:
-            st.subheader("📊 Scenario Comparison")
-            st.write("Compare the risk levels and characteristics of your analyzed scenarios.")
-            
-            # Create comparison data with actual risk scores
-            comparison_data = []
-            for i, result in enumerate(st.session_state.scenario_results):
-                risk_level = result['analysis'].get('risk_assessment', 'LOW')
-                risk_details = result['analysis'].get('risk_details', {})
-                actual_risk_score = risk_details.get('score', 0)
-                
-                # Convert risk level to display format
-                if risk_level in ['CRITICAL', 'HIGH']:
-                    display_risk_level = risk_level
-                elif risk_level == 'MEDIUM':
-                    display_risk_level = 'MEDIUM'
                 else:
-                    display_risk_level = 'LOW'
+                    risk_class = "risk-low"
+                    risk_text_short = "LOW"
                 
-                comparison_data.append({
-                    "Scenario": f"Scenario {len(st.session_state.scenario_results)-i}",
-                    "Date": result['timestamp'].strftime('%Y-%m-%d'),
-                    "Risk Level": display_risk_level,
-                    "Risk Score": actual_risk_score,
-                    "Insights Count": len(result['analysis'].get('insights', [])),
-                    "Recommendations Count": len(result['analysis'].get('recommendations', [])),
-                    "Description": result['scenario'][:40] + "..." if len(result['scenario']) > 40 else result['scenario']
-                })
-            
-            # Display comparison table with enhanced styling
-            if comparison_data:
-                df_comparison = pd.DataFrame(comparison_data)
+                # Create scenario card HTML
+                scenario_number = len(st.session_state.scenario_results) - i
+                date_str = result['timestamp'].strftime('%Y-%m-%d %H:%M')
+                scenario_text = result['scenario'][:60] + "..." if len(result['scenario']) > 60 else result['scenario']
                 
-                # Apply enhanced table styling
-                st.markdown("""
-                    <div class="table-enhanced">
-                        <style>
-                            .dataframe {
-                                background: #ffffff !important;
-                                border-radius: 12px !important;
-                                overflow: hidden !important;
-                                box-shadow: 0 4px 12px rgba(0,0,0,0.08) !important;
-                            }
-                            .dataframe th {
-                                background: linear-gradient(135deg, #667eea 0%, #764ba2 100%) !important;
-                                color: white !important;
-                                font-weight: 700 !important;
-                                padding: 16px 12px !important;
-                                text-align: left !important;
-                                border: none !important;
-                            }
-                            .dataframe td {
-                                padding: 12px !important;
-                                border-bottom: 1px solid #e9ecef !important;
-                                color: #4a5568 !important;
-                                font-weight: 500 !important;
-                            }
-                            .dataframe tr:hover {
-                                background-color: #f8f9fa !important;
-                            }
-                        </style>
+                card_html = f"""
+                <div class="scenario-card">
+                    <div class="scenario-header">
+                        <div class="scenario-title">🔮 Scenario {scenario_number}</div>
+                        <div class="risk-badge {risk_class}">{risk_text_short}</div>
                     </div>
-                """, unsafe_allow_html=True)
+                    <div class="scenario-date">Date: {date_str}</div>
+                    <div class="scenario-text"><strong>Scenario:</strong> {scenario_text}</div>
+                </div>
+                """
                 
-                st.dataframe(
-                    df_comparison,
-                    use_container_width=True,
-                    column_config={
-                        "Risk Score": st.column_config.NumberColumn(
-                            "Risk Score",
-                            help="Actual calculated risk score (0-100)",
-                            min_value=0,
-                            max_value=100,
-                            format="%.1f"
-                        )
-                    }
-                )
+                st.markdown(card_html, unsafe_allow_html=True)
                 
-                # Risk Level Distribution Chart
-                st.subheader("📊 Risk Level Distribution Across Scenarios")
+                # Display buttons immediately after each card
+                col1, col2 = st.columns(2)
+                with col1:
+                    if st.button("📊 View Full", key=f"view_{i}", use_container_width=True):
+                        st.session_state.selected_scenario = i
+                        st.rerun()
+                with col2:
+                    if st.button("🗑️ Delete", key=f"delete_{i}", use_container_width=True, type="secondary"):
+                        try:
+                            # Find the scenario ID from the backend
+                            scenarios = api_client.get_user_scenarios(st.session_state.access_token)
+                            if scenarios.get('scenarios'):
+                                # Find the matching scenario by timestamp
+                                target_timestamp = result['timestamp'].isoformat()
+                                for scenario in scenarios['scenarios']:
+                                    if scenario['created_at'].startswith(target_timestamp[:10]):
+                                        api_client.delete_scenario(scenario['scenario_id'], st.session_state.access_token)
+                                        st.session_state.scenario_results.pop(i)
+                                        st.success("Scenario deleted successfully!")
+                                        st.rerun()
+                                        break
+                        except Exception as e:
+                            st.error(f"❌ Error deleting scenario: {str(e)}")
                 
-                # Count risk levels
-                risk_counts = {}
-                for data in comparison_data:
-                    risk_level = data['Risk Level']
-                    risk_counts[risk_level] = risk_counts.get(risk_level, 0) + 1
-                
-                if risk_counts:
-                    # Create pie chart
-                    fig = go.Figure(data=[
-                        go.Pie(
-                            labels=list(risk_counts.keys()),
-                            values=list(risk_counts.values()),
-                            hole=0.4,
-                            marker_colors=['#dc3545', '#ffc107', '#28a745', '#6c757d']  # Red, Yellow, Green, Grey
-                        )
-                    ])
-                    
-                    fig.update_layout(
-                        title="Risk Level Distribution",
-                        showlegend=True,
-                        height=400,
-                        margin=dict(t=50, b=50, l=50, r=50)
-                    )
-                    
-                    st.plotly_chart(fig, use_container_width=True, config={'displayModeBar': False})
+                # Add some spacing between card+button groups
+                st.markdown("<br>", unsafe_allow_html=True)
+            
+            # Close the grid container
+            st.markdown('</div>', unsafe_allow_html=True)
     else:
         # No scenarios exist yet
         st.info("ℹ️ No saved scenario analyses found. Create your first scenario analysis below!")
         st.markdown("---")
+    
+    # Show full analysis if a scenario is selected
+    if 'selected_scenario' in st.session_state:
+        selected_idx = st.session_state.selected_scenario
+        if selected_idx < len(st.session_state.scenario_results):
+            selected_result = st.session_state.scenario_results[selected_idx]
+            
+            st.subheader(f"📊 Full Analysis: Scenario {len(st.session_state.scenario_results)-selected_idx}")
+            
+            # Close button
+            if st.button("❌ Close Full Analysis"):
+                del st.session_state.selected_scenario
+                st.rerun()
+            
+            # Display full analysis
+            display_scenario_analysis(selected_result['analysis'])
+            
+            st.markdown("---")
+    
+    # Scenario Comparison Section (if multiple scenarios exist)
+    if len(st.session_state.scenario_results) > 1:
+        st.subheader("📊 Scenario Comparison")
+        st.write("Compare the risk levels and characteristics of your analyzed scenarios.")
+        
+        # Create comparison data with actual risk scores
+        comparison_data = []
+        for i, result in enumerate(st.session_state.scenario_results):
+            risk_level = result['analysis'].get('risk_assessment', 'LOW')
+            risk_details = result['analysis'].get('risk_details', {})
+            actual_risk_score = risk_details.get('score', 0)
+            
+            # Convert risk level to display format
+            if risk_level in ['CRITICAL', 'HIGH']:
+                display_risk_level = risk_level
+            elif risk_level == 'MEDIUM':
+                display_risk_level = 'MEDIUM'
+            else:
+                display_risk_level = 'LOW'
+            
+            comparison_data.append({
+                "Scenario": f"Scenario {len(st.session_state.scenario_results)-i}",
+                "Date": result['timestamp'].strftime('%Y-%m-%d'),
+                "Risk Level": display_risk_level,
+                "Risk Score": actual_risk_score,
+                "Insights Count": len(result['analysis'].get('insights', [])),
+                "Recommendations Count": len(result['analysis'].get('recommendations', [])),
+                "Description": result['scenario'][:40] + "..." if len(result['scenario']) > 40 else result['scenario']
+            })
+        
+        # Display comparison table
+        if comparison_data:
+            df_comparison = pd.DataFrame(comparison_data)
+            st.dataframe(df_comparison, use_container_width=True)
     
     # New Scenario Analysis Section
     st.subheader("🔮 Analyze New Scenario")
@@ -2478,36 +2614,28 @@ def show_scenario_analysis():
                     response = api_client.analyze_scenario(selected_scenario, st.session_state.access_token)
                     
                     if response and 'narrative' in response:
-                        # Store the result
+                        # Save the analysis result
                         if 'scenario_results' not in st.session_state:
                             st.session_state.scenario_results = []
                         
-                        result_entry = {
+                        # Create result object with timestamp
+                        result = {
                             'scenario': selected_scenario,
-                            'analysis': response,  # Store the entire response as analysis
+                            'analysis': response,
                             'timestamp': datetime.now()
                         }
                         
-                        st.session_state.scenario_results.insert(0, result_entry)
+                        # Add to beginning of list (most recent first)
+                        st.session_state.scenario_results.insert(0, result)
                         
-                        # Show success message
                         st.success("✅ Scenario analysis completed successfully!")
-                        
-                        # Display the results
-                        st.markdown("---")
-                        st.subheader("📊 Analysis Results")
-                        display_scenario_analysis(response)
-                        
-                        # Rerun to refresh the display
                         st.rerun()
                     else:
                         st.error("❌ Failed to analyze scenario. Please try again.")
-                        
                 except Exception as e:
                     error_msg = str(e)
                     if "401" in error_msg or "Unauthorized" in error_msg:
-                        st.error("❌ Authentication expired. Please log in again.")
-                        # Clear the session and redirect to login
+                        st.error("❌ Session expired. Please log in again.")
                         st.session_state.clear()
                         st.rerun()
                     elif "500" in error_msg or "Internal Server Error" in error_msg:
