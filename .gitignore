@@ -1,3 +1,5 @@
 venv/
 .env
 __pycache__
+investment_advisor.db
+app.log
