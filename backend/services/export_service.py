@@ -249,7 +249,7 @@ class ExportService:
             return None
     
     def export_to_pdf_simple(self, user: User, session: Session, include_risk_profile: bool = True,
-                            include_portfolio: bool = True, include_scenarios: bool = True) -> bytes:
+                     include_portfolio: bool = True, include_scenarios: bool = True) -> bytes:
         """
         Fallback PDF export method - creates a simple PDF without charts for reliability
         """

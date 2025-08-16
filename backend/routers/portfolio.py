@@ -24,11 +24,29 @@ async def analyze_portfolio(
         service = PortfolioService()
         result = service.analyze_portfolio(request.portfolio_input, current_user, session)
         
+        # Ensure all required fields are present with safe defaults
+        if not isinstance(result, dict):
+            raise HTTPException(status_code=500, detail="Invalid response from portfolio service")
+        
+        # Validate required fields
+        required_fields = ['portfolio_id', 'valid_holdings', 'invalid_holdings', 'total_value', 'metrics', 'visualizations']
+        for field in required_fields:
+            if field not in result:
+                raise HTTPException(status_code=500, detail=f"Missing required field: {field}")
+        
+        # Ensure valid_holdings is always a list
+        if not isinstance(result['valid_holdings'], list):
+            result['valid_holdings'] = []
+        
+        # Ensure invalid_holdings is always a list
+        if not isinstance(result['invalid_holdings'], list):
+            result['invalid_holdings'] = []
+        
         return {
             "portfolio_id": result['portfolio_id'],
             "portfolio_input": request.portfolio_input,
             "total_value": result['total_value'],
-            "holdings": result['valid_holdings'],  # Use 'holdings' for consistency
+            "valid_holdings": result['valid_holdings'],  # Keep 'valid_holdings' for frontend compatibility
             "invalid_holdings": result['invalid_holdings'],
             "holdings_count": len(result['valid_holdings']),
             "metrics": result['metrics'],

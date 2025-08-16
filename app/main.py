@@ -1993,13 +1993,28 @@ def show_portfolio_analysis():
             try:
                 with st.spinner("📊 Fetching live market data and analyzing portfolio..."):
                     result = api_client.analyze_portfolio(portfolio_input, st.session_state.access_token)
+                    
+                    # Debug: Log the response structure
+                    if st.session_state.get('debug_mode'):
+                        st.write("🔍 Debug: API Response Structure", result.keys())
+                        st.write("🔍 Debug: Full Response", result)
+                    
+                    # Validate response structure
+                    if not isinstance(result, dict):
+                        st.error("❌ Invalid response format from server")
+                        return
+                    
+                    if 'valid_holdings' not in result:
+                        st.error(f"❌ Missing 'valid_holdings' in response. Available keys: {list(result.keys())}")
+                        return
+                    
                     st.session_state.portfolio_data = result
                     
                     # Normalize the data structure to ensure consistency
                     if 'valid_holdings' in result and 'holdings' not in result:
                         st.session_state.portfolio_data['holdings'] = result['valid_holdings']
                     
-                    if result['valid_holdings']:
+                    if result['valid_holdings'] and len(result['valid_holdings']) > 0:
                         st.success("✅ Portfolio analyzed successfully!")
                         
                         # Display portfolio summary
@@ -2052,6 +2067,17 @@ def show_portfolio_analysis():
                         
                         st.rerun()
                     
+                    elif result['valid_holdings'] is not None and len(result['valid_holdings']) == 0:
+                        st.warning("⚠️ Portfolio analysis completed, but no valid holdings were found.")
+                        st.info("This might happen if:")
+                        st.info("• Stock symbols couldn't be resolved")
+                        st.info("• Market data is unavailable")
+                        st.info("• Input format needs adjustment")
+                        
+                        if result.get('invalid_holdings'):
+                            st.subheader("⚠️ Invalid Entries")
+                            for invalid in result['invalid_holdings']:
+                                st.error(f"Could not process: {invalid}")
                     else:
                         st.error("❌ No valid holdings found. Please check your input format.")
                 

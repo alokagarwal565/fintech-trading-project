@@ -319,75 +319,98 @@ class PortfolioService:
         Returns:
             Dict[str, Any]: A comprehensive dictionary with portfolio details, metrics, and plots.
         """
-        # Parse input
-        holdings, invalid_entries = self.parse_portfolio_input(input_text)
-        
-        valid_holdings = []
-        invalid_holdings = []
-        total_value = 0
-        
-        # Process each holding
-        for holding in holdings:
-            symbol = self.get_stock_symbol(holding.get('company', ''))
-            stock_data = self.fetch_stock_data(symbol)
+        try:
+            # Parse input
+            holdings, invalid_entries = self.parse_portfolio_input(input_text)
+            app_logger.info(f"Parsed {len(holdings)} holdings and {len(invalid_entries)} invalid entries")
             
-            if stock_data['valid'] and stock_data.get('current_price'):
-                holding_value = holding.get('quantity', 0) * stock_data['current_price']
-                total_value += holding_value
+            valid_holdings = []
+            invalid_holdings = []
+            total_value = 0
+            
+            # Process each holding
+            for holding in holdings:
+                symbol = self.get_stock_symbol(holding.get('company', ''))
+                stock_data = self.fetch_stock_data(symbol)
                 
-                # Append stock data to valid holdings list
-                valid_holdings.append({
-                    'company_name': stock_data.get('company_name', holding.get('company', '')),
-                    'symbol': symbol,
-                    'quantity': holding.get('quantity', 0),
-                    'current_price': round(stock_data['current_price'], 2),
-                    'total_value': round(holding_value, 2),
-                    'sector': stock_data.get('sector', 'Unknown'),
-                    'pe_ratio': stock_data.get('pe_ratio'),
-                    'dividend_yield': round(stock_data.get('dividend_yield', 0) * 100, 2) if stock_data.get('dividend_yield') else None
-                })
-            else:
-                invalid_holdings.append(holding.get('original_entry', ''))
-        
-        # Add any entries that couldn't be parsed
-        invalid_holdings.extend(invalid_entries)
+                if stock_data['valid'] and stock_data.get('current_price'):
+                    holding_value = holding.get('quantity', 0) * stock_data['current_price']
+                    total_value += holding_value
+                    
+                    # Append stock data to valid holdings list
+                    valid_holdings.append({
+                        'company_name': stock_data.get('company_name', holding.get('company', '')),
+                        'symbol': symbol,
+                        'quantity': holding.get('quantity', 0),
+                        'current_price': round(stock_data['current_price'], 2),
+                        'total_value': round(holding_value, 2),
+                        'sector': stock_data.get('sector', 'Unknown'),
+                        'pe_ratio': stock_data.get('pe_ratio'),
+                        'dividend_yield': round(stock_data.get('dividend_yield', 0) * 100, 2) if stock_data.get('dividend_yield') else None
+                    })
+                else:
+                    invalid_holdings.append(holding.get('original_entry', ''))
+            
+            # Add any entries that couldn't be parsed
+            invalid_holdings.extend(invalid_entries)
 
-        # Calculate metrics and generate visualizations
-        metrics = self.get_portfolio_metrics(valid_holdings, total_value)
-        visualizations = self.visualize_portfolio(valid_holdings)
-        
-        # Save to database
-        portfolio = Portfolio(
-            user_id=user.id,
-            name=f"Portfolio {len(user.portfolios) + 1}",
-            total_value=total_value
-        )
-        session.add(portfolio)
-        session.commit()
-        session.refresh(portfolio)
-        
-        # Save holdings
-        for holding_data in valid_holdings:
-            holding = Holding(
-                portfolio_id=portfolio.id,
-                company_name=holding_data['company_name'],
-                symbol=holding_data['symbol'],
-                quantity=holding_data['quantity'],
-                current_price=holding_data['current_price'],
-                total_value=holding_data['total_value'],
-                sector=holding_data['sector'],
-                pe_ratio=holding_data['pe_ratio'],
-                dividend_yield=holding_data['dividend_yield']
+            # Calculate metrics and generate visualizations
+            metrics = self.get_portfolio_metrics(valid_holdings, total_value)
+            visualizations = self.visualize_portfolio(valid_holdings)
+            
+            # Save to database
+            portfolio = Portfolio(
+                user_id=user.id,
+                name=f"Portfolio {len(user.portfolios) + 1}",
+                total_value=total_value
             )
-            session.add(holding)
-        
-        session.commit()
-        
-        return {
-            'portfolio_id': portfolio.id,
-            'valid_holdings': valid_holdings,
-            'invalid_holdings': invalid_holdings,
-            'total_value': total_value,
-            'metrics': metrics,
-            'visualizations': visualizations
-        }
+            session.add(portfolio)
+            session.commit()
+            session.refresh(portfolio)
+            
+            # Save holdings
+            for holding_data in valid_holdings:
+                holding = Holding(
+                    portfolio_id=portfolio.id,
+                    company_name=holding_data['company_name'],
+                    symbol=holding_data['symbol'],
+                    quantity=holding_data['quantity'],
+                    current_price=holding_data['current_price'],
+                    total_value=holding_data['total_value'],
+                    sector=holding_data['sector'],
+                    pe_ratio=holding_data['pe_ratio'],
+                    dividend_yield=holding_data['dividend_yield']
+                )
+                session.add(holding)
+            
+            session.commit()
+            
+            return {
+                'portfolio_id': portfolio.id,
+                'valid_holdings': valid_holdings,
+                'invalid_holdings': invalid_holdings,
+                'total_value': total_value,
+                'metrics': metrics,
+                'visualizations': visualizations
+            }
+            
+        except Exception as e:
+            app_logger.error(f"Error in portfolio analysis: {str(e)}")
+            # Return a safe fallback structure
+            return {
+                'portfolio_id': None,
+                'valid_holdings': [],
+                'invalid_holdings': [input_text],
+                'total_value': 0.0,
+                'metrics': {
+                    'holdings_count': 0,
+                    'average_pe_ratio': None,
+                    'average_dividend_yield': None,
+                    'concentration_percentage': 0.0
+                },
+                'visualizations': {
+                    "pie_chart": "{}",
+                    "sector_bar_chart": "{}",
+                    "holdings_bar_chart": "{}"
+                }
+            }

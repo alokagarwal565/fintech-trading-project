@@ -1776,3 +1776,62 @@ WHERE ? = riskassessment.user_id]
 2025-08-16 20:24:45,782 - investment_advisor - INFO - log_api_request:61 - API GET /health - 200 (0.001s)
 2025-08-16 20:24:46,019 - investment_advisor - INFO - log_api_request:61 - API POST /api/v1/export/pdf - 200 (0.230s)
 2025-08-16 20:24:46,030 - investment_advisor - INFO - log_api_request:61 - API GET /api/v1/export/history - 200 (0.007s)
+2025-08-16 20:44:23,434 - investment_advisor - INFO - lifespan:22 - Starting AI-Powered Risk & Scenario Advisor API
+2025-08-16 20:44:23,443 - investment_advisor - INFO - lifespan:24 - Database initialized successfully
+2025-08-16 20:44:34,424 - investment_advisor - INFO - log_api_request:61 - API GET /health - 200 (0.001s)
+2025-08-16 20:44:39,862 - investment_advisor - INFO - log_api_request:61 - API GET /health - 200 (0.001s)
+2025-08-16 20:44:42,237 - investment_advisor - INFO - log_api_request:61 - API GET /health - 200
+2025-08-16 20:44:42,572 - investment_advisor - INFO - login:111 - User logged in successfully: 2 (alokagarwal629@gmail.com) with role: USER
+2025-08-16 20:44:42,575 - investment_advisor - INFO - log_api_request:61 - API POST /auth/token - 200 (0.330s)
+2025-08-16 20:44:44,990 - investment_advisor - INFO - log_api_request:61 - API GET /health - 200 (0.001s)
+2025-08-16 20:44:45,458 - investment_advisor - INFO - log_api_request:61 - API GET /api/v1/user/data - 200 (0.463s)
+2025-08-16 20:44:49,116 - investment_advisor - INFO - log_api_request:61 - API GET /health - 200 (0.001s)
+2025-08-16 20:44:54,060 - investment_advisor - INFO - log_api_request:61 - API GET /health - 200
+2025-08-16 20:44:54,300 - investment_advisor - INFO - log_api_request:61 - API DELETE /api/v1/portfolio/latest - 200 (0.190s)
+2025-08-16 20:44:56,743 - investment_advisor - INFO - log_api_request:61 - API GET /health - 200 (0.001s)
+2025-08-16 20:45:02,847 - investment_advisor - INFO - log_api_request:61 - API GET /health - 200 (0.001s)
+2025-08-16 20:45:02,858 - investment_advisor - INFO - fetch_stock_data:163 - Fetching stock data for symbol: TCS.NS
+2025-08-16 20:45:05,208 - investment_advisor - INFO - fetch_stock_data:182 - Successfully fetched data for TCS.NS in 2.35s
+2025-08-16 20:45:05,210 - investment_advisor - INFO - fetch_stock_data:163 - Fetching stock data for symbol: HDFCBANK.NS
+2025-08-16 20:45:06,328 - investment_advisor - INFO - fetch_stock_data:182 - Successfully fetched data for HDFCBANK.NS in 1.12s
+2025-08-16 20:45:06,744 - investment_advisor - INFO - log_api_request:61 - API POST /api/v1/analyze-portfolio - 200 (3.892s)
+2025-08-16 20:45:12,148 - investment_advisor - INFO - log_api_request:61 - API GET /health - 200
+2025-08-16 21:51:13,354 - investment_advisor - INFO - lifespan:22 - Starting AI-Powered Risk & Scenario Advisor API
+2025-08-16 21:51:13,355 - investment_advisor - INFO - lifespan:22 - Starting AI-Powered Risk & Scenario Advisor API
+2025-08-16 21:51:13,364 - investment_advisor - INFO - lifespan:24 - Database initialized successfully
+2025-08-16 21:51:13,371 - investment_advisor - INFO - lifespan:24 - Database initialized successfully
+2025-08-16 21:51:13,485 - investment_advisor - INFO - lifespan:22 - Starting AI-Powered Risk & Scenario Advisor API
+2025-08-16 21:51:13,495 - investment_advisor - INFO - lifespan:24 - Database initialized successfully
+2025-08-16 21:53:02,940 - investment_advisor - INFO - lifespan:22 - Starting AI-Powered Risk & Scenario Advisor API
+2025-08-16 21:53:02,971 - investment_advisor - INFO - lifespan:24 - Database initialized successfully
+2025-08-16 21:54:42,249 - investment_advisor - INFO - log_api_request:61 - API GET /health - 200 (0.001s)
+2025-08-16 21:54:52,579 - investment_advisor - INFO - lifespan:27 - Shutting down AI-Powered Risk & Scenario Advisor API
+2025-08-16 21:54:52,641 - investment_advisor - INFO - lifespan:27 - Shutting down AI-Powered Risk & Scenario Advisor API
+2025-08-16 21:54:52,658 - investment_advisor - INFO - lifespan:27 - Shutting down AI-Powered Risk & Scenario Advisor API
+2025-08-16 21:54:52,658 - investment_advisor - INFO - lifespan:27 - Shutting down AI-Powered Risk & Scenario Advisor API
+2025-08-16 21:55:17,604 - investment_advisor - INFO - lifespan:22 - Starting AI-Powered Risk & Scenario Advisor API
+2025-08-16 21:55:17,635 - investment_advisor - INFO - lifespan:22 - Starting AI-Powered Risk & Scenario Advisor API
+2025-08-16 21:55:17,655 - investment_advisor - INFO - lifespan:24 - Database initialized successfully
+2025-08-16 21:55:17,679 - investment_advisor - INFO - lifespan:24 - Database initialized successfully
+2025-08-16 21:55:17,708 - investment_advisor - INFO - lifespan:22 - Starting AI-Powered Risk & Scenario Advisor API
+2025-08-16 21:55:17,739 - investment_advisor - INFO - lifespan:22 - Starting AI-Powered Risk & Scenario Advisor API
+2025-08-16 21:55:17,763 - investment_advisor - INFO - lifespan:24 - Database initialized successfully
+2025-08-16 21:55:17,773 - investment_advisor - INFO - lifespan:24 - Database initialized successfully
+2025-08-16 21:55:17,802 - investment_advisor - INFO - log_api_request:61 - API GET /health - 200 (0.003s)
+2025-08-16 21:55:17,806 - investment_advisor - INFO - log_api_request:61 - API GET /health - 200 (0.007s)
+2025-08-16 21:55:18,874 - investment_advisor - INFO - login:111 - User logged in successfully: 2 (alokagarwal629@gmail.com) with role: USER
+2025-08-16 21:55:18,878 - investment_advisor - INFO - log_api_request:61 - API POST /auth/token - 200 (0.967s)
+2025-08-16 21:55:22,153 - investment_advisor - INFO - log_api_request:61 - API GET /health - 200 (0.001s)
+2025-08-16 21:55:24,007 - investment_advisor - INFO - log_api_request:61 - API GET /api/v1/user/data - 200 (1.846s)
+2025-08-16 21:55:28,956 - investment_advisor - INFO - log_api_request:61 - API GET /health - 200 (0.001s)
+2025-08-16 21:55:34,957 - investment_advisor - INFO - log_api_request:61 - API GET /health - 200
+2025-08-16 21:55:35,125 - investment_advisor - INFO - log_api_request:61 - API DELETE /api/v1/portfolio/latest - 200 (0.118s)
+2025-08-16 21:55:37,566 - investment_advisor - INFO - log_api_request:61 - API GET /health - 200
+2025-08-16 21:55:46,211 - investment_advisor - INFO - log_api_request:61 - API GET /health - 200 (0.001s)
+2025-08-16 21:55:46,226 - investment_advisor - INFO - analyze_portfolio:325 - Parsed 2 holdings and 0 invalid entries
+2025-08-16 21:55:46,227 - investment_advisor - INFO - fetch_stock_data:163 - Fetching stock data for symbol: TCS.NS
+2025-08-16 21:55:48,613 - investment_advisor - INFO - fetch_stock_data:182 - Successfully fetched data for TCS.NS in 2.39s
+2025-08-16 21:55:48,614 - investment_advisor - INFO - fetch_stock_data:163 - Fetching stock data for symbol: HDFCBANK.NS
+2025-08-16 21:55:49,413 - investment_advisor - INFO - fetch_stock_data:182 - Successfully fetched data for HDFCBANK.NS in 0.80s
+2025-08-16 21:55:49,730 - investment_advisor - INFO - log_api_request:61 - API POST /api/v1/analyze-portfolio - 200 (3.511s)
+2025-08-16 21:55:52,789 - investment_advisor - INFO - log_api_request:61 - API GET /health - 200 (0.001s)
