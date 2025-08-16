@@ -25,14 +25,20 @@ async def register(user_data: UserCreate, request: Request, session: Session = D
         log_security_event(app_logger, "INVALID_EMAIL", f"Invalid email format: {user_data.email}")
         raise HTTPException(
             status_code=status.HTTP_400_BAD_REQUEST,
-            detail="Invalid email format"
+            detail={
+                "error": "invalid_email",
+                "message": "Please enter a valid email address."
+            }
         )
     
     if not security_middleware.validate_password_strength(user_data.password):
         log_security_event(app_logger, "WEAK_PASSWORD", f"Weak password attempted for email: {user_data.email}")
         raise HTTPException(
             status_code=status.HTTP_400_BAD_REQUEST,
-            detail="Password must be at least 8 characters with uppercase, lowercase, digit, and special character"
+            detail={
+                "error": "weak_password",
+                "message": "Password must be at least 8 characters with uppercase, lowercase, digit, and special character."
+            }
         )
     
     # Sanitize inputs
@@ -47,7 +53,10 @@ async def register(user_data: UserCreate, request: Request, session: Session = D
         log_security_event(app_logger, "DUPLICATE_REGISTRATION", f"Duplicate registration attempt for: {sanitized_email}")
         raise HTTPException(
             status_code=status.HTTP_400_BAD_REQUEST,
-            detail="Email already registered"
+            detail={
+                "error": "duplicate_email",
+                "message": "This email is already registered. Please use another email or login instead."
+            }
         )
     
     # Create new user
@@ -75,7 +84,10 @@ async def login(form_data: OAuth2PasswordRequestForm = Depends(), request: Reque
         log_security_event(app_logger, "INVALID_LOGIN_EMAIL", f"Invalid email format in login: {form_data.username}")
         raise HTTPException(
             status_code=status.HTTP_400_BAD_REQUEST,
-            detail="Invalid email format"
+            detail={
+                "error": "invalid_email",
+                "message": "Please enter a valid email address."
+            }
         )
     
     user = authenticate_user(form_data.username, form_data.password, session)

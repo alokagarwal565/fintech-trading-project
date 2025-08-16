@@ -1,11 +1,12 @@
 import streamlit as st
 import os
+import re
 from dotenv import load_dotenv
 import pandas as pd
 from datetime import datetime
 import httpx
 import asyncio
-from typing import Optional, Dict, Any
+from typing import Optional, Dict, Any, Tuple
 import json
 import plotly.graph_objects as go
 
@@ -15,10 +16,190 @@ load_dotenv()
 # API Configuration
 API_BASE_URL = os.getenv("API_BASE_URL", "http://localhost:8000")
 
+def validate_password_strength(password: str) -> Tuple[bool, Dict[str, bool], str]:
+    """
+    Validate password strength and return detailed feedback
+    Returns: (is_valid, requirements_met, strength_level)
+    """
+    if not password:
+        return False, {}, "Empty"
+    
+    requirements = {
+        "length": len(password) >= 8,
+        "uppercase": bool(re.search(r'[A-Z]', password)),
+        "lowercase": bool(re.search(r'[a-z]', password)),
+        "digit": bool(re.search(r'\d', password)),
+        "special": bool(re.search(r'[!@#$%^&*(),.?":{}|<>]', password))
+    }
+    
+    # Count met requirements
+    met_count = sum(requirements.values())
+    
+    # Determine strength level
+    if met_count == 5:
+        strength = "Strong"
+    elif met_count >= 3:
+        strength = "Medium"
+    elif met_count >= 1:
+        strength = "Weak"
+    else:
+        strength = "Very Weak"
+    
+    # Password is valid if all requirements are met
+    is_valid = all(requirements.values())
+    
+    return is_valid, requirements, strength
+
+def get_strength_color(strength: str) -> str:
+    """Get color for password strength indicator"""
+    colors = {
+        "Very Weak": "#ff4444",
+        "Weak": "#ff8800", 
+        "Medium": "#ffaa00",
+        "Strong": "#00aa00"
+    }
+    return colors.get(strength, "#666666")
+
+def get_strength_percentage(strength: str) -> int:
+    """Get percentage for password strength bar"""
+    percentages = {
+        "Very Weak": 25,
+        "Weak": 50,
+        "Medium": 75,
+        "Strong": 100
+    }
+    return percentages.get(strength, 0)
+
+def display_password_validation(password: str, container):
+    """Display real-time password validation feedback"""
+    is_valid, requirements, strength = validate_password_strength(password)
+    
+    # Add custom CSS for better styling
+    st.markdown("""
+    <style>
+    .password-strength {
+        background-color: #f0f2f6;
+        padding: 10px;
+        border-radius: 5px;
+        margin: 10px 0;
+    }
+    .requirement-item {
+        margin: 5px 0;
+        font-size: 14px;
+    }
+    .strength-indicator {
+        font-weight: bold;
+        padding: 5px 10px;
+        border-radius: 3px;
+        display: inline-block;
+    }
+    </style>
+    """, unsafe_allow_html=True)
+    
+    # Password strength meter
+    color = get_strength_color(strength)
+    percentage = get_strength_percentage(strength)
+    st.markdown(f"""
+    <div class="password-strength">
+        <div style="margin-bottom: 10px;">
+            <strong>Password Strength:</strong> 
+            <span class="strength-indicator" style="color: {color}; background-color: {color}20;">{strength}</span>
+        </div>
+        <div style="margin-bottom: 15px;">
+            <div style="background-color: #e0e0e0; height: 8px; border-radius: 4px; overflow: hidden;">
+                <div style="background-color: {color}; height: 100%; width: {percentage}%; transition: width 0.3s ease;"></div>
+            </div>
+        </div>
+        <div><strong>Requirements:</strong></div>
+    """, unsafe_allow_html=True)
+    
+    req_labels = {
+        "length": "At least 8 characters",
+        "uppercase": "Contains uppercase letter(s)",
+        "lowercase": "Contains lowercase letter(s)", 
+        "digit": "Contains number(s)",
+        "special": "Contains special character(s)"
+    }
+    
+    for req_key, label in req_labels.items():
+        if requirements.get(req_key, False):
+            st.markdown(f"<div class='requirement-item'>✅ {label}</div>", unsafe_allow_html=True)
+        else:
+            st.markdown(f"<div class='requirement-item'>❌ {label}</div>", unsafe_allow_html=True)
+    
+    st.markdown("</div>", unsafe_allow_html=True)
+    
+    return is_valid
+
+def display_error_message(message: str, error_type: str = "general"):
+    """Display a styled error message with appropriate styling"""
+    if error_type == "duplicate_email":
+        st.markdown(f"""
+        <div class="error-message">
+            <strong>❌ {message}</strong>
+            <small>💡 Tip: If you already have an account, try logging in instead.</small>
+        </div>
+        """, unsafe_allow_html=True)
+    elif error_type == "invalid_email":
+        st.markdown(f"""
+        <div class="error-message">
+            <strong>❌ {message}</strong>
+            <small>💡 Tip: Please enter a valid email address (e.g., user@example.com)</small>
+        </div>
+        """, unsafe_allow_html=True)
+    elif error_type == "weak_password":
+        st.markdown(f"""
+        <div class="error-message">
+            <strong>❌ {message}</strong>
+            <small>💡 Tip: Check the password requirements above and try again.</small>
+        </div>
+        """, unsafe_allow_html=True)
+    else:
+        st.markdown(f"""
+        <div class="error-message">
+            <strong>❌ {message}</strong>
+        </div>
+        """, unsafe_allow_html=True)
+
+class APIError(Exception):
+    """Custom exception for API errors with structured error details"""
+    def __init__(self, status_code: int, error_type: str, message: str):
+        self.status_code = status_code
+        self.error_type = error_type
+        self.message = message
+        super().__init__(message)
+
 class APIClient:
     def __init__(self, base_url: str):
         self.base_url = base_url
         self.client = httpx.Client(timeout=30.0)
+    
+    def _handle_error_response(self, response: httpx.Response):
+        """Handle error responses and extract structured error information"""
+        try:
+            error_data = response.json()
+            if isinstance(error_data, dict) and 'detail' in error_data:
+                detail = error_data['detail']
+                if isinstance(detail, dict) and 'error' in detail and 'message' in detail:
+                    # Structured error response
+                    raise APIError(
+                        status_code=response.status_code,
+                        error_type=detail['error'],
+                        message=detail['message']
+                    )
+                elif isinstance(detail, str):
+                    # Simple string error
+                    raise APIError(
+                        status_code=response.status_code,
+                        error_type="unknown",
+                        message=detail
+                    )
+        except (ValueError, KeyError):
+            # Fallback for non-JSON responses
+            pass
+        
+        # Default error handling
+        response.raise_for_status()
     
     def get_headers(self, token: Optional[str] = None) -> Dict[str, str]:
         headers = {"Content-Type": "application/json"}
@@ -36,7 +217,10 @@ class APIClient:
             json=data,
             headers=self.get_headers()
         )
-        response.raise_for_status()
+        
+        if response.status_code >= 400:
+            self._handle_error_response(response)
+        
         return response.json()
     
     def login_user(self, email: str, password: str) -> Dict[str, Any]:
@@ -224,8 +408,192 @@ def add_custom_css():
             [data-theme="light"] .st-eb {
                 color: #222222; /* Dark gray for readability */
             }
-
-            /* --- SCENARIO ANALYSIS CUSTOM STYLES (ADAPTED FOR DARK/LIGHT THEMES) --- */
+            
+            /* --- ERROR STATE STYLES --- */
+            .error-field {
+                border: 2px solid #ff4444 !important;
+                background-color: #fff5f5 !important;
+            }
+            
+            /* Improved error message styling */
+            .error-message {
+                background-color: #fef2f2;
+                border: 2px solid #fecaca;
+                border-left: 6px solid #ef4444;
+                padding: 20px;
+                margin: 20px 0;
+                border-radius: 8px;
+                color: #991b1b !important;
+                font-weight: 500;
+                box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+                max-width: 100%;
+                word-wrap: break-word;
+                overflow-wrap: break-word;
+                line-height: 1.6;
+            }
+            
+            /* Ensure error message text is always visible and properly formatted */
+            .error-message strong {
+                color: #991b1b !important;
+                font-size: 16px;
+                font-weight: 600;
+                display: block;
+                margin-bottom: 8px;
+            }
+            
+            .error-message small {
+                color: #6b7280 !important;
+                font-size: 14px;
+                line-height: 1.5;
+                display: block;
+                margin-top: 8px;
+                font-style: italic;
+            }
+            
+            /* Dark theme specific error message styling */
+            [data-theme="dark"] .error-message {
+                background-color: #1f1f1f;
+                border: 2px solid #4b5563;
+                border-left: 6px solid #f87171;
+                color: #fca5a5 !important;
+                box-shadow: 0 4px 6px rgba(0,0,0,0.3);
+            }
+            
+            [data-theme="dark"] .error-message strong {
+                color: #fca5a5 !important;
+            }
+            
+            [data-theme="dark"] .error-message small {
+                color: #d1d5db !important;
+            }
+            
+            /* Fallback styling for better compatibility */
+            .error-message * {
+                color: inherit !important;
+            }
+            
+            /* Ensure error messages are always visible regardless of theme */
+            .stMarkdown .error-message,
+            .stMarkdown .error-message * {
+                color: #991b1b !important;
+            }
+            
+            /* Force visibility for error message text */
+            .error-message strong,
+            .error-message small {
+                display: block !important;
+                visibility: visible !important;
+                opacity: 1 !important;
+                width: 100% !important;
+            }
+            
+            /* Additional styling for better error message visibility */
+            .stMarkdown div[class*="error-message"] {
+                background-color: #fef2f2 !important;
+                border: 2px solid #fecaca !important;
+                border-left: 6px solid #ef4444 !important;
+                padding: 20px !important;
+                margin: 20px 0 !important;
+                border-radius: 8px !important;
+                color: #991b1b !important;
+                font-weight: 500 !important;
+                box-shadow: 0 4px 6px rgba(0,0,0,0.1) !important;
+                max-width: 100% !important;
+                word-wrap: break-word !important;
+                overflow-wrap: break-word !important;
+            }
+            
+            /* Ensure all text within error messages is visible */
+            .stMarkdown div[class*="error-message"] * {
+                color: #991b1b !important;
+            }
+            
+            /* Dark theme override for error messages */
+            [data-theme="dark"] .stMarkdown div[class*="error-message"] {
+                background-color: #1f1f1f !important;
+                border: 2px solid #4b5563 !important;
+                border-left: 6px solid #f87171 !important;
+                color: #fca5a5 !important;
+            }
+            
+            [data-theme="dark"] .stMarkdown div[class*="error-message"] * {
+                color: #fca5a5 !important;
+            }
+            
+            /* Final fallback to ensure error messages are always visible */
+            div.error-message,
+            div.error-message *,
+            .stMarkdown div.error-message,
+            .stMarkdown div.error-message * {
+                color: #991b1b !important;
+                background-color: #fef2f2 !important;
+                border: 2px solid #fecaca !important;
+                border-left: 6px solid #ef4444 !important;
+                padding: 20px !important;
+                margin: 20px 0 !important;
+                border-radius: 8px !important;
+                font-weight: 500 !important;
+                box-shadow: 0 4px 6px rgba(0,0,0,0.1) !important;
+                max-width: 100% !important;
+                word-wrap: break-word !important;
+                overflow-wrap: break-word !important;
+            }
+            
+            /* Dark theme final fallback */
+            [data-theme="dark"] div.error-message,
+            [data-theme="dark"] div.error-message *,
+            [data-theme="dark"] .stMarkdown div.error-message,
+            [data-theme="dark"] .stMarkdown div.error-message * {
+                color: #fca5a5 !important;
+                background-color: #1f1f1f !important;
+                border: 2px solid #4b5563 !important;
+                border-left: 6px solid #f87171 !important;
+            }
+            
+            /* Improved button styling */
+            .helpful-button {
+                background-color: #3b82f6;
+                color: white;
+                border: none;
+                padding: 10px 20px;
+                border-radius: 6px;
+                cursor: pointer;
+                margin: 10px 5px 0 0;
+                font-weight: 500;
+                transition: background-color 0.2s ease;
+                display: inline-block;
+            }
+            
+            .helpful-button:hover {
+                background-color: #2563eb;
+            }
+            
+            /* Button container for better layout */
+            .button-container {
+                display: flex;
+                gap: 10px;
+                flex-wrap: wrap;
+                margin-top: 15px;
+            }
+            
+            /* Ensure error messages don't interfere with other elements */
+            .error-message + * {
+                margin-top: 20px !important;
+            }
+            
+            /* Better spacing for form elements after error messages */
+            .stButton {
+                margin-top: 15px !important;
+            }
+            
+            /* Ensure proper text wrapping in all contexts */
+            .stMarkdown, .stText {
+                word-wrap: break-word !important;
+                overflow-wrap: break-word !important;
+                max-width: 100% !important;
+            }
+            
+            /* --- SCENARIO ANALYSIS CUSTOM STYLES (ADAPTED FOR DARK/LIGHT THEMES --- */
             .scenario-header {
                 font-size: 24px;
                 margin-bottom: 20px;
@@ -267,6 +635,7 @@ def add_custom_css():
                 color: #28a745;
                 font-weight: bold;
             }
+            
         </style>
     """, unsafe_allow_html=True)
 
@@ -381,47 +750,116 @@ def main():
 def show_auth_page():
     st.header("🔐 Authentication")
     
+    # Initialize active tab in session state
+    if 'active_tab' not in st.session_state:
+        st.session_state.active_tab = "Login"
+    
+    # Create tabs
     tab1, tab2 = st.tabs(["Login", "Register"])
+    
+    # Set active tab based on session state
+    if st.session_state.active_tab == "Register":
+        # Switch to register tab
+        st.session_state.active_tab = "Login"  # Reset for next time
     
     with tab1:
         st.subheader("Login to Your Account")
-        with st.form("login_form"):
-            email = st.text_input("Email")
-            password = st.text_input("Password", type="password")
-            login_submitted = st.form_submit_button("Login")
-            
-            if login_submitted:
-                if email and password:
-                    try:
-                        with st.spinner("Logging in..."):
-                            result = api_client.login_user(email, password)
-                            st.session_state.access_token = result["access_token"]
-                            st.session_state.user_email = email
-                            st.success("✅ Login successful!")
+        
+        # Login form
+        login_email = st.text_input("Email", key="login_email")
+        login_password = st.text_input("Password", type="password", key="login_password")
+        
+        if st.button("Login", key="login_btn"):
+            if not login_email or not login_password:
+                st.warning("Please enter both email and password.")
+            else:
+                try:
+                    with st.spinner("Logging in..."):
+                        result = api_client.login_user(login_email, login_password)
+                        st.session_state.access_token = result["access_token"]
+                        st.session_state.user_email = login_email
+                        st.success("✅ Login successful!")
+                        st.rerun()
+                except Exception as e:
+                    error_msg = str(e)
+                    if "401 Unauthorized" in error_msg:
+                        display_error_message("Invalid email or password. Please check your credentials.", "general")
+                        # Add a helpful button to switch to register tab
+                        st.markdown("**Don't have an account?**")
+                        if st.button("📝 Create New Account", key="go_to_register", use_container_width=True):
+                            st.session_state.active_tab = "Register"
                             st.rerun()
-                    except Exception as e:
-                        st.error(f"❌ Login failed: {str(e)}")
-                else:
-                    st.warning("Please enter both email and password.")
+                    else:
+                        display_error_message(f"Login failed: {error_msg}", "general")
     
     with tab2:
         st.subheader("Create New Account")
-        with st.form("register_form"):
-            reg_email = st.text_input("Email", key="reg_email")
-            reg_password = st.text_input("Password", type="password", key="reg_password")
-            reg_full_name = st.text_input("Full Name (Optional)", key="reg_full_name")
-            register_submitted = st.form_submit_button("Register")
-            
-            if register_submitted:
-                if reg_email and reg_password:
-                    try:
-                        with st.spinner("Creating account..."):
-                            result = api_client.register_user(reg_email, reg_password, reg_full_name)
-                            st.success("✅ Account created successfully! Please login.")
-                    except Exception as e:
-                        st.error(f"❌ Registration failed: {str(e)}")
-                else:
-                    st.warning("Please enter both email and password.")
+        
+        # Registration form with real-time password validation
+        reg_email = st.text_input("Email", key="reg_email")
+        reg_password = st.text_input("Password", type="password", key="reg_password")
+        
+        # Real-time password validation
+        if reg_password:
+            with st.container():
+                st.markdown("---")
+                st.markdown("**🔒 Password Strength Check**")
+                password_valid = display_password_validation(reg_password, st)
+                st.markdown("---")
+        
+        reg_full_name = st.text_input("Full Name (Optional)", key="reg_full_name")
+        
+        # Registration button with validation
+        if st.button("Register", key="register_btn"):
+            if not reg_email or not reg_password:
+                st.warning("Please enter both email and password.")
+            elif reg_password and not password_valid:
+                display_error_message("Your password is too weak. Please fulfill all requirements.", "weak_password")
+            else:
+                try:
+                    with st.spinner("Creating account..."):
+                        result = api_client.register_user(reg_email, reg_password, reg_full_name)
+                        st.success("✅ Account created successfully! Please login.")
+                        # Clear form
+                        st.session_state.reg_email = ""
+                        st.session_state.reg_password = ""
+                        st.session_state.reg_full_name = ""
+                        st.rerun()
+                except APIError as e:
+                    # Handle structured API errors
+                    if e.error_type == "duplicate_email":
+                        display_error_message(e.message, "duplicate_email")
+                        # Add a helpful button to switch to login tab
+                        st.markdown("**What would you like to do?**")
+                        col1, col2 = st.columns([1, 1])
+                        with col1:
+                            if st.button("🔐 Go to Login", key="go_to_login", use_container_width=True):
+                                st.session_state.active_tab = "Login"
+                                st.rerun()
+                        with col2:
+                            if st.button("🔄 Try Different Email", key="try_different_email", use_container_width=True):
+                                st.session_state.reg_email = ""
+                                st.rerun()
+                    elif e.error_type == "invalid_email":
+                        display_error_message(e.message, "invalid_email")
+                    elif e.error_type == "weak_password":
+                        display_error_message(e.message, "weak_password")
+                    else:
+                        display_error_message(e.message, "general")
+                except Exception as e:
+                    error_msg = str(e)
+                    if "400 Bad Request" in error_msg:
+                        # Fallback for non-structured errors
+                        if "Password must be at least 8 characters" in error_msg:
+                            display_error_message("Password strength requirements not met. Please check the requirements above.", "weak_password")
+                        elif "Email already registered" in error_msg:
+                            display_error_message("This email is already registered. Please use a different email or login.", "duplicate_email")
+                        elif "Invalid email format" in error_msg:
+                            display_error_message("Please enter a valid email address.", "invalid_email")
+                        else:
+                            display_error_message(f"Registration failed: {error_msg}", "general")
+                    else:
+                        display_error_message(f"Registration failed: {error_msg}", "general")
 
 def show_risk_profiling():
     st.header("🎯 Risk Tolerance Assessment")

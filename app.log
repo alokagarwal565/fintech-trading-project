@@ -372,3 +372,191 @@ WHERE ? = riskassessment.user_id]
 2025-08-16 12:28:00,116 - investment_advisor - INFO - lifespan:27 - Shutting down AI-Powered Risk & Scenario Advisor API
 2025-08-16 12:28:16,609 - investment_advisor - INFO - lifespan:22 - Starting AI-Powered Risk & Scenario Advisor API
 2025-08-16 12:28:16,618 - investment_advisor - INFO - lifespan:24 - Database initialized successfully
+2025-08-16 12:29:11,220 - investment_advisor - INFO - lifespan:22 - Starting AI-Powered Risk & Scenario Advisor API
+2025-08-16 12:29:11,257 - investment_advisor - INFO - lifespan:24 - Database initialized successfully
+2025-08-16 12:29:22,773 - investment_advisor - INFO - log_api_request:61 - API GET /health - 200 (0.001s)
+2025-08-16 12:29:56,054 - investment_advisor - INFO - log_api_request:61 - API GET /health - 200 (0.001s)
+2025-08-16 12:29:56,067 - investment_advisor - WARNING - log_security_event:76 - SECURITY WEAK_PASSWORD: Weak password attempted for email: alokagarwal629@gmail.com
+2025-08-16 12:29:56,070 - investment_advisor - INFO - log_api_request:61 - API POST /auth/register - 400 (0.007s)
+2025-08-16 12:34:00,745 - investment_advisor - INFO - lifespan:22 - Starting AI-Powered Risk & Scenario Advisor API
+2025-08-16 12:34:00,779 - investment_advisor - INFO - lifespan:24 - Database initialized successfully
+2025-08-16 12:34:08,216 - investment_advisor - INFO - log_api_request:61 - API GET /health - 200 (0.001s)
+2025-08-16 12:34:21,895 - investment_advisor - INFO - log_api_request:61 - API GET /health - 200 (0.001s)
+2025-08-16 12:34:21,909 - investment_advisor - WARNING - log_security_event:76 - SECURITY WEAK_PASSWORD: Weak password attempted for email: alok.agarwal2022@uem.edu.in
+2025-08-16 12:34:21,912 - investment_advisor - INFO - log_api_request:61 - API POST /auth/register - 400 (0.007s)
+2025-08-16 12:34:28,605 - investment_advisor - INFO - log_api_request:61 - API GET /health - 200
+2025-08-16 12:34:28,616 - investment_advisor - WARNING - log_security_event:76 - SECURITY WEAK_PASSWORD: Weak password attempted for email: alok.agarwal2022@uem.edu.in
+2025-08-16 12:34:28,618 - investment_advisor - INFO - log_api_request:61 - API POST /auth/register - 400 (0.004s)
+2025-08-16 12:34:39,146 - investment_advisor - INFO - log_api_request:61 - API GET /health - 200 (0.001s)
+2025-08-16 12:34:40,243 - investment_advisor - INFO - register:65 - New user registered: 11 (alok.agarwal2022@uem.edu.in)
+2025-08-16 12:34:40,247 - investment_advisor - INFO - log_api_request:61 - API POST /auth/register - 200 (1.080s)
+2025-08-16 12:35:50,241 - investment_advisor - INFO - lifespan:27 - Shutting down AI-Powered Risk & Scenario Advisor API
+2025-08-16 12:36:08,278 - investment_advisor - INFO - lifespan:22 - Starting AI-Powered Risk & Scenario Advisor API
+2025-08-16 12:36:08,305 - investment_advisor - INFO - lifespan:24 - Database initialized successfully
+2025-08-16 12:36:08,775 - investment_advisor - INFO - lifespan:27 - Shutting down AI-Powered Risk & Scenario Advisor API
+2025-08-16 12:36:24,591 - investment_advisor - INFO - lifespan:22 - Starting AI-Powered Risk & Scenario Advisor API
+2025-08-16 12:36:24,621 - investment_advisor - INFO - lifespan:24 - Database initialized successfully
+2025-08-16 12:36:25,844 - investment_advisor - INFO - lifespan:27 - Shutting down AI-Powered Risk & Scenario Advisor API
+2025-08-16 12:36:42,591 - investment_advisor - INFO - lifespan:22 - Starting AI-Powered Risk & Scenario Advisor API
+2025-08-16 12:36:42,616 - investment_advisor - INFO - lifespan:24 - Database initialized successfully
+2025-08-16 12:36:56,797 - investment_advisor - INFO - lifespan:22 - Starting AI-Powered Risk & Scenario Advisor API
+2025-08-16 12:36:56,813 - investment_advisor - INFO - lifespan:24 - Database initialized successfully
+2025-08-16 12:37:07,007 - investment_advisor - INFO - lifespan:27 - Shutting down AI-Powered Risk & Scenario Advisor API
+2025-08-16 12:37:22,255 - investment_advisor - INFO - lifespan:22 - Starting AI-Powered Risk & Scenario Advisor API
+2025-08-16 12:37:22,276 - investment_advisor - INFO - lifespan:24 - Database initialized successfully
+2025-08-16 12:37:38,491 - investment_advisor - INFO - lifespan:22 - Starting AI-Powered Risk & Scenario Advisor API
+2025-08-16 12:37:38,502 - investment_advisor - INFO - lifespan:24 - Database initialized successfully
+2025-08-16 12:37:55,215 - investment_advisor - INFO - lifespan:22 - Starting AI-Powered Risk & Scenario Advisor API
+2025-08-16 12:37:55,239 - investment_advisor - INFO - lifespan:24 - Database initialized successfully
+2025-08-16 12:38:10,793 - investment_advisor - INFO - lifespan:22 - Starting AI-Powered Risk & Scenario Advisor API
+2025-08-16 12:38:10,809 - investment_advisor - INFO - lifespan:24 - Database initialized successfully
+2025-08-16 12:38:28,493 - investment_advisor - INFO - lifespan:22 - Starting AI-Powered Risk & Scenario Advisor API
+2025-08-16 12:38:28,511 - investment_advisor - INFO - lifespan:24 - Database initialized successfully
+2025-08-16 12:38:47,097 - investment_advisor - INFO - lifespan:22 - Starting AI-Powered Risk & Scenario Advisor API
+2025-08-16 12:38:47,117 - investment_advisor - INFO - lifespan:24 - Database initialized successfully
+2025-08-16 12:39:26,424 - investment_advisor - INFO - lifespan:27 - Shutting down AI-Powered Risk & Scenario Advisor API
+2025-08-16 12:40:05,922 - investment_advisor - INFO - lifespan:22 - Starting AI-Powered Risk & Scenario Advisor API
+2025-08-16 12:40:05,955 - investment_advisor - INFO - lifespan:24 - Database initialized successfully
+2025-08-16 12:40:13,784 - investment_advisor - INFO - log_api_request:61 - API GET /health - 200 (0.001s)
+2025-08-16 12:40:21,835 - investment_advisor - INFO - log_api_request:61 - API GET /health - 200 (0.001s)
+2025-08-16 12:40:27,342 - investment_advisor - INFO - log_api_request:61 - API GET /health - 200 (0.001s)
+2025-08-16 12:40:44,239 - investment_advisor - INFO - log_api_request:61 - API GET /health - 200
+2025-08-16 12:40:54,627 - investment_advisor - INFO - log_api_request:61 - API GET /health - 200 (0.001s)
+2025-08-16 12:41:02,885 - investment_advisor - INFO - log_api_request:61 - API GET /health - 200 (0.001s)
+2025-08-16 12:41:10,468 - investment_advisor - INFO - log_api_request:61 - API GET /health - 200 (0.001s)
+2025-08-16 12:41:18,037 - investment_advisor - INFO - log_api_request:61 - API GET /health - 200 (0.001s)
+2025-08-16 12:41:25,124 - investment_advisor - INFO - log_api_request:61 - API GET /health - 200
+2025-08-16 12:41:25,194 - investment_advisor - WARNING - log_security_event:76 - SECURITY DUPLICATE_REGISTRATION: Duplicate registration attempt for: alokagarwal629@gmail.com
+2025-08-16 12:41:25,198 - investment_advisor - INFO - log_api_request:61 - API POST /auth/register - 400 (0.053s)
+2025-08-16 12:44:19,511 - investment_advisor - INFO - lifespan:27 - Shutting down AI-Powered Risk & Scenario Advisor API
+2025-08-16 12:44:32,528 - investment_advisor - INFO - lifespan:22 - Starting AI-Powered Risk & Scenario Advisor API
+2025-08-16 12:44:32,541 - investment_advisor - INFO - lifespan:24 - Database initialized successfully
+2025-08-16 12:44:44,260 - investment_advisor - INFO - lifespan:22 - Starting AI-Powered Risk & Scenario Advisor API
+2025-08-16 12:44:44,317 - investment_advisor - INFO - lifespan:24 - Database initialized successfully
+2025-08-16 12:44:59,946 - investment_advisor - INFO - lifespan:22 - Starting AI-Powered Risk & Scenario Advisor API
+2025-08-16 12:44:59,956 - investment_advisor - INFO - lifespan:24 - Database initialized successfully
+2025-08-16 12:45:11,562 - investment_advisor - INFO - lifespan:22 - Starting AI-Powered Risk & Scenario Advisor API
+2025-08-16 12:45:11,594 - investment_advisor - INFO - lifespan:24 - Database initialized successfully
+2025-08-16 12:45:22,787 - investment_advisor - INFO - lifespan:22 - Starting AI-Powered Risk & Scenario Advisor API
+2025-08-16 12:45:22,807 - investment_advisor - INFO - lifespan:24 - Database initialized successfully
+2025-08-16 12:45:33,940 - investment_advisor - INFO - lifespan:22 - Starting AI-Powered Risk & Scenario Advisor API
+2025-08-16 12:45:33,946 - investment_advisor - INFO - lifespan:24 - Database initialized successfully
+2025-08-16 12:45:38,230 - investment_advisor - INFO - lifespan:27 - Shutting down AI-Powered Risk & Scenario Advisor API
+2025-08-16 12:45:50,053 - investment_advisor - INFO - lifespan:22 - Starting AI-Powered Risk & Scenario Advisor API
+2025-08-16 12:45:50,088 - investment_advisor - INFO - lifespan:24 - Database initialized successfully
+2025-08-16 12:45:50,877 - investment_advisor - INFO - lifespan:27 - Shutting down AI-Powered Risk & Scenario Advisor API
+2025-08-16 12:46:03,633 - investment_advisor - INFO - lifespan:22 - Starting AI-Powered Risk & Scenario Advisor API
+2025-08-16 12:46:03,655 - investment_advisor - INFO - lifespan:24 - Database initialized successfully
+2025-08-16 12:46:04,658 - investment_advisor - INFO - lifespan:27 - Shutting down AI-Powered Risk & Scenario Advisor API
+2025-08-16 12:46:16,327 - investment_advisor - INFO - lifespan:22 - Starting AI-Powered Risk & Scenario Advisor API
+2025-08-16 12:46:16,334 - investment_advisor - INFO - lifespan:24 - Database initialized successfully
+2025-08-16 12:46:19,957 - investment_advisor - INFO - lifespan:27 - Shutting down AI-Powered Risk & Scenario Advisor API
+2025-08-16 12:46:31,389 - investment_advisor - INFO - lifespan:22 - Starting AI-Powered Risk & Scenario Advisor API
+2025-08-16 12:46:31,413 - investment_advisor - INFO - lifespan:24 - Database initialized successfully
+2025-08-16 12:46:32,218 - investment_advisor - INFO - lifespan:27 - Shutting down AI-Powered Risk & Scenario Advisor API
+2025-08-16 12:46:43,777 - investment_advisor - INFO - lifespan:22 - Starting AI-Powered Risk & Scenario Advisor API
+2025-08-16 12:46:43,788 - investment_advisor - INFO - lifespan:24 - Database initialized successfully
+2025-08-16 12:46:47,303 - investment_advisor - INFO - lifespan:27 - Shutting down AI-Powered Risk & Scenario Advisor API
+2025-08-16 12:46:59,188 - investment_advisor - INFO - lifespan:22 - Starting AI-Powered Risk & Scenario Advisor API
+2025-08-16 12:46:59,198 - investment_advisor - INFO - lifespan:24 - Database initialized successfully
+2025-08-16 12:47:21,895 - investment_advisor - INFO - lifespan:27 - Shutting down AI-Powered Risk & Scenario Advisor API
+2025-08-16 12:47:36,667 - investment_advisor - INFO - lifespan:22 - Starting AI-Powered Risk & Scenario Advisor API
+2025-08-16 12:47:36,688 - investment_advisor - INFO - lifespan:24 - Database initialized successfully
+2025-08-16 12:47:59,180 - investment_advisor - INFO - lifespan:22 - Starting AI-Powered Risk & Scenario Advisor API
+2025-08-16 12:47:59,195 - investment_advisor - INFO - lifespan:24 - Database initialized successfully
+2025-08-16 12:48:14,991 - investment_advisor - INFO - lifespan:27 - Shutting down AI-Powered Risk & Scenario Advisor API
+2025-08-16 12:48:52,433 - investment_advisor - INFO - lifespan:22 - Starting AI-Powered Risk & Scenario Advisor API
+2025-08-16 12:48:52,494 - investment_advisor - INFO - lifespan:24 - Database initialized successfully
+2025-08-16 12:48:59,258 - investment_advisor - INFO - log_api_request:61 - API GET /health - 200 (0.001s)
+2025-08-16 12:49:07,091 - investment_advisor - INFO - log_api_request:61 - API GET /health - 200 (0.001s)
+2025-08-16 12:49:13,382 - investment_advisor - INFO - log_api_request:61 - API GET /health - 200 (0.001s)
+2025-08-16 12:49:17,901 - investment_advisor - INFO - log_api_request:61 - API GET /health - 200 (0.001s)
+2025-08-16 12:49:17,940 - investment_advisor - WARNING - log_security_event:76 - SECURITY DUPLICATE_REGISTRATION: Duplicate registration attempt for: alokagarwal629@gmail.com
+2025-08-16 12:49:17,942 - investment_advisor - INFO - log_api_request:61 - API POST /auth/register - 400 (0.032s)
+2025-08-16 12:49:50,654 - investment_advisor - INFO - log_api_request:61 - API GET /health - 200 (0.001s)
+2025-08-16 13:05:31,914 - investment_advisor - INFO - log_api_request:61 - API GET /health - 200 (0.002s)
+2025-08-16 13:05:50,490 - investment_advisor - INFO - log_api_request:61 - API GET /health - 200 (0.002s)
+2025-08-16 13:31:39,765 - investment_advisor - INFO - lifespan:22 - Starting AI-Powered Risk & Scenario Advisor API
+2025-08-16 13:31:39,897 - investment_advisor - INFO - lifespan:24 - Database initialized successfully
+2025-08-16 13:31:53,339 - investment_advisor - INFO - log_api_request:61 - API GET /health - 200 (0.002s)
+2025-08-16 13:32:46,695 - investment_advisor - INFO - log_api_request:61 - API GET /health - 200 (0.003s)
+2025-08-16 13:32:57,248 - investment_advisor - INFO - log_api_request:61 - API GET /health - 200 (0.001s)
+2025-08-16 13:33:02,315 - investment_advisor - INFO - log_api_request:61 - API GET /health - 200 (0.001s)
+2025-08-16 13:33:02,351 - investment_advisor - WARNING - log_security_event:76 - SECURITY DUPLICATE_REGISTRATION: Duplicate registration attempt for: alokagarwal629@gmail.com
+2025-08-16 13:33:02,354 - investment_advisor - INFO - log_api_request:61 - API POST /auth/register - 400 (0.026s)
+2025-08-16 13:36:17,550 - investment_advisor - INFO - lifespan:27 - Shutting down AI-Powered Risk & Scenario Advisor API
+2025-08-16 13:36:29,619 - investment_advisor - INFO - lifespan:22 - Starting AI-Powered Risk & Scenario Advisor API
+2025-08-16 13:36:29,629 - investment_advisor - INFO - lifespan:24 - Database initialized successfully
+2025-08-16 13:36:37,771 - investment_advisor - INFO - lifespan:27 - Shutting down AI-Powered Risk & Scenario Advisor API
+2025-08-16 13:36:51,620 - investment_advisor - INFO - lifespan:22 - Starting AI-Powered Risk & Scenario Advisor API
+2025-08-16 13:36:51,630 - investment_advisor - INFO - lifespan:24 - Database initialized successfully
+2025-08-16 13:37:08,846 - investment_advisor - INFO - lifespan:22 - Starting AI-Powered Risk & Scenario Advisor API
+2025-08-16 13:37:08,855 - investment_advisor - INFO - lifespan:24 - Database initialized successfully
+2025-08-16 13:37:19,082 - investment_advisor - INFO - lifespan:22 - Starting AI-Powered Risk & Scenario Advisor API
+2025-08-16 13:37:19,095 - investment_advisor - INFO - lifespan:24 - Database initialized successfully
+2025-08-16 13:37:35,870 - investment_advisor - INFO - lifespan:22 - Starting AI-Powered Risk & Scenario Advisor API
+2025-08-16 13:37:35,893 - investment_advisor - INFO - lifespan:24 - Database initialized successfully
+2025-08-16 13:37:48,193 - investment_advisor - INFO - lifespan:22 - Starting AI-Powered Risk & Scenario Advisor API
+2025-08-16 13:37:48,211 - investment_advisor - INFO - lifespan:24 - Database initialized successfully
+2025-08-16 13:37:49,648 - investment_advisor - INFO - lifespan:27 - Shutting down AI-Powered Risk & Scenario Advisor API
+2025-08-16 13:38:02,024 - investment_advisor - INFO - lifespan:22 - Starting AI-Powered Risk & Scenario Advisor API
+2025-08-16 13:38:02,038 - investment_advisor - INFO - lifespan:24 - Database initialized successfully
+2025-08-16 13:38:19,570 - investment_advisor - INFO - lifespan:22 - Starting AI-Powered Risk & Scenario Advisor API
+2025-08-16 13:38:19,615 - investment_advisor - INFO - lifespan:24 - Database initialized successfully
+2025-08-16 13:38:37,453 - investment_advisor - INFO - lifespan:22 - Starting AI-Powered Risk & Scenario Advisor API
+2025-08-16 13:38:37,479 - investment_advisor - INFO - lifespan:24 - Database initialized successfully
+2025-08-16 13:38:49,398 - investment_advisor - INFO - lifespan:22 - Starting AI-Powered Risk & Scenario Advisor API
+2025-08-16 13:38:49,631 - investment_advisor - INFO - lifespan:24 - Database initialized successfully
+2025-08-16 13:38:52,076 - investment_advisor - INFO - lifespan:27 - Shutting down AI-Powered Risk & Scenario Advisor API
+2025-08-16 13:39:04,778 - investment_advisor - INFO - lifespan:22 - Starting AI-Powered Risk & Scenario Advisor API
+2025-08-16 13:39:04,791 - investment_advisor - INFO - lifespan:24 - Database initialized successfully
+2025-08-16 13:39:21,787 - investment_advisor - INFO - lifespan:22 - Starting AI-Powered Risk & Scenario Advisor API
+2025-08-16 13:39:21,798 - investment_advisor - INFO - lifespan:24 - Database initialized successfully
+2025-08-16 13:39:35,505 - investment_advisor - INFO - lifespan:22 - Starting AI-Powered Risk & Scenario Advisor API
+2025-08-16 13:39:35,522 - investment_advisor - INFO - lifespan:24 - Database initialized successfully
+2025-08-16 13:39:49,694 - investment_advisor - INFO - lifespan:22 - Starting AI-Powered Risk & Scenario Advisor API
+2025-08-16 13:39:49,702 - investment_advisor - INFO - lifespan:24 - Database initialized successfully
+2025-08-16 13:40:03,734 - investment_advisor - INFO - lifespan:22 - Starting AI-Powered Risk & Scenario Advisor API
+2025-08-16 13:40:03,745 - investment_advisor - INFO - lifespan:24 - Database initialized successfully
+2025-08-16 13:40:11,505 - investment_advisor - INFO - lifespan:22 - Starting AI-Powered Risk & Scenario Advisor API
+2025-08-16 13:40:11,515 - investment_advisor - INFO - lifespan:24 - Database initialized successfully
+2025-08-16 13:40:57,089 - investment_advisor - INFO - lifespan:22 - Starting AI-Powered Risk & Scenario Advisor API
+2025-08-16 13:40:57,099 - investment_advisor - INFO - lifespan:24 - Database initialized successfully
+2025-08-16 13:41:05,934 - investment_advisor - INFO - log_api_request:61 - API GET /health - 200 (0.001s)
+2025-08-16 13:41:27,960 - investment_advisor - INFO - log_api_request:61 - API GET /health - 200 (0.001s)
+2025-08-16 13:41:32,493 - investment_advisor - INFO - log_api_request:61 - API GET /health - 200 (0.001s)
+2025-08-16 13:41:36,745 - investment_advisor - INFO - log_api_request:61 - API GET /health - 200
+2025-08-16 13:41:36,785 - investment_advisor - WARNING - log_security_event:76 - SECURITY DUPLICATE_REGISTRATION: Duplicate registration attempt for: alokagarwal629@gmail.com
+2025-08-16 13:41:36,788 - investment_advisor - INFO - log_api_request:61 - API POST /auth/register - 400 (0.033s)
+2025-08-16 13:43:08,607 - investment_advisor - INFO - log_api_request:61 - API GET /health - 200 (0.002s)
+2025-08-16 13:43:10,672 - investment_advisor - INFO - lifespan:27 - Shutting down AI-Powered Risk & Scenario Advisor API
+2025-08-16 13:43:24,295 - investment_advisor - INFO - lifespan:22 - Starting AI-Powered Risk & Scenario Advisor API
+2025-08-16 13:43:24,326 - investment_advisor - INFO - lifespan:24 - Database initialized successfully
+2025-08-16 13:43:24,361 - investment_advisor - INFO - log_api_request:61 - API GET /health - 200 (0.005s)
+2025-08-16 13:43:26,093 - investment_advisor - INFO - lifespan:27 - Shutting down AI-Powered Risk & Scenario Advisor API
+2025-08-16 13:43:39,350 - investment_advisor - INFO - lifespan:22 - Starting AI-Powered Risk & Scenario Advisor API
+2025-08-16 13:43:39,376 - investment_advisor - INFO - lifespan:24 - Database initialized successfully
+2025-08-16 13:43:58,972 - investment_advisor - INFO - lifespan:22 - Starting AI-Powered Risk & Scenario Advisor API
+2025-08-16 13:43:58,985 - investment_advisor - INFO - lifespan:24 - Database initialized successfully
+2025-08-16 13:44:16,328 - investment_advisor - INFO - lifespan:22 - Starting AI-Powered Risk & Scenario Advisor API
+2025-08-16 13:44:16,334 - investment_advisor - INFO - lifespan:24 - Database initialized successfully
+2025-08-16 13:44:28,058 - investment_advisor - INFO - lifespan:22 - Starting AI-Powered Risk & Scenario Advisor API
+2025-08-16 13:44:28,072 - investment_advisor - INFO - lifespan:24 - Database initialized successfully
+2025-08-16 13:44:41,204 - investment_advisor - INFO - lifespan:22 - Starting AI-Powered Risk & Scenario Advisor API
+2025-08-16 13:44:41,215 - investment_advisor - INFO - lifespan:24 - Database initialized successfully
+2025-08-16 13:44:58,539 - investment_advisor - INFO - lifespan:22 - Starting AI-Powered Risk & Scenario Advisor API
+2025-08-16 13:44:58,549 - investment_advisor - INFO - lifespan:24 - Database initialized successfully
+2025-08-16 13:45:11,469 - investment_advisor - INFO - lifespan:22 - Starting AI-Powered Risk & Scenario Advisor API
+2025-08-16 13:45:11,480 - investment_advisor - INFO - lifespan:24 - Database initialized successfully
+2025-08-16 13:45:20,308 - investment_advisor - INFO - lifespan:22 - Starting AI-Powered Risk & Scenario Advisor API
+2025-08-16 13:45:20,341 - investment_advisor - INFO - lifespan:24 - Database initialized successfully
+2025-08-16 13:45:26,080 - investment_advisor - INFO - log_api_request:61 - API GET /health - 200
+2025-08-16 13:45:32,789 - investment_advisor - INFO - log_api_request:61 - API GET /health - 200
+2025-08-16 13:45:36,833 - investment_advisor - INFO - log_api_request:61 - API GET /health - 200 (0.001s)
+2025-08-16 13:45:41,546 - investment_advisor - INFO - log_api_request:61 - API GET /health - 200 (0.001s)
+2025-08-16 13:45:41,579 - investment_advisor - WARNING - log_security_event:76 - SECURITY DUPLICATE_REGISTRATION: Duplicate registration attempt for: alokagarwal629@gmail.com
+2025-08-16 13:45:41,582 - investment_advisor - INFO - log_api_request:61 - API POST /auth/register - 400 (0.027s)
+2025-08-16 13:46:04,658 - investment_advisor - INFO - log_api_request:61 - API GET /health - 200 (0.001s)
+2025-08-16 13:46:08,141 - investment_advisor - INFO - log_api_request:61 - API GET /health - 200 (0.001s)
+2025-08-16 13:46:08,544 - investment_advisor - WARNING - log_security_event:76 - SECURITY FAILED_LOGIN (IP: 127.0.0.1): Failed login attempt for email: alokagarwal629@gmail.com
+2025-08-16 13:46:08,545 - investment_advisor - INFO - log_api_request:61 - API POST /auth/token - 401 (0.400s)

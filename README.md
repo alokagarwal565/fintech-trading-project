@@ -45,6 +45,8 @@ A comprehensive full-stack application that helps retail investors assess their 
 
 ### ✅ **User Management & Security**
 - Secure JWT-based authentication
+- **Real-time password strength validation** with visual feedback
+- **Enhanced error handling** with user-friendly messages
 - Password hashing with bcrypt
 - Rate limiting and input sanitization
 - Comprehensive security middleware
@@ -103,6 +105,8 @@ A comprehensive full-stack application that helps retail investors assess their 
 
 ### 1. **User Authentication & Management**
 - Secure user registration with email validation
+- **Real-time password strength validation** with visual feedback
+- **Enhanced error handling** with structured error responses
 - JWT-based login and session management
 - Password strength validation and hashing
 - User profile management
@@ -161,25 +165,25 @@ A comprehensive full-stack application that helps retail investors assess their 
 ### **Automated Setup**
 
 1. **Clone and setup**
-   ```bash
+```bash
    git clone <repository-url>
    cd fintech-trading-project
    python setup.py
-   ```
+```
 
 2. **Configure environment**
-   ```bash
+```bash
    cp env.example .env
    # Edit .env with your API keys and configuration
-   ```
+```
 
 3. **Start the application**
-   ```bash
+```bash
    # Terminal 1: Start backend
-   python run_backend.py
-   
+python run_backend.py
+
    # Terminal 2: Start frontend
-   python run_frontend.py
+python run_frontend.py
    ```
 
 4. **Access the application**
@@ -321,6 +325,20 @@ python test_all.py userdata
 ## 🔒 Security Features
 
 - **JWT Authentication**: Secure token-based authentication
+- **Real-time Password Validation**: Frontend validation with visual feedback
+  - At least 8 characters long
+  - Contains uppercase letter(s)
+  - Contains lowercase letter(s)
+  - Contains number(s)
+  - Contains special character(s)
+  - Visual strength meter (Very Weak → Weak → Medium → Strong)
+  - Real-time checklist updates as user types
+- **Enhanced Error Handling**: User-friendly error messages with structured responses
+  - Duplicate email detection with clear messaging
+  - Invalid email format validation
+  - Password strength requirement feedback
+  - Helpful action buttons (Go to Login, Try Different Email)
+  - Styled error messages with tips and suggestions
 - **Password Hashing**: bcrypt password hashing with salt
 - **Input Sanitization**: Protection against XSS and injection attacks
 - **Rate Limiting**: Redis-based API rate limiting
