@@ -103,7 +103,7 @@ def display_password_validation(password: str, container):
     st.markdown(f"""
     <div class="password-strength">
         <div style="margin-bottom: 10px;">
-            <strong>Password Strength:</strong> 
+            <strong style="color: #000000;">Password Strength:</strong> 
             <span class="strength-indicator" style="color: {color}; background-color: {color}20;">{strength}</span>
         </div>
         <div style="margin-bottom: 15px;">
@@ -111,7 +111,7 @@ def display_password_validation(password: str, container):
                 <div style="background-color: {color}; height: 100%; width: {percentage}%; transition: width 0.3s ease;"></div>
             </div>
         </div>
-        <div><strong>Requirements:</strong></div>
+        <div><strong style="color: #000000;">Requirements:</strong></div>
     """, unsafe_allow_html=True)
     
     req_labels = {
