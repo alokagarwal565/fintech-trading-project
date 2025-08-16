@@ -7,6 +7,7 @@ from backend.auth.auth import get_current_user
 from backend.services.export_service import ExportService
 from datetime import datetime
 import os
+import asyncio
 
 router = APIRouter(prefix="/api/v1/export", tags=["export"])
 
@@ -73,17 +74,37 @@ async def export_pdf(
     session: Session = Depends(get_session)
 ):
     """
-    Export user's analysis results as PDF
+    Export user's analysis results as PDF with timeout protection
     """
     try:
+        print(f"🚀 Starting PDF export for user {current_user.email}")
+        
+        # Create a task for PDF generation with timeout
         service = ExportService()
-        pdf_content = service.export_to_pdf(
-            current_user,
-            session,
-            request.include_risk_profile,
-            request.include_portfolio,
-            request.include_scenarios
-        )
+        
+        # Run PDF generation with timeout protection
+        try:
+            # Use asyncio.wait_for to add timeout protection
+            pdf_content = await asyncio.wait_for(
+                asyncio.to_thread(
+                    service.export_to_pdf,
+                    current_user,
+                    session,
+                    request.include_risk_profile,
+                    request.include_portfolio,
+                    request.include_scenarios
+                ),
+                timeout=15.0  # 15 second timeout since charts are disabled (reduced from 25)
+            )
+            
+            print(f"✅ PDF generation completed for user {current_user.email}")
+            
+        except asyncio.TimeoutError:
+            print(f"⏰ PDF generation timeout for user {current_user.email}")
+            raise HTTPException(
+                status_code=408, 
+                detail="PDF generation timed out. The export may be too complex. Please try again or contact support."
+            )
         
         # Create exports directory if it doesn't exist
         exports_dir = "exports"
@@ -95,8 +116,11 @@ async def export_pdf(
         filename = f"investment_analysis_{timestamp}.pdf"
         file_path = os.path.join(exports_dir, filename)
         
+        # Save the PDF file
         with open(file_path, 'wb') as f:
             f.write(pdf_content)
+        
+        print(f"💾 PDF file saved: {file_path}")
         
         # Save export record to database
         export_record = Export(
@@ -113,14 +137,23 @@ async def export_pdf(
         session.commit()
         session.refresh(export_record)
         
+        print(f"📊 Export record saved to database for user {current_user.email}")
+        
         return Response(
             content=pdf_content,
             media_type="application/pdf",
             headers={"Content-Disposition": f"attachment; filename={filename}"}
         )
         
+    except HTTPException:
+        # Re-raise HTTP exceptions (like timeout)
+        raise
     except Exception as e:
-        raise HTTPException(status_code=500, detail=f"Error generating PDF export: {str(e)}")
+        print(f"❌ PDF export error for user {current_user.email}: {str(e)}")
+        raise HTTPException(
+            status_code=500, 
+            detail=f"Error generating PDF export: {str(e)}. Please try again or contact support."
+        )
 
 @router.get("/history")
 async def get_export_history(
