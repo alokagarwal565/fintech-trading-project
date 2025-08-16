@@ -560,3 +560,156 @@ WHERE ? = riskassessment.user_id]
 2025-08-16 13:46:08,141 - investment_advisor - INFO - log_api_request:61 - API GET /health - 200 (0.001s)
 2025-08-16 13:46:08,544 - investment_advisor - WARNING - log_security_event:76 - SECURITY FAILED_LOGIN (IP: 127.0.0.1): Failed login attempt for email: alokagarwal629@gmail.com
 2025-08-16 13:46:08,545 - investment_advisor - INFO - log_api_request:61 - API POST /auth/token - 401 (0.400s)
+2025-08-16 14:00:06,673 - investment_advisor - INFO - lifespan:22 - Starting AI-Powered Risk & Scenario Advisor API
+2025-08-16 14:00:06,683 - investment_advisor - INFO - lifespan:24 - Database initialized successfully
+2025-08-16 14:00:11,194 - investment_advisor - INFO - log_api_request:61 - API GET /health - 200 (0.001s)
+2025-08-16 14:00:34,457 - investment_advisor - INFO - setup_admin_user:157 - Admin user created: 12 (admin@alok.com)
+2025-08-16 14:00:34,526 - investment_advisor - INFO - log_api_request:61 - API POST /auth/setup-admin - 200 (0.556s)
+2025-08-16 14:00:48,145 - investment_advisor - INFO - log_api_request:61 - API GET /health - 200 (0.001s)
+2025-08-16 14:01:02,908 - investment_advisor - INFO - log_api_request:61 - API GET /health - 200 (0.001s)
+2025-08-16 14:01:12,197 - investment_advisor - INFO - log_api_request:61 - API GET /health - 200 (0.001s)
+2025-08-16 14:01:15,019 - investment_advisor - INFO - log_api_request:61 - API GET /health - 200
+2025-08-16 14:01:15,585 - investment_advisor - INFO - login:111 - User logged in successfully: 12 (admin@alok.com) with role: admin
+2025-08-16 14:01:15,587 - investment_advisor - INFO - log_api_request:61 - API POST /auth/token - 200 (0.563s)
+2025-08-16 14:01:18,003 - investment_advisor - INFO - log_api_request:61 - API GET /health - 200 (0.001s)
+2025-08-16 14:01:18,026 - investment_advisor - INFO - log_api_request:61 - API GET /api/v1/user/data - 200 (0.020s)
+2025-08-16 14:01:27,910 - investment_advisor - INFO - log_api_request:61 - API GET /health - 200
+2025-08-16 14:01:30,321 - investment_advisor - INFO - log_api_request:61 - API GET /health - 200 (0.001s)
+2025-08-16 14:01:54,606 - investment_advisor - INFO - log_api_request:61 - API GET /health - 200 (0.001s)
+2025-08-16 14:02:02,388 - investment_advisor - INFO - log_api_request:61 - API GET /health - 200 (0.001s)
+2025-08-16 14:02:07,342 - investment_advisor - INFO - log_api_request:61 - API GET /health - 200 (0.001s)
+2025-08-16 14:02:08,361 - investment_advisor - INFO - log_api_request:61 - API GET /health - 200 (0.001s)
+2025-08-16 14:02:08,646 - investment_advisor - INFO - login:111 - User logged in successfully: 12 (admin@alok.com) with role: admin
+2025-08-16 14:02:08,649 - investment_advisor - INFO - log_api_request:61 - API POST /auth/token - 200 (0.282s)
+2025-08-16 14:02:11,094 - investment_advisor - INFO - log_api_request:61 - API GET /health - 200 (0.001s)
+2025-08-16 14:02:11,113 - investment_advisor - INFO - log_api_request:61 - API GET /api/v1/user/data - 200 (0.014s)
+2025-08-16 14:06:50,127 - investment_advisor - INFO - lifespan:27 - Shutting down AI-Powered Risk & Scenario Advisor API
+2025-08-16 14:07:02,426 - investment_advisor - INFO - lifespan:22 - Starting AI-Powered Risk & Scenario Advisor API
+2025-08-16 14:07:02,450 - investment_advisor - INFO - lifespan:24 - Database initialized successfully
+2025-08-16 14:07:03,013 - investment_advisor - INFO - lifespan:27 - Shutting down AI-Powered Risk & Scenario Advisor API
+2025-08-16 14:07:14,136 - investment_advisor - INFO - lifespan:22 - Starting AI-Powered Risk & Scenario Advisor API
+2025-08-16 14:07:14,146 - investment_advisor - INFO - lifespan:24 - Database initialized successfully
+2025-08-16 14:08:10,073 - investment_advisor - INFO - log_api_request:61 - API GET /health - 200
+2025-08-16 14:08:23,821 - investment_advisor - INFO - log_api_request:61 - API POST /auth/setup-admin - 400 (0.023s)
+2025-08-16 14:08:47,620 - investment_advisor - INFO - log_api_request:61 - API GET /health - 200
+2025-08-16 14:08:55,539 - investment_advisor - INFO - login:111 - User logged in successfully: 12 (admin@alok.com) with role: admin
+2025-08-16 14:08:55,541 - investment_advisor - INFO - log_api_request:61 - API POST /auth/token - 200 (0.310s)
+2025-08-16 14:09:05,882 - investment_advisor - INFO - lifespan:27 - Shutting down AI-Powered Risk & Scenario Advisor API
+2025-08-16 14:09:18,439 - investment_advisor - INFO - lifespan:22 - Starting AI-Powered Risk & Scenario Advisor API
+2025-08-16 14:09:18,465 - investment_advisor - INFO - lifespan:24 - Database initialized successfully
+2025-08-16 14:09:20,026 - investment_advisor - INFO - lifespan:27 - Shutting down AI-Powered Risk & Scenario Advisor API
+2025-08-16 14:09:31,829 - investment_advisor - INFO - lifespan:22 - Starting AI-Powered Risk & Scenario Advisor API
+2025-08-16 14:09:31,838 - investment_advisor - INFO - lifespan:24 - Database initialized successfully
+2025-08-16 14:09:39,599 - investment_advisor - INFO - lifespan:27 - Shutting down AI-Powered Risk & Scenario Advisor API
+2025-08-16 14:09:51,514 - investment_advisor - INFO - lifespan:22 - Starting AI-Powered Risk & Scenario Advisor API
+2025-08-16 14:09:51,524 - investment_advisor - INFO - lifespan:24 - Database initialized successfully
+2025-08-16 14:10:16,089 - investment_advisor - INFO - lifespan:22 - Starting AI-Powered Risk & Scenario Advisor API
+2025-08-16 14:10:16,097 - investment_advisor - INFO - lifespan:24 - Database initialized successfully
+2025-08-16 14:10:19,431 - investment_advisor - INFO - login:111 - User logged in successfully: 12 (admin@alok.com) with role: admin
+2025-08-16 14:10:19,434 - investment_advisor - INFO - log_api_request:61 - API POST /auth/token - 200 (0.343s)
+2025-08-16 14:10:35,394 - investment_advisor - INFO - lifespan:27 - Shutting down AI-Powered Risk & Scenario Advisor API
+2025-08-16 14:11:00,456 - investment_advisor - INFO - lifespan:22 - Starting AI-Powered Risk & Scenario Advisor API
+2025-08-16 14:11:00,497 - investment_advisor - INFO - lifespan:24 - Database initialized successfully
+2025-08-16 14:11:12,169 - investment_advisor - INFO - log_api_request:61 - API GET /health - 200 (0.004s)
+2025-08-16 14:11:25,090 - investment_advisor - INFO - log_api_request:61 - API GET /health - 200 (0.001s)
+2025-08-16 14:11:28,810 - investment_advisor - INFO - log_api_request:61 - API GET /health - 200 (0.001s)
+2025-08-16 14:11:31,762 - investment_advisor - INFO - log_api_request:61 - API GET /health - 200 (0.001s)
+2025-08-16 14:11:32,100 - investment_advisor - INFO - login:111 - User logged in successfully: 12 (admin@alok.com) with role: admin
+2025-08-16 14:11:32,102 - investment_advisor - INFO - log_api_request:61 - API POST /auth/token - 200 (0.334s)
+2025-08-16 14:11:34,524 - investment_advisor - INFO - log_api_request:61 - API GET /health - 200 (0.001s)
+2025-08-16 14:13:07,246 - investment_advisor - INFO - lifespan:27 - Shutting down AI-Powered Risk & Scenario Advisor API
+2025-08-16 14:13:19,394 - investment_advisor - INFO - lifespan:22 - Starting AI-Powered Risk & Scenario Advisor API
+2025-08-16 14:13:19,404 - investment_advisor - INFO - lifespan:24 - Database initialized successfully
+2025-08-16 14:14:44,356 - investment_advisor - INFO - login:111 - User logged in successfully: 12 (admin@alok.com) with role: admin
+2025-08-16 14:14:44,360 - investment_advisor - INFO - log_api_request:61 - API POST /auth/token - 200 (0.801s)
+2025-08-16 14:14:46,529 - investment_advisor - INFO - log_api_request:61 - API GET /api/v1/admin/dashboard/stats - 200 (0.114s)
+2025-08-16 14:15:20,391 - investment_advisor - INFO - lifespan:22 - Starting AI-Powered Risk & Scenario Advisor API
+2025-08-16 14:15:20,434 - investment_advisor - INFO - lifespan:24 - Database initialized successfully
+2025-08-16 14:15:28,634 - investment_advisor - INFO - log_api_request:61 - API GET /health - 200 (0.001s)
+2025-08-16 14:15:49,582 - investment_advisor - INFO - log_api_request:61 - API GET /health - 200 (0.001s)
+2025-08-16 14:15:53,340 - investment_advisor - INFO - log_api_request:61 - API GET /health - 200 (0.001s)
+2025-08-16 14:15:53,678 - investment_advisor - INFO - login:111 - User logged in successfully: 12 (admin@alok.com) with role: admin
+2025-08-16 14:15:53,681 - investment_advisor - INFO - log_api_request:61 - API POST /auth/token - 200 (0.335s)
+2025-08-16 14:15:56,097 - investment_advisor - INFO - log_api_request:61 - API GET /health - 200 (0.001s)
+2025-08-16 14:15:56,136 - investment_advisor - INFO - log_api_request:61 - API GET /api/v1/admin/dashboard/stats - 200 (0.033s)
+2025-08-16 14:16:10,312 - investment_advisor - INFO - log_api_request:61 - API GET /health - 200 (0.001s)
+2025-08-16 14:16:19,983 - investment_advisor - INFO - log_api_request:61 - API GET /health - 200 (0.001s)
+2025-08-16 14:16:20,009 - investment_advisor - INFO - log_api_request:61 - API GET /api/v1/admin/dashboard/stats - 200 (0.022s)
+2025-08-16 14:16:22,448 - investment_advisor - INFO - log_api_request:61 - API GET /health - 200
+2025-08-16 14:19:00,014 - investment_advisor - INFO - lifespan:27 - Shutting down AI-Powered Risk & Scenario Advisor API
+2025-08-16 14:19:11,005 - investment_advisor - INFO - lifespan:22 - Starting AI-Powered Risk & Scenario Advisor API
+2025-08-16 14:19:11,030 - investment_advisor - INFO - lifespan:24 - Database initialized successfully
+2025-08-16 14:19:22,313 - investment_advisor - INFO - lifespan:22 - Starting AI-Powered Risk & Scenario Advisor API
+2025-08-16 14:19:22,324 - investment_advisor - INFO - lifespan:24 - Database initialized successfully
+2025-08-16 14:19:59,937 - investment_advisor - INFO - lifespan:27 - Shutting down AI-Powered Risk & Scenario Advisor API
+2025-08-16 14:20:13,757 - investment_advisor - INFO - lifespan:22 - Starting AI-Powered Risk & Scenario Advisor API
+2025-08-16 14:20:13,772 - investment_advisor - INFO - lifespan:24 - Database initialized successfully
+2025-08-16 14:20:27,012 - investment_advisor - INFO - lifespan:22 - Starting AI-Powered Risk & Scenario Advisor API
+2025-08-16 14:20:27,041 - investment_advisor - INFO - lifespan:24 - Database initialized successfully
+2025-08-16 14:21:16,226 - investment_advisor - INFO - lifespan:27 - Shutting down AI-Powered Risk & Scenario Advisor API
+2025-08-16 14:21:31,353 - investment_advisor - INFO - lifespan:22 - Starting AI-Powered Risk & Scenario Advisor API
+2025-08-16 14:21:31,361 - investment_advisor - INFO - lifespan:24 - Database initialized successfully
+2025-08-16 14:21:41,402 - investment_advisor - INFO - lifespan:22 - Starting AI-Powered Risk & Scenario Advisor API
+2025-08-16 14:21:41,412 - investment_advisor - INFO - lifespan:24 - Database initialized successfully
+2025-08-16 14:22:07,873 - investment_advisor - INFO - lifespan:22 - Starting AI-Powered Risk & Scenario Advisor API
+2025-08-16 14:22:07,888 - investment_advisor - INFO - lifespan:24 - Database initialized successfully
+2025-08-16 14:22:36,401 - investment_advisor - INFO - lifespan:22 - Starting AI-Powered Risk & Scenario Advisor API
+2025-08-16 14:22:36,412 - investment_advisor - INFO - lifespan:24 - Database initialized successfully
+2025-08-16 14:22:51,144 - investment_advisor - INFO - lifespan:27 - Shutting down AI-Powered Risk & Scenario Advisor API
+2025-08-16 14:23:04,246 - investment_advisor - INFO - lifespan:22 - Starting AI-Powered Risk & Scenario Advisor API
+2025-08-16 14:23:04,257 - investment_advisor - INFO - lifespan:24 - Database initialized successfully
+2025-08-16 14:23:16,593 - investment_advisor - INFO - lifespan:22 - Starting AI-Powered Risk & Scenario Advisor API
+2025-08-16 14:23:16,607 - investment_advisor - INFO - lifespan:24 - Database initialized successfully
+2025-08-16 14:24:12,418 - investment_advisor - INFO - lifespan:22 - Starting AI-Powered Risk & Scenario Advisor API
+2025-08-16 14:24:12,430 - investment_advisor - INFO - lifespan:24 - Database initialized successfully
+2025-08-16 14:24:26,161 - investment_advisor - INFO - lifespan:27 - Shutting down AI-Powered Risk & Scenario Advisor API
+2025-08-16 14:24:39,980 - investment_advisor - INFO - lifespan:22 - Starting AI-Powered Risk & Scenario Advisor API
+2025-08-16 14:24:39,988 - investment_advisor - INFO - lifespan:24 - Database initialized successfully
+2025-08-16 14:24:55,573 - investment_advisor - INFO - lifespan:22 - Starting AI-Powered Risk & Scenario Advisor API
+2025-08-16 14:24:55,582 - investment_advisor - INFO - lifespan:24 - Database initialized successfully
+2025-08-16 14:25:09,826 - investment_advisor - INFO - lifespan:22 - Starting AI-Powered Risk & Scenario Advisor API
+2025-08-16 14:25:09,845 - investment_advisor - INFO - lifespan:24 - Database initialized successfully
+2025-08-16 14:25:21,754 - investment_advisor - INFO - lifespan:22 - Starting AI-Powered Risk & Scenario Advisor API
+2025-08-16 14:25:21,764 - investment_advisor - INFO - lifespan:24 - Database initialized successfully
+2025-08-16 14:25:44,606 - investment_advisor - INFO - lifespan:27 - Shutting down AI-Powered Risk & Scenario Advisor API
+2025-08-16 14:25:55,966 - investment_advisor - INFO - lifespan:22 - Starting AI-Powered Risk & Scenario Advisor API
+2025-08-16 14:25:55,973 - investment_advisor - INFO - lifespan:24 - Database initialized successfully
+2025-08-16 14:26:21,342 - investment_advisor - INFO - lifespan:22 - Starting AI-Powered Risk & Scenario Advisor API
+2025-08-16 14:26:21,352 - investment_advisor - INFO - lifespan:24 - Database initialized successfully
+2025-08-16 14:26:23,230 - investment_advisor - INFO - login:111 - User logged in successfully: 12 (admin@alok.com) with role: admin
+2025-08-16 14:26:23,233 - investment_advisor - INFO - log_api_request:61 - API POST /auth/token - 200 (0.443s)
+2025-08-16 14:26:25,494 - investment_advisor - INFO - log_api_request:61 - API GET /api/v1/admin/users - 200 (0.206s)
+2025-08-16 14:26:27,560 - investment_advisor - INFO - log_api_request:61 - API GET /api/v1/admin/portfolios - 200 (0.022s)
+2025-08-16 14:26:29,609 - investment_advisor - INFO - log_api_request:61 - API GET /api/v1/admin/risk-assessments - 200 (0.012s)
+2025-08-16 14:26:31,658 - investment_advisor - INFO - log_api_request:61 - API GET /api/v1/admin/scenarios - 200 (0.031s)
+2025-08-16 14:26:33,738 - investment_advisor - INFO - log_api_request:61 - API GET /api/v1/admin/exports - 200 (0.041s)
+2025-08-16 14:26:35,796 - investment_advisor - INFO - log_api_request:61 - API GET /api/v1/admin/system-logs - 200 (0.036s)
+2025-08-16 14:26:46,161 - investment_advisor - INFO - lifespan:27 - Shutting down AI-Powered Risk & Scenario Advisor API
+2025-08-16 14:27:37,926 - investment_advisor - INFO - lifespan:22 - Starting AI-Powered Risk & Scenario Advisor API
+2025-08-16 14:27:37,932 - investment_advisor - INFO - lifespan:24 - Database initialized successfully
+2025-08-16 14:27:52,135 - investment_advisor - INFO - log_api_request:61 - API GET /health - 200
+2025-08-16 14:28:00,585 - investment_advisor - INFO - log_api_request:61 - API GET /health - 200
+2025-08-16 14:28:05,170 - investment_advisor - INFO - log_api_request:61 - API GET /health - 200
+2025-08-16 14:28:06,120 - investment_advisor - INFO - log_api_request:61 - API GET /health - 200 (0.001s)
+2025-08-16 14:28:06,452 - investment_advisor - INFO - login:111 - User logged in successfully: 12 (admin@alok.com) with role: ADMIN
+2025-08-16 14:28:06,455 - investment_advisor - INFO - log_api_request:61 - API POST /auth/token - 200 (0.329s)
+2025-08-16 14:28:08,875 - investment_advisor - INFO - log_api_request:61 - API GET /health - 200
+2025-08-16 14:28:09,055 - investment_advisor - INFO - log_api_request:61 - API GET /api/v1/admin/dashboard/stats - 200 (0.167s)
+2025-08-16 14:28:09,130 - investment_advisor - INFO - log_api_request:61 - API GET /api/v1/admin/users - 200 (0.072s)
+2025-08-16 14:28:09,145 - investment_advisor - INFO - log_api_request:61 - API GET /api/v1/admin/portfolios - 200 (0.013s)
+2025-08-16 14:28:09,155 - investment_advisor - INFO - log_api_request:61 - API GET /api/v1/admin/risk-assessments - 200 (0.007s)
+2025-08-16 14:28:09,166 - investment_advisor - INFO - log_api_request:61 - API GET /api/v1/admin/scenarios - 200 (0.008s)
+2025-08-16 14:28:09,177 - investment_advisor - INFO - log_api_request:61 - API GET /api/v1/admin/exports - 200 (0.009s)
+2025-08-16 14:28:09,201 - investment_advisor - INFO - log_api_request:61 - API GET /api/v1/admin/system-logs - 200 (0.021s)
+2025-08-16 14:28:26,029 - investment_advisor - INFO - log_api_request:61 - API GET /health - 200 (0.001s)
+2025-08-16 14:28:36,160 - investment_advisor - INFO - log_api_request:61 - API GET /health - 200 (0.001s)
+2025-08-16 14:28:36,381 - investment_advisor - INFO - log_api_request:61 - API PUT /api/v1/admin/users/2/toggle-status - 200 (0.188s)
+2025-08-16 14:28:36,408 - investment_advisor - INFO - log_api_request:61 - API GET /api/v1/admin/dashboard/stats - 200 (0.022s)
+2025-08-16 14:28:36,476 - investment_advisor - INFO - log_api_request:61 - API GET /api/v1/admin/users - 200 (0.065s)
+2025-08-16 14:28:36,489 - investment_advisor - INFO - log_api_request:61 - API GET /api/v1/admin/portfolios - 200 (0.011s)
+2025-08-16 14:28:36,498 - investment_advisor - INFO - log_api_request:61 - API GET /api/v1/admin/risk-assessments - 200 (0.006s)
+2025-08-16 14:28:36,508 - investment_advisor - INFO - log_api_request:61 - API GET /api/v1/admin/scenarios - 200 (0.008s)
+2025-08-16 14:28:36,518 - investment_advisor - INFO - log_api_request:61 - API GET /api/v1/admin/exports - 200 (0.008s)
+2025-08-16 14:28:36,541 - investment_advisor - INFO - log_api_request:61 - API GET /api/v1/admin/system-logs - 200 (0.021s)
+2025-08-16 14:28:38,977 - investment_advisor - INFO - log_api_request:61 - API GET /health - 200 (0.001s)
+2025-08-16 14:29:12,496 - investment_advisor - INFO - log_api_request:61 - API GET /health - 200

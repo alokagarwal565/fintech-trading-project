@@ -11,7 +11,7 @@ from dotenv import load_dotenv
 load_dotenv()
 
 from backend.models.database import create_db_and_tables
-from backend.routers import auth, risk_profile, portfolio, scenario, export, user_data
+from backend.routers import auth, risk_profile, portfolio, scenario, export, user_data, admin
 from backend.middleware.rate_limiter import rate_limit_middleware
 from backend.middleware.security import security_middleware_func
 from backend.utils.logger import app_logger, log_api_request
@@ -55,6 +55,7 @@ app.include_router(portfolio.router)
 app.include_router(scenario.router)
 app.include_router(export.router)
 app.include_router(user_data.router)
+app.include_router(admin.router)
 
 @app.get("/")
 async def root():

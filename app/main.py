@@ -223,6 +223,23 @@ class APIClient:
         
         return response.json()
     
+    def setup_admin_user(self, email: str, password: str, full_name: str = None) -> Dict[str, Any]:
+        """Setup initial admin user"""
+        data = {"email": email, "password": password}
+        if full_name:
+            data["full_name"] = full_name
+        
+        response = self.client.post(
+            f"{self.base_url}/auth/setup-admin",
+            json=data,
+            headers=self.get_headers()
+        )
+        
+        if response.status_code >= 400:
+            self._handle_error_response(response)
+        
+        return response.json()
+    
     def login_user(self, email: str, password: str) -> Dict[str, Any]:
         data = {"username": email, "password": password}
         response = self.client.post(
@@ -381,6 +398,104 @@ class APIClient:
         """Delete a specific export"""
         response = self.client.delete(
             f"{self.base_url}/api/v1/export/{export_id}",
+            headers=self.get_headers(token)
+        )
+        response.raise_for_status()
+        return response.json()
+    
+    # Admin-specific methods
+    def get_admin_dashboard_stats(self, token: str) -> Dict[str, Any]:
+        """Get admin dashboard statistics"""
+        response = self.client.get(
+            f"{self.base_url}/api/v1/admin/dashboard/stats",
+            headers=self.get_headers(token)
+        )
+        response.raise_for_status()
+        return response.json()
+    
+    def get_admin_users(self, token: str, skip: int = 0, limit: int = 100, active_only: bool = False) -> Dict[str, Any]:
+        """Get all users for admin dashboard"""
+        params = {"skip": skip, "limit": limit}
+        if active_only:
+            params["active_only"] = True
+        
+        response = self.client.get(
+            f"{self.base_url}/api/v1/admin/users",
+            params=params,
+            headers=self.get_headers(token)
+        )
+        response.raise_for_status()
+        return response.json()
+    
+    def get_admin_portfolios(self, token: str, skip: int = 0, limit: int = 100) -> Dict[str, Any]:
+        """Get all portfolios for admin dashboard"""
+        response = self.client.get(
+            f"{self.base_url}/api/v1/admin/portfolios",
+            params={"skip": skip, "limit": limit},
+            headers=self.get_headers(token)
+        )
+        response.raise_for_status()
+        return response.json()
+    
+    def get_admin_risk_assessments(self, token: str, skip: int = 0, limit: int = 100) -> Dict[str, Any]:
+        """Get all risk assessments for admin dashboard"""
+        response = self.client.get(
+            f"{self.base_url}/api/v1/admin/risk-assessments",
+            params={"skip": skip, "limit": limit},
+            headers=self.get_headers(token)
+        )
+        response.raise_for_status()
+        return response.json()
+    
+    def get_admin_scenarios(self, token: str, skip: int = 0, limit: int = 100) -> Dict[str, Any]:
+        """Get all scenarios for admin dashboard"""
+        response = self.client.get(
+            f"{self.base_url}/api/v1/admin/scenarios",
+            params={"skip": skip, "limit": limit},
+            headers=self.get_headers(token)
+        )
+        response.raise_for_status()
+        return response.json()
+    
+    def get_admin_exports(self, token: str, skip: int = 0, limit: int = 100) -> Dict[str, Any]:
+        """Get all exports for admin dashboard"""
+        response = self.client.get(
+            f"{self.base_url}/api/v1/admin/exports",
+            params={"skip": skip, "limit": limit},
+            headers=self.get_headers(token)
+        )
+        response.raise_for_status()
+        return response.json()
+    
+    def get_admin_system_logs(self, token: str, skip: int = 0, limit: int = 100, level: str = None, search: str = None) -> Dict[str, Any]:
+        """Get system logs for admin dashboard"""
+        params = {"skip": skip, "limit": limit}
+        if level:
+            params["level"] = level
+        if search:
+            params["search"] = search
+        
+        response = self.client.get(
+            f"{self.base_url}/api/v1/admin/system-logs",
+            params=params,
+            headers=self.get_headers(token)
+        )
+        response.raise_for_status()
+        return response.json()
+    
+    def toggle_user_status(self, user_id: int, token: str) -> Dict[str, Any]:
+        """Toggle user active/inactive status"""
+        response = self.client.put(
+            f"{self.base_url}/api/v1/admin/users/{user_id}/toggle-status",
+            headers=self.get_headers(token)
+        )
+        response.raise_for_status()
+        return response.json()
+    
+    def delete_user(self, user_id: int, token: str) -> Dict[str, Any]:
+        """Delete a user and all associated data"""
+        response = self.client.delete(
+            f"{self.base_url}/api/v1/admin/users/{user_id}",
             headers=self.get_headers(token)
         )
         response.raise_for_status()
@@ -708,7 +823,12 @@ def main():
         show_auth_page()
         return
     
-    # Load user data on first login
+    # Check if user is admin and show admin dashboard
+    if st.session_state.get('user_role') == 'admin':
+        show_admin_dashboard()
+        return
+    
+    # Load user data on first login (for regular users)
     if 'user_data_loaded' not in st.session_state:
         load_user_data()
         st.session_state.user_data_loaded = True
@@ -778,6 +898,7 @@ def show_auth_page():
                         result = api_client.login_user(login_email, login_password)
                         st.session_state.access_token = result["access_token"]
                         st.session_state.user_email = login_email
+                        st.session_state.user_role = result.get("user_role", "user")
                         st.success("✅ Login successful!")
                         st.rerun()
                 except Exception as e:
@@ -1427,6 +1548,396 @@ def show_export_options():
                         pass
             except Exception as e:
                 st.error(f"❌ Error generating PDF export: {str(e)}")
+
+def show_admin_dashboard():
+    """Display the admin dashboard with comprehensive analytics and management features"""
+    st.header("🔐 Admin Dashboard")
+    st.markdown("---")
+    
+    # Initialize session state for admin data
+    if 'admin_stats' not in st.session_state:
+        st.session_state.admin_stats = None
+    if 'admin_users' not in st.session_state:
+        st.session_state.admin_users = []
+    if 'admin_portfolios' not in st.session_state:
+        st.session_state.admin_portfolios = []
+    if 'admin_risk_assessments' not in st.session_state:
+        st.session_state.admin_risk_assessments = []
+    if 'admin_scenarios' not in st.session_state:
+        st.session_state.admin_scenarios = []
+    if 'admin_exports' not in st.session_state:
+        st.session_state.admin_exports = []
+    if 'admin_logs' not in st.session_state:
+        st.session_state.admin_logs = []
+    
+    # Sidebar for admin actions
+    st.sidebar.title("Admin Actions")
+    
+    # Logout button
+    if st.sidebar.button("🚪 Logout"):
+        for key in list(st.session_state.keys()):
+            del st.session_state[key]
+        st.rerun()
+    
+    # Refresh data button
+    if st.sidebar.button("🔄 Refresh All Data"):
+        load_admin_data()
+        st.rerun()
+    
+    # Load admin data if not already loaded
+    if st.session_state.admin_stats is None:
+        load_admin_data()
+    
+    # Admin dashboard tabs
+    tab1, tab2, tab3, tab4, tab5, tab6, tab7 = st.tabs([
+        "📊 Overview", "👥 Users", "💼 Portfolios", "🎯 Risk Assessments", 
+        "🔮 Scenarios", "📋 Exports", "📝 System Logs"
+    ])
+    
+    with tab1:
+        show_admin_overview()
+    
+    with tab2:
+        show_admin_users()
+    
+    with tab3:
+        show_admin_portfolios()
+    
+    with tab4:
+        show_admin_risk_assessments()
+    
+    with tab5:
+        show_admin_scenarios()
+    
+    with tab6:
+        show_admin_exports()
+    
+    with tab7:
+        show_admin_system_logs()
+
+def load_admin_data():
+    """Load all admin dashboard data from the backend"""
+    try:
+        with st.spinner("🔄 Loading admin data..."):
+            # Load dashboard statistics
+            st.session_state.admin_stats = api_client.get_admin_dashboard_stats(st.session_state.access_token)
+            
+            # Load user data
+            st.session_state.admin_users = api_client.get_admin_users(st.session_state.access_token)
+            
+            # Load portfolio data
+            st.session_state.admin_portfolios = api_client.get_admin_portfolios(st.session_state.access_token)
+            
+            # Load risk assessment data
+            st.session_state.admin_risk_assessments = api_client.get_admin_risk_assessments(st.session_state.access_token)
+            
+            # Load scenario data
+            st.session_state.admin_scenarios = api_client.get_admin_scenarios(st.session_state.access_token)
+            
+            # Load export data
+            st.session_state.admin_exports = api_client.get_admin_exports(st.session_state.access_token)
+            
+            # Load system logs
+            st.session_state.admin_logs = api_client.get_admin_system_logs(st.session_state.access_token)
+            
+        st.success("✅ Admin data loaded successfully!")
+    except Exception as e:
+        st.error(f"❌ Error loading admin data: {str(e)}")
+
+def show_admin_overview():
+    """Display admin dashboard overview with key metrics and charts"""
+    st.subheader("📊 Dashboard Overview")
+    
+    if not st.session_state.admin_stats:
+        st.warning("No dashboard data available. Please refresh.")
+        return
+    
+    stats = st.session_state.admin_stats
+    
+    # Key metrics in columns
+    col1, col2, col3, col4 = st.columns(4)
+    
+    with col1:
+        st.metric("Total Users", stats['total_users'])
+        st.metric("Active Users", stats['active_users'])
+    
+    with col2:
+        st.metric("New Users (Week)", stats['new_users_this_week'])
+        st.metric("New Users (Month)", stats['new_users_this_month'])
+    
+    with col3:
+        st.metric("Total Portfolios", stats['total_portfolios'])
+        st.metric("Total Holdings", stats['total_holdings'])
+    
+    with col4:
+        st.metric("Avg Holdings/Portfolio", f"{stats['average_holdings_per_portfolio']:.1f}")
+        st.metric("Total Exports", stats['total_exports'])
+    
+    st.markdown("---")
+    
+    # Charts section
+    col1, col2 = st.columns(2)
+    
+    with col1:
+        st.subheader("🎯 Risk Score Distribution")
+        if stats['risk_score_distribution']:
+            risk_data = pd.DataFrame([
+                {"Score": score, "Count": count} 
+                for score, count in stats['risk_score_distribution'].items()
+            ])
+            fig = go.Figure(data=[
+                go.Bar(x=risk_data['Score'], y=risk_data['Count'], marker_color='#1f77b4')
+            ])
+            fig.update_layout(title="Risk Score Distribution", xaxis_title="Risk Score", yaxis_title="Count")
+            st.plotly_chart(fig, use_container_width=True)
+        else:
+            st.info("No risk assessment data available")
+    
+    with col2:
+        st.subheader("📈 Most Common Stocks")
+        if stats['most_common_stocks']:
+            stock_data = pd.DataFrame(stats['most_common_stocks'])
+            fig = go.Figure(data=[
+                go.Bar(x=stock_data['symbol'], y=stock_data['count'], marker_color='#ff7f0e')
+            ])
+            fig.update_layout(title="Most Common Stocks", xaxis_title="Stock Symbol", yaxis_title="Count")
+            st.plotly_chart(fig, use_container_width=True)
+        else:
+            st.info("No portfolio data available")
+    
+    # Sector distribution
+    if stats['most_common_sectors']:
+        st.subheader("🏢 Sector Distribution")
+        sector_data = pd.DataFrame(stats['most_common_sectors'])
+        fig = go.Figure(data=[
+            go.Pie(labels=sector_data['sector'], values=sector_data['count'])
+        ])
+        fig.update_layout(title="Portfolio Sector Distribution")
+        st.plotly_chart(fig, use_container_width=True)
+
+def show_admin_users():
+    """Display user management interface"""
+    st.subheader("👥 User Management")
+    
+    if not st.session_state.admin_users:
+        st.warning("No user data available. Please refresh.")
+        return
+    
+    # Filters
+    col1, col2 = st.columns(2)
+    with col1:
+        active_filter = st.checkbox("Show Active Users Only", value=True)
+    with col2:
+        search_term = st.text_input("Search Users", placeholder="Enter email or name...")
+    
+    # Filter users
+    filtered_users = st.session_state.admin_users
+    if active_filter:
+        filtered_users = [u for u in filtered_users if u['is_active']]
+    
+    if search_term:
+        filtered_users = [
+            u for u in filtered_users 
+            if search_term.lower() in u['email'].lower() or 
+               (u['full_name'] and search_term.lower() in u['full_name'].lower())
+        ]
+    
+    # Display users table
+    if filtered_users:
+        user_data = []
+        for user in filtered_users:
+            user_data.append({
+                "ID": user['id'],
+                "Email": user['email'],
+                "Name": user['full_name'] or "N/A",
+                "Role": user['role'],
+                "Status": "🟢 Active" if user['is_active'] else "🔴 Inactive",
+                "Created": user['created_at'][:10],
+                "Risk Profiles": user['risk_assessments_count'],
+                "Portfolios": user['portfolios_count'],
+                "Scenarios": user['scenarios_count'],
+                "Exports": user['exports_count']
+            })
+        
+        df = pd.DataFrame(user_data)
+        st.dataframe(df, use_container_width=True)
+        
+        # User actions
+        st.subheader("User Actions")
+        selected_user_id = st.selectbox(
+            "Select User for Actions",
+            options=[u['id'] for u in filtered_users if u['role'] != 'admin'],
+            format_func=lambda x: next(u['email'] for u in filtered_users if u['id'] == x)
+        )
+        
+        if selected_user_id:
+            col1, col2 = st.columns(2)
+            with col1:
+                if st.button("🔄 Toggle Status", key=f"toggle_{selected_user_id}"):
+                    try:
+                        result = api_client.toggle_user_status(selected_user_id, st.session_state.access_token)
+                        st.success(result['message'])
+                        load_admin_data()
+                        st.rerun()
+                    except Exception as e:
+                        st.error(f"Error: {str(e)}")
+            
+            with col2:
+                if st.button("🗑️ Delete User", key=f"delete_{selected_user_id}"):
+                    if st.checkbox("I understand this will permanently delete the user and all their data"):
+                        try:
+                            result = api_client.delete_user(selected_user_id, st.session_state.access_token)
+                            st.success(result['message'])
+                            load_admin_data()
+                            st.rerun()
+                        except Exception as e:
+                            st.error(f"Error: {str(e)}")
+    else:
+        st.info("No users found matching the criteria")
+
+def show_admin_portfolios():
+    """Display portfolio management interface"""
+    st.subheader("💼 Portfolio Management")
+    
+    if not st.session_state.admin_portfolios:
+        st.warning("No portfolio data available. Please refresh.")
+        return
+    
+    # Display portfolios table
+    portfolio_data = []
+    for portfolio in st.session_state.admin_portfolios:
+        portfolio_data.append({
+            "ID": portfolio['id'],
+            "User": portfolio['user_email'],
+            "Name": portfolio['name'],
+            "Total Value": f"₹{portfolio['total_value']:,.2f}",
+            "Holdings": portfolio['holdings_count'],
+            "Created": portfolio['created_at'][:10],
+            "Updated": portfolio['updated_at'][:10]
+        })
+    
+    df = pd.DataFrame(portfolio_data)
+    st.dataframe(df, use_container_width=True)
+
+def show_admin_risk_assessments():
+    """Display risk assessment management interface"""
+    st.subheader("🎯 Risk Assessment Management")
+    
+    if not st.session_state.admin_risk_assessments:
+        st.warning("No risk assessment data available. Please refresh.")
+        return
+    
+    # Display risk assessments table
+    risk_data = []
+    for assessment in st.session_state.admin_risk_assessments:
+        risk_data.append({
+            "ID": assessment['id'],
+            "User": assessment['user_email'],
+            "Score": assessment['score'],
+            "Category": assessment['category'],
+            "Created": assessment['created_at'][:10]
+        })
+    
+    df = pd.DataFrame(risk_data)
+    st.dataframe(df, use_container_width=True)
+
+def show_admin_scenarios():
+    """Display scenario management interface"""
+    st.subheader("🔮 Scenario Analysis Management")
+    
+    if not st.session_state.admin_scenarios:
+        st.warning("No scenario data available. Please refresh.")
+        return
+    
+    # Display scenarios table
+    scenario_data = []
+    for scenario in st.session_state.admin_scenarios:
+        scenario_data.append({
+            "ID": scenario['id'],
+            "User": scenario['user_email'],
+            "Scenario": scenario['scenario_text'][:50] + "..." if len(scenario['scenario_text']) > 50 else scenario['scenario_text'],
+            "Risk Level": scenario['risk_assessment'].split()[0] if scenario['risk_assessment'] else "N/A",
+            "Created": scenario['created_at'][:10]
+        })
+    
+    df = pd.DataFrame(scenario_data)
+    st.dataframe(df, use_container_width=True)
+
+def show_admin_exports():
+    """Display export management interface"""
+    st.subheader("📋 Export Management")
+    
+    if not st.session_state.admin_exports:
+        st.warning("No export data available. Please refresh.")
+        return
+    
+    # Display exports table
+    export_data = []
+    for export in st.session_state.admin_exports:
+        export_data.append({
+            "ID": export['id'],
+            "User": export['user_email'],
+            "Type": export['export_type'].upper(),
+            "Filename": export['filename'],
+            "Includes": f"Risk: {'✓' if export['include_risk_profile'] else '✗'}, "
+                       f"Portfolio: {'✓' if export['include_portfolio'] else '✗'}, "
+                       f"Scenarios: {'✓' if export['include_scenarios'] else '✗'}",
+            "Created": export['created_at'][:10]
+        })
+    
+    df = pd.DataFrame(export_data)
+    st.dataframe(df, use_container_width=True)
+
+def show_admin_system_logs():
+    """Display system logs interface"""
+    st.subheader("📝 System Logs")
+    
+    # Log filters
+    col1, col2, col3 = st.columns(3)
+    with col1:
+        log_level = st.selectbox("Log Level", ["All", "INFO", "WARNING", "ERROR"], key="log_level")
+    with col2:
+        search_logs = st.text_input("Search Logs", placeholder="Enter search term...", key="search_logs")
+    with col3:
+        if st.button("🔍 Search Logs", key="search_logs_btn"):
+            try:
+                level_filter = log_level if log_level != "All" else None
+                st.session_state.admin_logs = api_client.get_admin_system_logs(
+                    st.session_state.access_token,
+                    level=level_filter,
+                    search=search_logs if search_logs else None
+                )
+                st.rerun()
+            except Exception as e:
+                st.error(f"Error searching logs: {str(e)}")
+    
+    # Display logs
+    if st.session_state.admin_logs:
+        log_data = []
+        for log in st.session_state.admin_logs:
+            log_data.append({
+                "Timestamp": log['timestamp'],
+                "Level": log['level'],
+                "Module": log['module'],
+                "Function": log['function'],
+                "Line": log['line'],
+                "Message": log['message'][:100] + "..." if len(log['message']) > 100 else log['message']
+            })
+        
+        df = pd.DataFrame(log_data)
+        st.dataframe(df, use_container_width=True)
+        
+        # Log download
+        if st.button("📥 Download Logs"):
+            csv = df.to_csv(index=False)
+            st.download_button(
+                label="Click to download",
+                data=csv,
+                file_name=f"system_logs_{datetime.now().strftime('%Y%m%d_%H%M%S')}.csv",
+                mime="text/csv"
+            )
+    else:
+        st.info("No log data available. Please refresh or search for specific logs.")
 
 if __name__ == "__main__":
     main()

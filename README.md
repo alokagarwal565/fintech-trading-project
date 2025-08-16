@@ -157,66 +157,115 @@ A comprehensive full-stack application that helps retail investors assess their 
 
 ## 🚀 Quick Start
 
-### **Prerequisites**
-- Python 3.8+
-- Redis server (for rate limiting)
-- Google Gemini API key (optional for full functionality)
-
-### **Automated Setup**
-
-1. **Clone and setup**
+### 1. **Clone and Setup**
 ```bash
-   git clone <repository-url>
-   cd fintech-trading-project
-   python setup.py
+git clone <your-repo-url>
+cd fintech-trading-project
+python setup.py
 ```
 
-2. **Configure environment**
+### 2. **Start Backend**
 ```bash
-   cp env.example .env
-   # Edit .env with your API keys and configuration
-```
-
-3. **Start the application**
-```bash
-   # Terminal 1: Start backend
 python run_backend.py
-
-   # Terminal 2: Start frontend
-python run_frontend.py
-   ```
-
-4. **Access the application**
-   - **Frontend**: http://localhost:8501
-   - **Backend API**: http://localhost:8000
-   - **API Documentation**: http://localhost:8000/docs
-
-### **Environment Configuration**
-
-Create a `.env` file with the following variables:
-
-```env
-# API Keys
-GEMINI_API_KEY=your_gemini_api_key_here
-
-# JWT Configuration
-JWT_SECRET_KEY=your_jwt_secret_key_here
-ACCESS_TOKEN_EXPIRE_MINUTES=30
-
-# Database
-DATABASE_URL=sqlite:///./investment_advisor.db
-
-# Redis (for rate limiting)
-REDIS_URL=redis://localhost:6379
-RATE_LIMIT_PER_MINUTE=60
-RATE_LIMIT_PER_HOUR=1000
-
-# CORS
-CORS_ORIGINS=http://localhost:8501,http://localhost:3000
-
-# Logging
-LOG_LEVEL=INFO
 ```
+
+### 3. **Setup Admin User (First Time Only)**
+```bash
+python setup_admin.py
+```
+Follow the prompts to create your admin account.
+
+### 4. **Start Frontend**
+```bash
+python run_frontend.py
+```
+
+### 5. **Access the Application**
+- **Regular Users**: Navigate to `http://localhost:8501` and login with your credentials
+- **Admin Users**: Login with admin credentials to access the Admin Dashboard
+
+## 🔐 Admin Dashboard
+
+The application now includes a comprehensive **Admin Dashboard** that provides administrators with full system oversight and management capabilities.
+
+### **Admin Authentication**
+- **Role-based Access**: Only users with `admin` role can access the Admin Dashboard
+- **Secure Setup**: Use `setup_admin.py` to create the initial admin user
+- **JWT Protection**: Admin endpoints are protected with role-based authentication
+
+### **Admin Dashboard Features**
+
+#### 📊 **Overview Dashboard**
+- **User Statistics**: Total users, active users, new users (weekly/monthly)
+- **Portfolio Analytics**: Total portfolios, holdings, average holdings per portfolio
+- **Risk Assessment Metrics**: Risk score distribution charts
+- **Investment Insights**: Most common stocks and sector distribution
+- **System Metrics**: Total scenarios, exports, and system performance
+
+#### 👥 **User Management**
+- **User List**: Complete user database with activity counts
+- **User Status**: Toggle user active/inactive status
+- **User Actions**: Delete users and associated data
+- **Search & Filter**: Find users by email, name, or status
+- **Activity Tracking**: Monitor user engagement across all features
+
+#### 💼 **Portfolio Management**
+- **Portfolio Overview**: All user portfolios with values and holdings
+- **User Linking**: See which portfolios belong to which users
+- **Performance Tracking**: Monitor portfolio creation and updates
+- **Data Export**: Download portfolio data for analysis
+
+#### 🎯 **Risk Assessment Management**
+- **Assessment History**: All risk assessments across all users
+- **Score Distribution**: Visualize risk score patterns
+- **User Insights**: Track user risk tolerance evolution
+- **Category Analysis**: Monitor risk category distribution
+
+#### 🔮 **Scenario Analysis Management**
+- **Scenario Database**: All AI-generated scenario analyses
+- **User Engagement**: Track scenario usage patterns
+- **Risk Assessment**: Monitor scenario risk levels
+- **Content Review**: Review AI-generated insights and recommendations
+
+#### 📋 **Export Management**
+- **Export History**: Track all generated reports (PDF/Text)
+- **User Activity**: Monitor export usage patterns
+- **Content Tracking**: See what data was included in each export
+- **File Management**: Organize and track export files
+
+#### 📝 **System Logs**
+- **Real-time Monitoring**: View system logs directly from `app.log`
+- **Log Filtering**: Filter by log level (INFO, WARNING, ERROR)
+- **Search Capability**: Search logs for specific terms or patterns
+- **Log Download**: Export logs for external analysis
+- **Security Monitoring**: Track failed logins, security events, and API usage
+
+### **Admin API Endpoints**
+
+The backend provides comprehensive admin API endpoints:
+
+- `GET /api/v1/admin/dashboard/stats` - Dashboard statistics
+- `GET /api/v1/admin/users` - User management
+- `GET /api/v1/admin/portfolios` - Portfolio overview
+- `GET /api/v1/admin/risk-assessments` - Risk assessment data
+- `GET /api/v1/admin/scenarios` - Scenario analysis data
+- `GET /api/v1/admin/exports` - Export history
+- `GET /api/v1/admin/system-logs` - System logs
+- `PUT /api/v1/admin/users/{id}/toggle-status` - Toggle user status
+- `DELETE /api/v1/admin/users/{id}` - Delete user
+
+### **Security Features**
+- **Role-based Access Control**: Admin endpoints require admin role
+- **JWT Token Validation**: Secure authentication for all admin operations
+- **Audit Logging**: All admin actions are logged for security
+- **Input Validation**: Comprehensive validation for all admin inputs
+- **Rate Limiting**: Admin endpoints are protected by rate limiting
+
+### **Data Privacy**
+- **User Data Protection**: Admin can view but not modify user data
+- **Secure Deletion**: User deletion removes all associated data
+- **Audit Trail**: All admin actions are logged with timestamps
+- **Access Control**: Admins cannot modify other admin accounts
 
 ## 🧪 Testing
 

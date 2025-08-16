@@ -26,8 +26,8 @@ def create_env_file():
     
     if env_example.exists():
         shutil.copy(env_example, env_file)
-        print("✅ Created .env file from template")
-        print("⚠️  Please edit .env file with your API keys")
+        print("✅ Environment file created from template")
+        print("   Please edit .env with your actual API keys and configuration")
     else:
         print("❌ env.example file not found")
 
@@ -79,13 +79,21 @@ def main():
     # Check Redis
     check_redis()
     
-    print("\n" + "=" * 50)
-    print("✅ Setup completed successfully!")
-    print("\n📋 Next steps:")
-    print("1. Edit .env file with your API keys")
-    print("2. Start the backend: python run_backend.py")
-    print("3. Start the frontend: python run_frontend.py")
+    # Check for admin setup
+    print("\n🔐 Admin Dashboard Setup:")
+    print("   After starting the backend, run: python setup_admin.py")
+    print("   This will create your initial admin user for the Admin Dashboard")
+    
+    print("\n🎯 Next Steps:")
+    print("1. Edit .env file with your configuration")
+    print("2. Start backend: python run_backend.py")
+    print("3. Setup admin user: python setup_admin.py")
+    print("4. Start frontend: python run_frontend.py")
+    print("5. Access the application at http://localhost:8501")
+    
     print("\n📚 For more information, see README.md")
+    
+    return True
 
 if __name__ == "__main__":
     main()

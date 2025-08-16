@@ -12,6 +12,7 @@ from backend.auth.auth import (
 )
 from backend.middleware.security import security_middleware
 from backend.utils.logger import app_logger, log_security_event
+from backend.models.models import UserRole
 
 router = APIRouter(prefix="/auth", tags=["authentication"])
 
@@ -104,8 +105,54 @@ async def login(form_data: OAuth2PasswordRequestForm = Depends(), request: Reque
     
     access_token_expires = timedelta(minutes=ACCESS_TOKEN_EXPIRE_MINUTES)
     access_token = create_access_token(
-        data={"sub": user.email}, expires_delta=access_token_expires
+        data={"sub": user.email, "role": user.role.value}, expires_delta=access_token_expires
     )
     
-    app_logger.info(f"User logged in successfully: {user.id} ({user.email})")
-    return {"access_token": access_token, "token_type": "bearer"}
+    app_logger.info(f"User logged in successfully: {user.id} ({user.email}) with role: {user.role.value}")
+    return {"access_token": access_token, "token_type": "bearer", "user_role": user.role.value.lower()}
+
+@router.post("/setup-admin", response_model=dict)
+async def setup_admin_user(
+    admin_data: UserCreate, 
+    session: Session = Depends(get_session)
+):
+    """
+    Setup initial admin user - should only be used once during initial setup
+    """
+    # Check if any admin already exists
+    existing_admin = session.exec(select(User).where(User.role == UserRole.ADMIN)).first()
+    if existing_admin:
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail="Admin user already exists"
+        )
+    
+    # Validate admin credentials
+    if not security_middleware.validate_email(admin_data.email):
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail="Invalid email format"
+        )
+    
+    if not security_middleware.validate_password_strength(admin_data.password):
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail="Password must be at least 8 characters with uppercase, lowercase, digit, and special character"
+        )
+    
+    # Create admin user
+    hashed_password = get_password_hash(admin_data.password)
+    admin_user = User(
+        email=admin_data.email,
+        hashed_password=hashed_password,
+        full_name=admin_data.full_name,
+        role=UserRole.ADMIN,
+        is_active=True
+    )
+    
+    session.add(admin_user)
+    session.commit()
+    session.refresh(admin_user)
+    
+    app_logger.info(f"Admin user created: {admin_user.id} ({admin_data.email})")
+    return {"message": "Admin user created successfully", "admin_id": admin_user.id}

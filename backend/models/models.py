@@ -12,11 +12,16 @@ class ExportType(str, Enum):
     TEXT = "text"
     PDF = "pdf"
 
+class UserRole(str, Enum):
+    USER = "USER"
+    ADMIN = "ADMIN"
+
 class User(SQLModel, table=True):
     id: Optional[int] = Field(default=None, primary_key=True)
     email: str = Field(unique=True, index=True)
     hashed_password: str
     full_name: Optional[str] = None
+    role: UserRole = Field(default=UserRole.USER)
     is_active: bool = Field(default=True)
     created_at: datetime = Field(default_factory=datetime.utcnow)
     
@@ -107,6 +112,7 @@ class UserLogin(SQLModel):
 class Token(SQLModel):
     access_token: str
     token_type: str
+    user_role: str
 
 class RiskProfileRequest(SQLModel):
     answers: List[str]
@@ -129,3 +135,76 @@ class UserDataResponse(SQLModel):
     portfolio: Optional[dict] = None
     scenarios: List[dict] = []
     exports: List[dict] = []
+
+# Admin Dashboard Response Models
+class AdminUserSummary(SQLModel):
+    id: int
+    email: str
+    full_name: Optional[str]
+    role: UserRole
+    is_active: bool
+    created_at: datetime
+    risk_assessments_count: int
+    portfolios_count: int
+    scenarios_count: int
+    exports_count: int
+
+class AdminPortfolioSummary(SQLModel):
+    id: int
+    user_email: str
+    user_full_name: Optional[str]
+    name: str
+    total_value: float
+    holdings_count: int
+    created_at: datetime
+    updated_at: datetime
+
+class AdminRiskAssessmentSummary(SQLModel):
+    id: int
+    user_email: str
+    user_full_name: Optional[str]
+    score: int
+    category: RiskCategory
+    created_at: datetime
+
+class AdminScenarioSummary(SQLModel):
+    id: int
+    user_email: str
+    user_full_name: Optional[str]
+    scenario_text: str
+    risk_assessment: str
+    created_at: datetime
+
+class AdminExportSummary(SQLModel):
+    id: int
+    user_email: str
+    user_full_name: Optional[str]
+    export_type: ExportType
+    filename: str
+    include_risk_profile: bool
+    include_portfolio: bool
+    include_scenarios: bool
+    created_at: datetime
+
+class AdminDashboardStats(SQLModel):
+    total_users: int
+    active_users: int
+    new_users_this_week: int
+    new_users_this_month: int
+    total_portfolios: int
+    total_holdings: int
+    average_holdings_per_portfolio: float
+    total_risk_assessments: int
+    risk_score_distribution: dict
+    total_scenarios: int
+    total_exports: int
+    most_common_stocks: List[dict]
+    most_common_sectors: List[dict]
+
+class AdminSystemLog(SQLModel):
+    timestamp: str
+    level: str
+    message: str
+    module: str
+    function: str
+    line: int

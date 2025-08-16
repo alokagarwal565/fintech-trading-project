@@ -6,7 +6,7 @@ from passlib.context import CryptContext
 from fastapi import HTTPException, status, Depends
 from fastapi.security import HTTPBearer, HTTPAuthorizationCredentials
 from sqlmodel import Session, select
-from backend.models.models import User
+from backend.models.models import User, UserRole
 from backend.models.database import get_session
 
 # Configuration
@@ -62,6 +62,16 @@ def get_current_user(
         )
     return user
 
+def get_current_admin(
+    current_user: User = Depends(get_current_user)
+) -> User:
+    if current_user.role != UserRole.ADMIN:
+        raise HTTPException(
+            status_code=status.HTTP_403_FORBIDDEN,
+            detail="Admin access required"
+        )
+    return current_user
+
 def authenticate_user(email: str, password: str, session: Session) -> Optional[User]:
     statement = select(User).where(User.email == email)
     user = session.exec(statement).first()
@@ -70,3 +80,27 @@ def authenticate_user(email: str, password: str, session: Session) -> Optional[U
     if not verify_password(password, user.hashed_password):
         return None
     return user
+
+def create_admin_user(session: Session, email: str, password: str, full_name: str = None) -> User:
+    """Create an admin user - should only be used during setup"""
+    # Check if admin already exists
+    existing_admin = session.exec(select(User).where(User.role == UserRole.ADMIN)).first()
+    if existing_admin:
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail="Admin user already exists"
+        )
+    
+    # Create admin user
+    hashed_password = get_password_hash(password)
+    admin_user = User(
+        email=email,
+        hashed_password=hashed_password,
+        full_name=full_name,
+        role=UserRole.ADMIN,
+        is_active=True
+    )
+    session.add(admin_user)
+    session.commit()
+    session.refresh(admin_user)
+    return admin_user
