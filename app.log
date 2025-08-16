@@ -713,3 +713,7 @@ WHERE ? = riskassessment.user_id]
 2025-08-16 14:28:36,541 - investment_advisor - INFO - log_api_request:61 - API GET /api/v1/admin/system-logs - 200 (0.021s)
 2025-08-16 14:28:38,977 - investment_advisor - INFO - log_api_request:61 - API GET /health - 200 (0.001s)
 2025-08-16 14:29:12,496 - investment_advisor - INFO - log_api_request:61 - API GET /health - 200
+2025-08-16 14:34:22,951 - investment_advisor - INFO - lifespan:22 - Starting AI-Powered Risk & Scenario Advisor API
+2025-08-16 14:34:22,955 - investment_advisor - INFO - lifespan:24 - Database initialized successfully
+2025-08-16 14:34:23,035 - investment_advisor - INFO - log_api_request:61 - API GET /health - 200 (0.001s)
+2025-08-16 14:34:25,412 - investment_advisor - INFO - log_api_request:61 - API POST /auth/setup-admin - 400 (0.018s)

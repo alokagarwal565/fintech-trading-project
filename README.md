@@ -164,16 +164,25 @@ cd fintech-trading-project
 python setup.py
 ```
 
-### 2. **Start Backend**
+The setup script will:
+- Check Python version and dependencies
+- Install required packages
+- Create necessary directories
+- Create environment file from template
+- Optionally start backend and setup admin user
+
+**For Admin Setup**: When prompted, choose 'y' to automatically start the backend and create your admin user.
+
+### 2. **Start Backend (if not done during setup)**
 ```bash
 python run_backend.py
 ```
 
-### 3. **Setup Admin User (First Time Only)**
+### 3. **Setup Admin User (if not done during setup)**
 ```bash
-python setup_admin.py
+python setup.py
 ```
-Follow the prompts to create your admin account.
+Choose 'y' when prompted to setup admin user.
 
 ### 4. **Start Frontend**
 ```bash
@@ -190,7 +199,7 @@ The application now includes a comprehensive **Admin Dashboard** that provides a
 
 ### **Admin Authentication**
 - **Role-based Access**: Only users with `admin` role can access the Admin Dashboard
-- **Secure Setup**: Use `setup_admin.py` to create the initial admin user
+- **Secure Setup**: Use `setup.py` to create the initial admin user during setup
 - **JWT Protection**: Admin endpoints are protected with role-based authentication
 
 ### **Admin Dashboard Features**
