@@ -12,14 +12,22 @@ class RateLimiter:
         self.redis_url = os.getenv("REDIS_URL", "redis://localhost:6379")
         self.rate_limit_per_minute = int(os.getenv("RATE_LIMIT_PER_MINUTE", "60"))
         self.rate_limit_per_hour = int(os.getenv("RATE_LIMIT_PER_HOUR", "1000"))
+        self.redis_enabled = os.getenv("REDIS_ENABLED", "true").lower() == "true"
         
-        try:
-            self.redis_client = redis.from_url(self.redis_url, decode_responses=True)
-            # Test connection
-            self.redis_client.ping()
-        except Exception as e:
-            logger.warning(f"Redis connection failed: {e}. Rate limiting will be disabled.")
-            self.redis_client = None
+        # Initialize Redis client
+        self.redis_client = None
+        if self.redis_enabled:
+            try:
+                self.redis_client = redis.from_url(self.redis_url, decode_responses=True, socket_connect_timeout=2)
+                # Test connection
+                self.redis_client.ping()
+                logger.info("✅ Redis connected successfully. Rate limiting enabled.")
+            except Exception as e:
+                logger.warning(f"⚠️ Redis connection failed: {e}. Rate limiting will be disabled.")
+                logger.info("💡 This is OK for development. Rate limiting will be disabled gracefully.")
+                self.redis_client = None
+        else:
+            logger.info("ℹ️ Redis disabled via configuration. Rate limiting will be disabled.")
     
     def _get_client_ip(self, request: Request) -> str:
         """Extract client IP from request"""

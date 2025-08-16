@@ -1835,3 +1835,24 @@ WHERE ? = riskassessment.user_id]
 2025-08-16 21:55:49,413 - investment_advisor - INFO - fetch_stock_data:182 - Successfully fetched data for HDFCBANK.NS in 0.80s
 2025-08-16 21:55:49,730 - investment_advisor - INFO - log_api_request:61 - API POST /api/v1/analyze-portfolio - 200 (3.511s)
 2025-08-16 21:55:52,789 - investment_advisor - INFO - log_api_request:61 - API GET /health - 200 (0.001s)
+2025-08-16 21:57:53,233 - investment_advisor - INFO - lifespan:22 - Starting AI-Powered Risk & Scenario Advisor API
+2025-08-16 21:57:53,255 - investment_advisor - INFO - lifespan:24 - Database initialized successfully
+2025-08-16 22:00:56,465 - investment_advisor - INFO - lifespan:22 - Starting AI-Powered Risk & Scenario Advisor API
+2025-08-16 22:00:56,485 - investment_advisor - INFO - lifespan:24 - Database initialized successfully
+2025-08-16 22:02:49,493 - investment_advisor - INFO - lifespan:22 - Starting AI-Powered Risk & Scenario Advisor API
+2025-08-16 22:02:49,513 - investment_advisor - INFO - lifespan:24 - Database initialized successfully
+2025-08-16 22:08:21,294 - investment_advisor - INFO - lifespan:22 - Starting AI-Powered Risk & Scenario Advisor API
+2025-08-16 22:08:21,303 - investment_advisor - INFO - lifespan:24 - Database initialized successfully
+2025-08-16 22:10:00,347 - investment_advisor - INFO - lifespan:22 - Starting AI-Powered Risk & Scenario Advisor API
+2025-08-16 22:10:00,360 - investment_advisor - INFO - lifespan:24 - Database initialized successfully
+2025-08-16 22:10:11,881 - investment_advisor - INFO - log_api_request:61 - API GET /health - 200
+2025-08-16 22:10:46,634 - investment_advisor - INFO - lifespan:22 - Starting AI-Powered Risk & Scenario Advisor API
+2025-08-16 22:10:46,642 - investment_advisor - INFO - lifespan:24 - Database initialized successfully
+2025-08-16 22:10:48,611 - investment_advisor - INFO - log_api_request:61 - API GET /health - 200 (0.001s)
+2025-08-16 22:19:18,517 - investment_advisor - INFO - lifespan:22 - Starting AI-Powered Risk & Scenario Advisor API
+2025-08-16 22:19:18,526 - investment_advisor - INFO - lifespan:24 - Database initialized successfully
+2025-08-16 22:19:31,979 - investment_advisor - INFO - log_api_request:61 - API GET /health - 200 (0.001s)
+2025-08-16 22:20:15,748 - investment_advisor - INFO - log_api_request:61 - API GET /health - 200
+2025-08-16 22:20:19,671 - investment_advisor - INFO - log_api_request:61 - API GET /health - 200 (0.001s)
+2025-08-16 22:20:19,713 - investment_advisor - WARNING - log_security_event:76 - SECURITY FAILED_LOGIN (IP: 127.0.0.1): Failed login attempt for email: admin@finadvisor.com
+2025-08-16 22:20:19,716 - investment_advisor - INFO - log_api_request:61 - API POST /auth/token - 401 (0.038s)
