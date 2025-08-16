@@ -145,18 +145,18 @@ def setup_admin_user(api_base_url="http://localhost:8000"):
     print("\n🔐 Admin User Setup")
     print("=" * 40)
     
-    # Check if admin already exists
+    # Check if backend is running first
     try:
-        response = httpx.post(
-            f"{api_base_url}/auth/setup-admin",
-            json={"email": "test@test.com", "password": "Test123!"},
-            timeout=5.0
-        )
-        if response.status_code == 400 and "already exists" in response.text:
-            print("✅ Admin user already exists")
-            return True
-    except:
-        pass
+        response = httpx.get(f"{api_base_url}/health", timeout=5.0)
+        if response.status_code != 200:
+            print("❌ Backend is not responding properly")
+            print("   Make sure the backend is running before setup")
+            return False
+        print("✅ Backend is running")
+    except Exception as e:
+        print(f"❌ Could not connect to backend: {e}")
+        print("   Make sure the backend is running before setup")
+        return False
     
     print("📝 Enter Admin User Details:")
     print("-" * 30)
@@ -212,6 +212,20 @@ def setup_admin_user(api_base_url="http://localhost:8000"):
             print(f"   Email: {admin_email}")
             print("\n🎉 You can now login with these credentials to access the Admin Dashboard")
             return True
+        elif response.status_code == 400:
+            error_data = response.json()
+            if 'detail' in error_data:
+                error_msg = error_data['detail']
+                if "already exists" in error_msg:
+                    print("ℹ️  Admin user already exists")
+                    print("   You can login with your existing admin credentials")
+                    print("   Or reset the database to start fresh")
+                    return True
+                else:
+                    print(f"❌ Error: {error_msg}")
+            else:
+                print(f"❌ Error: HTTP {response.status_code}")
+            return False
         else:
             error_data = response.json()
             if 'detail' in error_data:
