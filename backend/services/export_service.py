@@ -594,6 +594,24 @@ class ExportService:
             story.append(Paragraph(f"User: {user.full_name or user.email}", normal_style))
             story.append(Spacer(1, 25))
             
+            # Add page header and footer styles
+            header_footer_style = ParagraphStyle(
+                'HeaderFooter',
+                parent=styles['Normal'],
+                fontSize=8,
+                textColor=colors.grey,
+                alignment=TA_CENTER,
+                spaceAfter=0,
+                spaceBefore=0
+            )
+            
+            # Add page header
+            story.append(Paragraph("─" * 80, header_footer_style))
+            story.append(Paragraph("AI-Powered Risk & Scenario Advisor – Export Report", header_footer_style))
+            story.append(Paragraph(f"Generated: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')} | User: {user.full_name or user.email}", header_footer_style))
+            story.append(Paragraph("─" * 80, header_footer_style))
+            story.append(Spacer(1, 20))
+            
             # Risk Profile Section
             if include_risk_profile and user.risk_assessments:
                 print("📊 Adding risk profile section")
@@ -733,88 +751,216 @@ class ExportService:
                 for i, scenario in enumerate(latest_scenarios, 1):
                     print(f"📝 Processing scenario {i}/{len(latest_scenarios)}")
                     
-                    # Scenario header
+                    # Add page break for scenarios after the first one
+                    if i > 1:
+                        story.append(PageBreak())
+                        story.append(Spacer(1, 20))
+                    
+                    # Scenario Header with clear structure
                     story.append(Paragraph(f"Scenario Analysis {i}", subheading_style))
                     story.append(Paragraph(f"Date: {scenario.created_at.strftime('%Y-%m-%d %H:%M:%S')}", normal_style))
                     story.append(Paragraph(f"Scenario: {scenario.scenario_text}", normal_style))
-                    story.append(Spacer(1, 10))
+                    story.append(Spacer(1, 15))
                     
-                    # AI Analysis narrative
-                    story.append(Paragraph("AI Analysis:", normal_style))
-                    story.append(Paragraph(scenario.analysis_narrative, normal_style))
-                    story.append(Spacer(1, 10))
+                    # AI Analysis narrative with proper formatting
+                    if scenario.analysis_narrative:
+                        story.append(Paragraph("AI Analysis:", subheading_style))
+                        # Clean up any markdown-like syntax and ensure proper text wrapping
+                        clean_narrative = scenario.analysis_narrative.replace('###', '').replace('**', '').replace('*', '')
+                        story.append(Paragraph(clean_narrative, normal_style))
+                        story.append(Spacer(1, 15))
                     
-                    # Key Insights
+                    # Key Insights with proper bullet formatting
                     try:
-                        insights = json.loads(scenario.insights)
+                        insights = json.loads(scenario.insights) if scenario.insights else []
                         if insights:
-                            story.append(Paragraph("Key Insights:", normal_style))
+                            story.append(Paragraph("Key Insights:", subheading_style))
                             for insight in insights:
-                                story.append(Paragraph(f"• {insight}", normal_style))
-                            story.append(Spacer(1, 10))
+                                # Clean up any markdown-like syntax
+                                clean_insight = insight.replace('###', '').replace('**', '').replace('*', '')
+                                story.append(Paragraph(f"• {clean_insight}", normal_style))
+                            story.append(Spacer(1, 15))
                     except:
                         pass
                     
-                    # Recommendations
+                    # Recommendations with proper bullet formatting
                     try:
-                        recommendations = json.loads(scenario.recommendations)
+                        recommendations = json.loads(scenario.recommendations) if scenario.recommendations else []
                         if recommendations:
-                            story.append(Paragraph("Recommendations:", normal_style))
+                            story.append(Paragraph("Recommendations:", subheading_style))
                             for rec in recommendations:
-                                story.append(Paragraph(f"• {rec}", normal_style))
-                            story.append(Spacer(1, 10))
+                                # Clean up any markdown-like syntax
+                                clean_rec = rec.replace('###', '').replace('**', '').replace('*', '')
+                                story.append(Paragraph(f"• {clean_rec}", normal_style))
+                            story.append(Spacer(1, 15))
                     except:
                         pass
                     
-                    # Risk Assessment
+                    # Risk Assessment with structured display
                     if scenario.risk_assessment:
-                        story.append(Paragraph("Risk Assessment:", normal_style))
-                        story.append(Paragraph(scenario.risk_assessment, normal_style))
-                        story.append(Spacer(1, 10))
+                        story.append(Paragraph("Risk Assessment:", subheading_style))
+                        # Clean up any markdown-like syntax
+                        clean_risk = scenario.risk_assessment.replace('###', '').replace('**', '').replace('*', '')
+                        story.append(Paragraph(clean_risk, normal_style))
+                        story.append(Spacer(1, 15))
                     
-                    # Enhanced Risk Details (simplified for speed)
+                    # Enhanced Risk Details with structured table
                     if scenario.risk_details:
                         try:
                             risk_details = json.loads(scenario.risk_details)
                             if risk_details:
-                                story.append(Paragraph("Detailed Risk Analysis:", normal_style))
-                                # Show only first 3 risk details for speed
-                                risk_items = list(risk_details.items())[:3]
-                                for key, value in risk_items:
+                                story.append(Paragraph("Detailed Risk Analysis:", subheading_style))
+                                
+                                # Create structured table for risk details
+                                risk_table_data = [['Risk Metric', 'Value']]
+                                for key, value in risk_details.items():
                                     if isinstance(value, (int, float)):
-                                        story.append(Paragraph(f"• {key.replace('_', ' ').title()}: {value:.2f}", normal_style))
+                                        risk_table_data.append([key.replace('_', ' ').title(), f"{value:.2f}"])
                                     else:
-                                        story.append(Paragraph(f"• {key.replace('_', ' ').title()}: {str(value)}", normal_style))
-                                story.append(Spacer(1, 10))
+                                        risk_table_data.append([key.replace('_', ' ').title(), str(value)])
+                                
+                                if len(risk_table_data) > 1:  # Only create table if we have data
+                                    risk_details_table = Table(risk_table_data, colWidths=[2.5*inch, 2.5*inch])
+                                    risk_details_table.setStyle(TableStyle([
+                                        ('BACKGROUND', (0, 0), (-1, 0), colors.darkblue),
+                                        ('TEXTCOLOR', (0, 0), (-1, 0), colors.white),
+                                        ('ALIGN', (0, 0), (-1, -1), 'LEFT'),
+                                        ('FONTNAME', (0, 0), (-1, 0), 'Helvetica-Bold'),
+                                        ('FONTNAME', (0, 1), (-1, -1), 'Helvetica'),
+                                        ('FONTSIZE', (0, 0), (-1, -1), 9),
+                                        ('BOTTOMPADDING', (0, 0), (-1, -1), 6),
+                                        ('TOPPADDING', (0, 0), (-1, -1), 6),
+                                        ('GRID', (0, 0), (-1, -1), 0.5, colors.lightgrey),
+                                        ('ROWBACKGROUNDS', (0, 1), (-1, -1), [colors.white, colors.lightgrey]),
+                                    ]))
+                                    story.append(risk_details_table)
+                                    story.append(Spacer(1, 15))
                         except:
                             pass
                     
-                    # Portfolio Impact Analysis (simplified for speed)
+                    # Portfolio Impact Analysis with structured tables
                     if scenario.portfolio_impact:
                         try:
                             portfolio_impact = json.loads(scenario.portfolio_impact)
                             if portfolio_impact:
-                                story.append(Paragraph("Portfolio Impact Analysis:", normal_style))
-                                # Show only first 3 impact details for speed
-                                impact_items = list(portfolio_impact.items())[:3]
-                                for key, value in impact_items:
-                                    if isinstance(value, (int, float)):
-                                        story.append(Paragraph(f"• {key.replace('_', ' ').title()}: {value:.4f}", normal_style))
-                                    else:
-                                        story.append(Paragraph(f"• {key.replace('_', ' ').title()}: {str(value)}", normal_style))
-                                story.append(Spacer(1, 10))
+                                story.append(Paragraph("Portfolio Impact Analysis:", subheading_style))
+                                
+                                # Create structured table for portfolio impact metrics
+                                impact_table_data = [['Impact Metric', 'Value']]
+                                for key, value in portfolio_impact.items():
+                                    if key != 'affected_sectors':  # Handle sectors separately
+                                        if isinstance(value, (int, float)):
+                                            impact_table_data.append([key.replace('_', ' ').title(), f"{value:.4f}"])
+                                        else:
+                                            impact_table_data.append([key.replace('_', ' ').title(), str(value)])
+                                
+                                if len(impact_table_data) > 1:  # Only create table if we have data
+                                    impact_table = Table(impact_table_data, colWidths=[2.5*inch, 2.5*inch])
+                                    impact_table.setStyle(TableStyle([
+                                        ('BACKGROUND', (0, 0), (-1, 0), colors.darkblue),
+                                        ('TEXTCOLOR', (0, 0), (-1, 0), colors.white),
+                                        ('ALIGN', (0, 0), (-1, -1), 'LEFT'),
+                                        ('FONTNAME', (0, 0), (-1, 0), 'Helvetica-Bold'),
+                                        ('FONTNAME', (0, 1), (-1, -1), 'Helvetica'),
+                                        ('FONTSIZE', (0, 0), (-1, -1), 9),
+                                        ('BOTTOMPADDING', (0, 0), (-1, -1), 6),
+                                        ('TOPPADDING', (0, 0), (-1, -1), 6),
+                                        ('GRID', (0, 0), (-1, -1), 0.5, colors.lightgrey),
+                                        ('ROWBACKGROUNDS', (0, 1), (-1, -1), [colors.white, colors.lightgrey]),
+                                    ]))
+                                    story.append(impact_table)
+                                    story.append(Spacer(1, 15))
+                                
+                                # Handle affected sectors if they exist
+                                if 'affected_sectors' in portfolio_impact and portfolio_impact['affected_sectors']:
+                                    try:
+                                        affected_sectors = portfolio_impact['affected_sectors']
+                                        if isinstance(affected_sectors, list) and affected_sectors:
+                                            story.append(Paragraph("Affected Sectors:", subheading_style))
+                                            
+                                            # Create structured table for affected sectors
+                                            sectors_table_data = [['Sector', 'Weight %', 'Impact', 'Risk Level']]
+                                            for sector_data in affected_sectors:
+                                                if isinstance(sector_data, dict):
+                                                    sector = sector_data.get('sector', 'Unknown')
+                                                    weight = sector_data.get('weight', 0)
+                                                    impact = sector_data.get('impact', 'Unknown')
+                                                    risk_level = sector_data.get('risk_level', 'Unknown')
+                                                    
+                                                    sectors_table_data.append([
+                                                        str(sector),
+                                                        f"{weight:.1f}%" if isinstance(weight, (int, float)) else str(weight),
+                                                        str(impact),
+                                                        str(risk_level)
+                                                    ])
+                                            
+                                            if len(sectors_table_data) > 1:  # Only create table if we have data
+                                                sectors_table = Table(sectors_table_data, colWidths=[1.5*inch, 1.0*inch, 1.5*inch, 1.0*inch])
+                                                sectors_table.setStyle(TableStyle([
+                                                    ('BACKGROUND', (0, 0), (-1, 0), colors.darkblue),
+                                                    ('TEXTCOLOR', (0, 0), (-1, 0), colors.white),
+                                                    ('ALIGN', (0, 0), (-1, -1), 'LEFT'),
+                                                    ('FONTNAME', (0, 0), (-1, 0), 'Helvetica-Bold'),
+                                                    ('FONTNAME', (0, 1), (-1, -1), 'Helvetica'),
+                                                    ('FONTSIZE', (0, 0), (-1, -1), 8),
+                                                    ('BOTTOMPADDING', (0, 0), (-1, -1), 4),
+                                                    ('TOPPADDING', (0, 0), (-1, -1), 4),
+                                                    ('GRID', (0, 0), (-1, -1), 0.5, colors.lightgrey),
+                                                    ('ROWBACKGROUNDS', (0, 1), (-1, -1), [colors.white, colors.lightgrey]),
+                                                ]))
+                                                story.append(sectors_table)
+                                                story.append(Spacer(1, 15))
+                                    except:
+                                        pass
                         except:
                             pass
                     
-                    # Add page break between scenarios if not the last one
+                    # Portfolio Composition if available
+                    if scenario.portfolio_composition:
+                        try:
+                            portfolio_composition = json.loads(scenario.portfolio_composition)
+                            if portfolio_composition:
+                                story.append(Paragraph("Portfolio Composition:", subheading_style))
+                                
+                                # Create structured table for portfolio composition
+                                comp_table_data = [['Component', 'Details']]
+                                for key, value in portfolio_composition.items():
+                                    if isinstance(value, (int, float)):
+                                        comp_table_data.append([key.replace('_', ' ').title(), f"{value:.2f}"])
+                                    else:
+                                        comp_table_data.append([key.replace('_', ' ').title(), str(value)])
+                                
+                                if len(comp_table_data) > 1:  # Only create table if we have data
+                                    comp_table = Table(comp_table_data, colWidths=[2.0*inch, 3.0*inch])
+                                    comp_table.setStyle(TableStyle([
+                                        ('BACKGROUND', (0, 0), (-1, 0), colors.darkblue),
+                                        ('TEXTCOLOR', (0, 0), (-1, 0), colors.white),
+                                        ('ALIGN', (0, 0), (-1, -1), 'LEFT'),
+                                        ('FONTNAME', (0, 0), (-1, 0), 'Helvetica-Bold'),
+                                        ('FONTNAME', (0, 1), (-1, -1), 'Helvetica'),
+                                        ('FONTSIZE', (0, 0), (-1, -1), 9),
+                                        ('BOTTOMPADDING', (0, 0), (-1, -1), 6),
+                                        ('TOPPADDING', (0, 0), (-1, -1), 6),
+                                        ('GRID', (0, 0), (-1, -1), 0.5, colors.lightgrey),
+                                        ('ROWBACKGROUNDS', (0, 1), (-1, -1), [colors.white, colors.lightgrey]),
+                                    ]))
+                                    story.append(comp_table)
+                                    story.append(Spacer(1, 15))
+                        except:
+                            pass
+                    
+                    # Add separator between scenarios
                     if i < len(latest_scenarios):
-                        story.append(PageBreak())
+                        story.append(Spacer(1, 20))
+                        story.append(Paragraph("─" * 80, normal_style))  # Visual separator
                         story.append(Spacer(1, 20))
             
             # Footer
             story.append(Spacer(1, 30))
+            story.append(Paragraph("─" * 80, header_footer_style))
             story.append(Paragraph("End of Report", normal_style))
-            story.append(Paragraph("Generated by AI-Powered Risk & Scenario Advisor", normal_style))
+            story.append(Paragraph("Generated by AI-Powered Risk & Scenario Advisor", header_footer_style))
+            story.append(Paragraph("─" * 80, header_footer_style))
             
             # Build PDF
             print("🔨 Building PDF document")
