@@ -1,482 +1,575 @@
-# AI-Powered Risk & Scenario Advisor for Retail Investors
+# 🚀 AI-Powered Risk & Scenario Advisor
 
-A comprehensive full-stack application that helps retail investors assess their risk tolerance, analyze portfolios, and run AI-driven scenario planning using Google Gemini AI. The application provides a complete, persistent user experience where all work is automatically saved and restored.
+[![Python](https://img.shields.io/badge/Python-3.10+-blue.svg)](https://www.python.org/downloads/)
+[![FastAPI](https://img.shields.io/badge/FastAPI-0.104+-green.svg)](https://fastapi.tiangolo.com/)
+[![Streamlit](https://img.shields.io/badge/Streamlit-1.28+-red.svg)](https://streamlit.io/)
+[![License](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 
-## 🎯 Project Status
+> **Professional-grade investment risk assessment and scenario analysis platform powered by AI**
 
-✅ **FULLY FUNCTIONAL** - All core features implemented and tested  
-✅ **DATA PERSISTENCE** - Complete user data persistence across sessions  
-✅ **UNIFIED TESTING** - Comprehensive test suite with 100% success rate  
-✅ **PRODUCTION READY** - Security, performance, and deployment optimized  
+## 📖 Overview
 
-## 🚀 Key Features
+The **AI-Powered Risk & Scenario Advisor** is a comprehensive financial technology application designed for retail investors. It combines advanced AI analysis with traditional financial modeling to provide personalized investment insights, risk assessments, and market scenario analysis.
 
-### ✅ **Complete Data Persistence**
-- **Automatic Data Saving**: All user actions are automatically saved to the database
-- **Session Restoration**: Previous work is immediately displayed when users log back in
-- **Data Management**: Users can update, replace, or delete their saved data
-- **Export History**: Track and re-download all previous exports
+### 🎯 **What It Does**
 
-### ✅ **Risk Assessment System**
-- 6-question interactive questionnaire with intelligent scoring
-- Risk categorization (Conservative/Moderate/Aggressive)
-- Personalized investment recommendations
-- **Persistent Results**: Assessment history saved and restored
+- **🔒 Risk Profiling**: Comprehensive risk assessment questionnaires with AI-powered analysis
+- **📊 Portfolio Analysis**: Real-time portfolio evaluation with sector diversification insights
+- **🤖 AI Scenario Analysis**: Market scenario impact analysis using Google Gemini AI
+- **📈 Dynamic Visualizations**: Interactive charts and graphs for portfolio insights
+- **📋 Export Capabilities**: Generate detailed reports in PDF and text formats
+- **👥 User Management**: Secure authentication with role-based access control
+- **📊 Admin Dashboard**: Comprehensive system monitoring and user management
 
-### ✅ **Portfolio Analysis Engine**
-- Natural language portfolio input parsing
-- Real-time stock data via yfinance API
-- Advanced metrics calculation (P/E, dividend yield, concentration)
-- **Interactive Visualizations**: Pie charts, sector analysis, holdings breakdown
-- **Data Persistence**: Portfolio data persists across sessions
+### 🚀 **Key Features**
 
-### ✅ **AI-Powered Scenario Analysis**
-- Google Gemini AI integration for market scenario analysis
-- Predefined and custom market scenarios
-- Impact analysis on portfolio performance
-- Actionable recommendations and risk assessment
-- **Complete History**: All scenarios saved and manageable
+- **AI-Powered Analysis**: Leverages Google Gemini AI for intelligent financial insights
+- **Real-time Data**: Live stock data integration via Yahoo Finance API
+- **Responsive UI**: Modern, intuitive interface built with Streamlit
+- **Secure Backend**: FastAPI-based REST API with JWT authentication
+- **Database Persistence**: SQLite database with SQLModel ORM
+- **Rate Limiting**: Redis-based API protection and caching
+- **Comprehensive Testing**: 100% test coverage with automated test suite
 
-### ✅ **Export & Reporting System**
-- Professional Text and PDF export generation
-- Customizable export options (include/exclude sections)
-- Export history tracking and re-download capability
-- ReportLab-powered document generation
+## 🏗️ Architecture & Tech Stack
 
-### ✅ **User Management & Security**
-- Secure JWT-based authentication
-- **Real-time password strength validation** with visual feedback
-- **Enhanced error handling** with user-friendly messages
-- Password hashing with bcrypt
-- Rate limiting and input sanitization
-- Comprehensive security middleware
+### **Backend (FastAPI)**
+- **Framework**: FastAPI 0.104+
+- **Database**: SQLite with SQLModel ORM
+- **Authentication**: JWT with bcrypt password hashing
+- **AI Integration**: Google Gemini AI API
+- **Caching**: Redis for rate limiting and performance
+- **Security**: CORS, rate limiting, input validation
 
-## 🏗️ Architecture
+### **Frontend (Streamlit)**
+- **Framework**: Streamlit 1.28+
+- **Charts**: Plotly for interactive visualizations
+- **Data Processing**: Pandas for financial data manipulation
+- **Real-time Data**: Yahoo Finance integration via yfinance
 
-### **Frontend (Streamlit - Port 8501)**
-- Interactive web application with modern UI
-- Real-time data visualization with Plotly
-- Responsive design for desktop and mobile
-- Seamless API integration
+### **Infrastructure**
+- **Database**: SQLite with automatic migrations
+- **File Storage**: Local file system with export management
+- **Logging**: Structured logging with configurable levels
+- **Environment**: Python 3.10+ with virtual environment
 
-### **Backend (FastAPI - Port 8000)**
-- High-performance REST API
-- SQLModel ORM with SQLite/PostgreSQL support
-- Redis-based rate limiting and caching
-- Comprehensive logging and monitoring
+## 🛠️ Installation & Setup
 
-### **Database & Storage**
-- **SQLite**: Development database with full schema
-- **PostgreSQL**: Production-ready database support
-- **File Storage**: Export files and document management
-- **Redis**: Caching and rate limiting
+### **Prerequisites**
 
-### **External Integrations**
-- **Google Gemini AI**: Advanced scenario analysis
-- **yfinance**: Real-time stock market data
-- **ReportLab**: Professional PDF generation
+- **Python**: 3.10 or higher
+- **Git**: For cloning the repository
+- **Redis**: Optional (for enhanced rate limiting)
 
-## 🛠️ Technology Stack
+### **Step 1: Clone the Repository**
 
-### **Backend Technologies**
-- **FastAPI**: Modern, fast web framework with automatic API documentation
-- **SQLModel**: SQL database toolkit and ORM with Pydantic integration
-- **JWT**: Secure token-based authentication
-- **Redis**: Rate limiting, caching, and session management
-- **ReportLab**: Professional PDF document generation
-- **yfinance**: Real-time stock market data API
-- **Google Gemini**: AI-powered scenario analysis
-
-### **Frontend Technologies**
-- **Streamlit**: Interactive web application framework
-- **Plotly**: Advanced data visualization and charts
-- **Pandas**: Data manipulation and analysis
-- **httpx**: Modern HTTP client for API communication
-
-### **Security & Performance**
-- **Rate Limiting**: Redis-based API rate limiting (60/min, 1000/hour)
-- **Input Sanitization**: Protection against XSS and injection attacks
-- **Security Headers**: Comprehensive security middleware
-- **Retry Logic**: Exponential backoff for external API calls
-- **Logging**: Application and security event logging
-- **CORS Protection**: Cross-origin resource sharing security
-
-## 📋 Complete Feature List
-
-### 1. **User Authentication & Management**
-- Secure user registration with email validation
-- **Real-time password strength validation** with visual feedback
-- **Enhanced error handling** with structured error responses
-- JWT-based login and session management
-- Password strength validation and hashing
-- User profile management
-
-### 2. **Risk Assessment System**
-- 6-question interactive questionnaire
-- Intelligent risk scoring (0-24 scale)
-- Risk categorization (Conservative/Moderate/Aggressive)
-- Personalized investment recommendations
-- Assessment history and retake functionality
-
-### 3. **Portfolio Analysis Engine**
-- Natural language portfolio input parsing
-- Real-time stock data fetching
-- Portfolio metrics calculation:
-  - Total portfolio value
-  - Individual holding values
-  - P/E ratios and dividend yields
-  - Sector allocation analysis
-  - Concentration risk assessment
-- Interactive visualizations:
-  - Portfolio composition pie chart
-  - Sector allocation bar chart
-  - Holdings value comparison
-- Portfolio history and update functionality
-
-### 4. **AI-Powered Scenario Analysis**
-- Google Gemini AI integration
-- Market scenario impact analysis
-- Portfolio performance projections
-- Risk assessment for scenarios
-- Actionable investment recommendations
-- Scenario history management
-
-### 5. **Export & Reporting System**
-- Professional text report generation
-- PDF document creation with ReportLab
-- Customizable export options
-- Export history tracking
-- Re-download functionality
-
-### 6. **Data Persistence & Management**
-- Complete user data persistence
-- Automatic session restoration
-- Data update and replacement
-- Export history management
-- User data aggregation
-
-## 🚀 Quick Start
-
-### 1. **Clone and Setup**
 ```bash
-git clone <your-repo-url>
+git clone https://github.com/alokagarwal565/fintech-trading-project.git
 cd fintech-trading-project
-python setup.py
 ```
 
-The setup script will:
-- Check Python version and dependencies
-- Install required packages
-- Create necessary directories
-- Create environment file from template
-- Optionally start backend and setup admin user
+### **Step 2: Environment Setup**
 
-**For Admin Setup**: When prompted, choose 'y' to automatically start the backend and create your admin user.
-
-### 2. **Start Backend (if not done during setup)**
 ```bash
+# Create virtual environment
+python -m venv venv
+
+# Activate virtual environment
+# Windows
+venv\Scripts\activate
+# macOS/Linux
+source venv/bin/activate
+
+# Install dependencies
+pip install -r requirements.txt
+```
+
+### **Step 3: Configuration**
+
+```bash
+# Copy environment template
+cp env.example .env
+
+# Edit .env file with your configuration
+# Required: GEMINI_API_KEY, SECRET_KEY
+# Optional: REDIS_URL, CORS_ORIGINS, etc.
+```
+
+#### **Required Environment Variables**
+
+| Variable | Description | Example |
+|----------|-------------|---------|
+| `GEMINI_API_KEY` | Google Gemini AI API key | `AIzaSyC...` |
+| `SECRET_KEY` | JWT secret key | `your-super-secret-key` |
+| `API_BASE_URL` | Backend API URL | `http://localhost:8000` |
+
+#### **Optional Environment Variables**
+
+| Variable | Description | Default |
+|----------|-------------|---------|
+| `REDIS_URL` | Redis connection string | `redis://localhost:6379` |
+| `CORS_ORIGINS` | Allowed CORS origins | `http://localhost:8501` |
+| `LOG_LEVEL` | Logging level | `INFO` |
+| `DEBUG_MODE` | Debug mode flag | `true` |
+
+### **Step 4: Database Initialization**
+
+```bash
+# Run setup script (automatically creates database and admin user)
+python setup.py
+
+# Or manually initialize database
+python -c "from backend.models.database import create_db_and_tables; create_db_and_tables()"
+```
+
+## 🚀 Running the Application
+
+### **Option 1: Automated Startup (Recommended)**
+
+```bash
+# Start both backend and frontend automatically
+python start_services.py
+```
+
+### **Option 2: Manual Startup**
+
+#### **Start Backend Server**
+
+```bash
+# Terminal 1: Activate venv and start backend
+venv\Scripts\activate  # Windows
+# source venv/bin/activate  # macOS/Linux
 python run_backend.py
 ```
 
-### 3. **Setup Admin User (if not done during setup)**
-```bash
-python setup.py
-```
-Choose 'y' when prompted to setup admin user.
+Backend will be available at: **http://localhost:8000**
 
-### 4. **Start Frontend**
+#### **Start Frontend Application**
+
 ```bash
+# Terminal 2: Activate venv and start frontend
+venv\Scripts\activate  # Windows
+# source venv/bin/activate  # macOS/Linux
 python run_frontend.py
 ```
 
-### 5. **Access the Application**
-- **Regular Users**: Navigate to `http://localhost:8501` and login with your credentials
-- **Admin Users**: Login with admin credentials to access the Admin Dashboard
+Frontend will be available at: **http://localhost:8501**
 
-## 🔐 Admin Dashboard
+### **Option 3: Individual Scripts**
 
-The application now includes a comprehensive **Admin Dashboard** that provides administrators with full system oversight and management capabilities.
+```bash
+# Backend only
+python run_backend.py
 
-### **Admin Authentication**
-- **Role-based Access**: Only users with `admin` role can access the Admin Dashboard
-- **Secure Setup**: Use `setup.py` to create the initial admin user during setup
-- **JWT Protection**: Admin endpoints are protected with role-based authentication
-
-### **Admin Dashboard Features**
-
-#### 📊 **Overview Dashboard**
-- **User Statistics**: Total users, active users, new users (weekly/monthly)
-- **Portfolio Analytics**: Total portfolios, holdings, average holdings per portfolio
-- **Risk Assessment Metrics**: Risk score distribution charts
-- **Investment Insights**: Most common stocks and sector distribution
-- **System Metrics**: Total scenarios, exports, and system performance
-
-#### 👥 **User Management**
-- **User List**: Complete user database with activity counts
-- **User Status**: Toggle user active/inactive status
-- **User Actions**: Delete users and associated data
-- **Search & Filter**: Find users by email, name, or status
-- **Activity Tracking**: Monitor user engagement across all features
-
-#### 💼 **Portfolio Management**
-- **Portfolio Overview**: All user portfolios with values and holdings
-- **User Linking**: See which portfolios belong to which users
-- **Performance Tracking**: Monitor portfolio creation and updates
-- **Data Export**: Download portfolio data for analysis
-
-#### 🎯 **Risk Assessment Management**
-- **Assessment History**: All risk assessments across all users
-- **Score Distribution**: Visualize risk score patterns
-- **User Insights**: Track user risk tolerance evolution
-- **Category Analysis**: Monitor risk category distribution
-
-#### 🔮 **Scenario Analysis Management**
-- **Scenario Database**: All AI-generated scenario analyses
-- **User Engagement**: Track scenario usage patterns
-- **Risk Assessment**: Monitor scenario risk levels
-- **Content Review**: Review AI-generated insights and recommendations
-
-#### 📋 **Export Management**
-- **Export History**: Track all generated reports (PDF/Text)
-- **User Activity**: Monitor export usage patterns
-- **Content Tracking**: See what data was included in each export
-- **File Management**: Organize and track export files
-
-#### 📝 **System Logs**
-- **Real-time Monitoring**: View system logs directly from `app.log`
-- **Log Filtering**: Filter by log level (INFO, WARNING, ERROR)
-- **Search Capability**: Search logs for specific terms or patterns
-- **Log Download**: Export logs for external analysis
-- **Security Monitoring**: Track failed logins, security events, and API usage
-
-### **Admin API Endpoints**
-
-The backend provides comprehensive admin API endpoints:
-
-- `GET /api/v1/admin/dashboard/stats` - Dashboard statistics
-- `GET /api/v1/admin/users` - User management
-- `GET /api/v1/admin/portfolios` - Portfolio overview
-- `GET /api/v1/admin/risk-assessments` - Risk assessment data
-- `GET /api/v1/admin/scenarios` - Scenario analysis data
-- `GET /api/v1/admin/exports` - Export history
-- `GET /api/v1/admin/system-logs` - System logs
-- `PUT /api/v1/admin/users/{id}/toggle-status` - Toggle user status
-- `DELETE /api/v1/admin/users/{id}` - Delete user
-
-### **Security Features**
-- **Role-based Access Control**: Admin endpoints require admin role
-- **JWT Token Validation**: Secure authentication for all admin operations
-- **Audit Logging**: All admin actions are logged for security
-- **Input Validation**: Comprehensive validation for all admin inputs
-- **Rate Limiting**: Admin endpoints are protected by rate limiting
-
-### **Data Privacy**
-- **User Data Protection**: Admin can view but not modify user data
-- **Secure Deletion**: User deletion removes all associated data
-- **Audit Trail**: All admin actions are logged with timestamps
-- **Access Control**: Admins cannot modify other admin accounts
+# Frontend only  
+python run_frontend.py
+```
 
 ## 🧪 Testing
 
-The application includes a **comprehensive unified test suite** that consolidates all testing functionality:
+### **Run Complete Test Suite**
 
-### **Smart Test Execution**
-
-**Run all tests (automatically adapts to environment):**
 ```bash
+# Run all tests (requires backend running)
 python test_all.py
 ```
 
-**Run specific test categories:**
+### **Run Specific Test Categories**
+
 ```bash
 # Environment and dependencies (always available)
 python test_all.py environment
 python test_all.py dependencies
 python test_all.py database
 
-# Backend connectivity (requires backend running)
-python test_all.py health
-
 # Core features (requires backend running)
 python test_all.py auth
 python test_all.py risk
 python test_all.py portfolio
-python test_all.py visualizations
 python test_all.py scenario
 python test_all.py export
-python test_all.py userdata
 ```
 
 ### **Test Coverage**
 
-#### **Offline Tests** (Always Run):
-- Environment configuration validation
-- Python dependencies verification
-- Database connection and models testing
-
-#### **Online Tests** (Require Backend):
-- Backend API health and responsiveness
-- User authentication and registration
-- Risk assessment functionality
-- Portfolio analysis and visualizations
-- AI-powered scenario analysis
-- Export functionality and history
-- User data aggregation
-
-### **Test Results**
-- ✅ Success indicators for each test
-- ⚠️ Warnings for missing optional components
-- ❌ Detailed error messages and debugging info
-- 📊 Summary statistics (pass/fail counts, success rate)
-- 📋 Information about skipped tests
+- ✅ **Environment Configuration**: Python version, dependencies, environment variables
+- ✅ **Database Operations**: Connection, models, CRUD operations
+- ✅ **API Endpoints**: Authentication, CRUD operations, error handling
+- ✅ **Business Logic**: Risk assessment, portfolio analysis, scenario analysis
+- ✅ **Integration**: End-to-end user workflows
 
 **Current Status**: 100% test success rate with comprehensive coverage
 
-## 📊 Database Schema
+## 📚 Usage Examples
 
-### **Core Models**
-- **User**: User accounts and authentication data
-- **RiskAssessment**: Risk profile results and questionnaire answers
-- **Portfolio**: User portfolios with total values and metadata
-- **Holding**: Individual stock holdings with real-time data
-- **Scenario**: AI-generated scenario analyses and recommendations
-- **Export**: Export history and file metadata
+### **1. User Registration & Authentication**
 
-### **Key Features**
-- **Foreign Key Relationships**: All user data properly linked
-- **Timestamps**: Created/updated timestamps for all records
-- **JSON Storage**: Complex data stored as JSON strings
-- **Cascade Deletes**: Proper cleanup when deleting parent records
+```python
+# Register new user
+POST /auth/register
+{
+    "email": "user@example.com",
+    "password": "SecurePass123!",
+    "full_name": "John Doe"
+}
 
-## 🔧 API Endpoints
+# Login
+POST /auth/token
+{
+    "username": "user@example.com",
+    "password": "SecurePass123!"
+}
+```
 
-### **Authentication**
-- `POST /auth/register` - User registration
-- `POST /auth/token` - User login
+### **2. Risk Assessment**
 
-### **Risk Profiling**
-- `POST /api/v1/risk-profile` - Create risk assessment
-- `GET /api/v1/risk-profile/latest` - Get latest assessment
-- `DELETE /api/v1/risk-profile/latest` - Delete latest assessment
+```python
+# Create risk profile
+POST /api/v1/risk-profile
+{
+    "answers": [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
+}
 
-### **Portfolio Analysis**
-- `POST /api/v1/analyze-portfolio` - Analyze portfolio
-- `GET /api/v1/portfolio/latest` - Get latest portfolio
-- `DELETE /api/v1/portfolio/latest` - Delete latest portfolio
+# Get latest assessment
+GET /api/v1/risk-profile/latest
+```
 
-### **Scenario Analysis**
-- `POST /api/v1/analyze-scenario` - Create scenario analysis
-- `GET /api/v1/scenarios` - Get all scenarios
-- `GET /api/v1/scenarios/{id}` - Get specific scenario
-- `DELETE /api/v1/scenarios/{id}` - Delete specific scenario
+### **3. Portfolio Analysis**
 
-### **Export Management**
-- `POST /api/v1/export/text` - Export as text
-- `POST /api/v1/export/pdf` - Export as PDF
-- `GET /api/v1/export/history` - Get export history
-- `GET /api/v1/export/download/{id}` - Download export file
-- `DELETE /api/v1/export/{id}` - Delete export
+```python
+# Analyze portfolio
+POST /api/v1/analyze-portfolio
+{
+    "portfolio_input": "AAPL:100,GOOGL:50,MSFT:75"
+}
 
-### **User Data**
-- `GET /api/v1/user/data` - Get all user data
+# Get portfolio data
+GET /api/v1/portfolio/latest
+```
 
-## 🔒 Security Features
+### **4. Scenario Analysis**
 
-- **JWT Authentication**: Secure token-based authentication
-- **Real-time Password Validation**: Frontend validation with visual feedback
-  - At least 8 characters long
-  - Contains uppercase letter(s)
-  - Contains lowercase letter(s)
-  - Contains number(s)
-  - Contains special character(s)
-  - Visual strength meter (Very Weak → Weak → Medium → Strong)
-  - Real-time checklist updates as user types
-- **Enhanced Error Handling**: User-friendly error messages with structured responses
-  - Duplicate email detection with clear messaging
-  - Invalid email format validation
-  - Password strength requirement feedback
-  - Helpful action buttons (Go to Login, Try Different Email)
-  - Styled error messages with tips and suggestions
-- **Password Hashing**: bcrypt password hashing with salt
-- **Input Sanitization**: Protection against XSS and injection attacks
-- **Rate Limiting**: Redis-based API rate limiting
-- **Security Headers**: Comprehensive security middleware
-- **CORS Protection**: Cross-origin resource sharing protection
-- **Audit Logging**: Security event logging and monitoring
+```python
+# Analyze market scenario
+POST /api/v1/analyze-scenario
+{
+    "scenario_text": "Federal Reserve increases interest rates by 0.5%",
+    "portfolio_id": 1
+}
 
-## 📈 Performance Optimizations
+# Get all scenarios
+GET /api/v1/scenarios
+```
 
-- **Database Indexing**: Optimized queries with proper indexing
-- **Caching**: Redis-based caching for frequently accessed data
-- **Retry Logic**: Exponential backoff for external API calls
-- **Async Operations**: Non-blocking API operations
-- **Connection Pooling**: Efficient database connection management
-- **Memory Optimization**: Efficient data handling and cleanup
+### **5. Export Reports**
 
-## 🚀 Production Deployment
+```python
+# Export as PDF
+POST /api/v1/export/pdf
+{
+    "include_risk_profile": true,
+    "include_portfolio": true,
+    "include_scenarios": true
+}
 
-See `DEPLOYMENT.md` for detailed production deployment instructions including:
-- Docker containerization
-- Nginx reverse proxy setup
-- SSL/TLS configuration
-- Monitoring and logging
-- Backup strategies
-- Performance optimization
+# Download export
+GET /api/v1/export/download/{export_id}
+```
 
 ## 📁 Project Structure
 
 ```
 fintech-trading-project/
-├── app/                    # Streamlit frontend
-│   └── main.py            # Main frontend application
-├── backend/               # FastAPI backend
-│   ├── main.py           # FastAPI application entry point
-│   ├── models/           # Database models and schemas
-│   ├── routers/          # API route handlers
-│   ├── services/         # Business logic services
-│   ├── middleware/       # Security and logging middleware
-│   ├── utils/            # Utility functions
-│   └── auth/             # Authentication modules
-├── exports/              # Generated export files
-├── logs/                 # Application logs
-├── temp/                 # Temporary files
-├── test_all.py           # Unified test suite
-├── requirements.txt      # Python dependencies
-├── setup.py             # Automated setup script
-├── run_backend.py       # Backend startup script
-├── run_frontend.py      # Frontend startup script
-└── README.md            # Project documentation
+├── 📁 app/                          # Streamlit frontend application
+│   └── 📄 main.py                  # Main frontend application (3,174 lines)
+├── 📁 backend/                      # FastAPI backend application
+│   ├── 📄 main.py                  # FastAPI app entry point
+│   ├── 📁 models/                  # Database models and schemas
+│   │   ├── 📄 models.py            # SQLModel data models
+│   │   └── 📄 database.py          # Database configuration
+│   ├── 📁 routers/                 # API route handlers
+│   │   ├── 📄 auth.py              # Authentication endpoints
+│   │   ├── 📄 admin.py             # Admin management endpoints
+│   │   ├── 📄 export.py            # Export functionality
+│   │   ├── 📄 portfolio.py         # Portfolio management
+│   │   ├── 📄 risk_profile.py      # Risk assessment
+│   │   ├── 📄 scenario.py          # Scenario analysis
+│   │   └── 📄 user_data.py         # User data aggregation
+│   ├── 📁 services/                # Business logic services
+│   │   ├── 📄 export_service.py    # Export generation
+│   │   ├── 📄 portfolio_service.py # Portfolio analysis
+│   │   ├── 📄 risk_profile_service.py # Risk assessment logic
+│   │   └── 📄 scenario_service.py  # AI scenario analysis
+│   ├── 📁 middleware/              # Security and logging middleware
+│   ├── 📁 utils/                   # Utility functions
+│   └── 📁 auth/                    # Authentication modules
+├── 📁 exports/                     # Generated export files
+├── 📁 logs/                        # Application logs
+├── 📁 temp/                        # Temporary files
+├── 📁 venv/                        # Python virtual environment
+├── 📄 .env.example                 # Environment variables template
+├── 📄 requirements.txt             # Python dependencies
+├── 📄 setup.py                     # Automated setup script
+├── 📄 start_services.py            # Service startup automation
+├── 📄 run_backend.py               # Backend startup script
+├── 📄 run_frontend.py              # Frontend startup script
+├── 📄 test_all.py                  # Comprehensive test suite
+├── 📄 investment_advisor.db        # SQLite database
+└── 📄 README.md                    # This file
+```
+
+## 🔧 Configuration
+
+### **Database Configuration**
+
+The application uses SQLite by default with automatic table creation:
+
+```python
+# Database URL (configurable via environment)
+DATABASE_URL = "sqlite:///./investment_advisor.db"
+
+# Automatic table creation on startup
+create_db_and_tables()
+```
+
+### **Security Configuration**
+
+```python
+# JWT Configuration
+SECRET_KEY = "your-super-secret-key"
+ALGORITHM = "HS256"
+ACCESS_TOKEN_EXPIRE_MINUTES = 30
+
+# CORS Configuration
+CORS_ORIGINS = ["http://localhost:8501", "http://localhost:3000"]
+
+# Rate Limiting
+RATE_LIMIT_PER_MINUTE = 60
+RATE_LIMIT_PER_HOUR = 1000
+```
+
+### **AI Configuration**
+
+```python
+# Google Gemini AI
+GEMINI_API_KEY = "your-gemini-api-key"
+
+# AI Analysis Settings
+MAX_RETRIES = 2
+BASE_DELAY = 2.0
+```
+
+## 🚀 Deployment
+
+### **Production Deployment**
+
+1. **Environment Setup**
+   ```bash
+   # Set production environment variables
+   export DEBUG_MODE=false
+   export ENABLE_HTTPS=true
+   export LOG_LEVEL=WARNING
+   ```
+
+2. **Database Migration**
+   ```bash
+   # Backup existing database
+   cp investment_advisor.db investment_advisor_backup.db
+   
+   # Run setup in production mode
+   python setup.py --production
+   ```
+
+3. **Service Management**
+   ```bash
+   # Use systemd (Linux) or Windows Services
+   # Configure reverse proxy (Nginx/Apache)
+   # Enable SSL/TLS certificates
+   ```
+
+### **Docker Deployment**
+
+```dockerfile
+# Dockerfile example
+FROM python:3.10-slim
+
+WORKDIR /app
+COPY requirements.txt .
+RUN pip install -r requirements.txt
+
+COPY . .
+EXPOSE 8000
+
+CMD ["python", "run_backend.py"]
 ```
 
 ## 🤝 Contributing
 
-1. Fork the repository
-2. Create a feature branch
-3. Make your changes
-4. Add tests for new functionality
-5. Ensure all tests pass
-6. Submit a pull request
+We welcome contributions! Here's how you can help:
+
+### **Development Setup**
+
+1. **Fork the repository**
+2. **Create a feature branch**
+   ```bash
+   git checkout -b feature/amazing-feature
+   ```
+3. **Make your changes**
+4. **Run tests**
+   ```bash
+   python test_all.py
+   ```
+5. **Commit your changes**
+   ```bash
+   git commit -m "Add amazing feature"
+   ```
+6. **Push to your branch**
+   ```bash
+   git push origin feature/amazing-feature
+   ```
+7. **Open a Pull Request**
+
+### **Contribution Guidelines**
+
+- **Code Style**: Follow PEP 8 Python style guide
+- **Testing**: Ensure all tests pass before submitting
+- **Documentation**: Update documentation for new features
+- **Commits**: Use clear, descriptive commit messages
+- **Issues**: Report bugs and suggest features via GitHub Issues
+
+### **Development Workflow**
+
+```bash
+# 1. Setup development environment
+python -m venv venv
+source venv/bin/activate  # or venv\Scripts\activate on Windows
+pip install -r requirements.txt
+
+# 2. Make changes and test
+python test_all.py
+
+# 3. Run specific tests during development
+python test_all.py auth
+python test_all.py portfolio
+
+# 4. Check code quality
+python -m flake8 backend/ app/
+python -m black backend/ app/
+```
+
+## 📊 API Documentation
+
+### **Interactive API Docs**
+
+Once the backend is running, visit:
+- **Swagger UI**: http://localhost:8000/docs
+- **ReDoc**: http://localhost:8000/redoc
+
+### **Core Endpoints**
+
+| Method | Endpoint | Description |
+|--------|----------|-------------|
+| `POST` | `/auth/register` | User registration |
+| `POST` | `/auth/token` | User authentication |
+| `POST` | `/api/v1/risk-profile` | Create risk assessment |
+| `POST` | `/api/v1/analyze-portfolio` | Analyze portfolio |
+| `POST` | `/api/v1/analyze-scenario` | Analyze market scenario |
+| `POST` | `/api/v1/export/pdf` | Export report as PDF |
+| `GET` | `/api/v1/user/data` | Get all user data |
+| `GET` | `/api/v1/admin/users` | Admin: List all users |
+
+## 🐛 Troubleshooting
+
+### **Common Issues**
+
+#### **Backend Won't Start**
+```bash
+# Check if port 8000 is available
+netstat -an | grep 8000
+
+# Check environment variables
+python -c "import os; print(os.getenv('GEMINI_API_KEY'))"
+```
+
+#### **Frontend Connection Issues**
+```bash
+# Verify backend is running
+curl http://localhost:8000/health
+
+# Check CORS configuration in .env
+CORS_ORIGINS=http://localhost:8501
+```
+
+#### **Database Issues**
+```bash
+# Reset database (WARNING: Data loss)
+python reset_database.py
+
+# Check database schema
+python -c "from backend.models.database import create_db_and_tables; create_db_and_tables()"
+```
+
+#### **AI Analysis Failing**
+```bash
+# Verify Gemini API key
+echo $GEMINI_API_KEY
+
+# Check API quota and limits
+# Visit: https://makersuite.google.com/app/apikey
+```
+
+### **Logs and Debugging**
+
+```bash
+# Check application logs
+tail -f app.log
+
+# Enable debug mode
+export DEBUG_MODE=true
+export LOG_LEVEL=DEBUG
+
+# Check specific service logs
+tail -f logs/backend.log
+tail -f logs/frontend.log
+```
 
 ## 📄 License
 
-This project is licensed under the MIT License - see the LICENSE file for details.
+This project is licensed under the **MIT License** - see the [LICENSE](LICENSE) file for details.
 
 ## 🆘 Support
 
-For support and questions:
-1. Check the documentation
-2. Review the API docs at http://localhost:8000/docs
-3. Run the test script: `python test_all.py`
-4. Check the logs for error details
-5. Review the deployment guide in `DEPLOYMENT.md`
+### **Getting Help**
 
-## 🎉 Project Status
+1. **📚 Documentation**: Check this README and inline code comments
+2. **🐛 Issues**: Report bugs via [GitHub Issues](https://github.com/alokagarwal565/fintech-trading-project/issues)
+3. **💬 Discussions**: Start discussions for questions and ideas
+4. **📖 API Docs**: Interactive API documentation at http://localhost:8000/docs
+5. **🧪 Testing**: Run `python test_all.py` to verify system health
 
-**✅ FULLY FUNCTIONAL** - All features implemented and tested  
-**✅ PRODUCTION READY** - Security, performance, and deployment optimized  
-**✅ COMPREHENSIVE TESTING** - 100% test success rate with full coverage  
-**✅ COMPLETE DOCUMENTATION** - Detailed guides and API documentation  
+### **Community Resources**
+
+- **GitHub Repository**: [https://github.com/alokagarwal565/fintech-trading-project](https://github.com/alokagarwal565/fintech-trading-project)
+- **FastAPI Documentation**: [https://fastapi.tiangolo.com/](https://fastapi.tiangolo.com/)
+- **Streamlit Documentation**: [https://docs.streamlit.io/](https://docs.streamlit.io/)
+- **Google Gemini AI**: [https://ai.google.dev/](https://ai.google.dev/)
+
+## 🎉 Acknowledgments
+
+- **FastAPI**: Modern, fast web framework for building APIs
+- **Streamlit**: Rapid web app development for data science
+- **Google Gemini AI**: Advanced AI capabilities for financial analysis
+- **SQLModel**: Modern Python library for working with databases
+- **Yahoo Finance**: Real-time financial data via yfinance library
 
 ---
 
-**🚀 Ready for production deployment with complete feature set and comprehensive testing!**
+**⭐ Star this repository if you find it helpful!**
+
+**🤝 Contributions are welcome and appreciated!**
+
+**📧 Questions? Open an issue or start a discussion!**
+
+---
+
+*Built with ❤️ for the fintech community*
