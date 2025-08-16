@@ -364,3 +364,11 @@ WHERE ? = riskassessment.user_id]
 2025-08-16 12:16:33,944 - investment_advisor - INFO - log_api_request:61 - API GET /api/v1/user/data - 200 (0.023s)
 2025-08-16 12:16:42,759 - investment_advisor - INFO - lifespan:27 - Shutting down AI-Powered Risk & Scenario Advisor API
 2025-08-16 12:16:42,777 - investment_advisor - INFO - lifespan:27 - Shutting down AI-Powered Risk & Scenario Advisor API
+2025-08-16 12:25:26,441 - investment_advisor - INFO - lifespan:22 - Starting AI-Powered Risk & Scenario Advisor API
+2025-08-16 12:25:26,451 - investment_advisor - INFO - lifespan:24 - Database initialized successfully
+2025-08-16 12:27:32,058 - investment_advisor - INFO - lifespan:27 - Shutting down AI-Powered Risk & Scenario Advisor API
+2025-08-16 12:27:52,262 - investment_advisor - INFO - lifespan:22 - Starting AI-Powered Risk & Scenario Advisor API
+2025-08-16 12:27:52,284 - investment_advisor - INFO - lifespan:24 - Database initialized successfully
+2025-08-16 12:28:00,116 - investment_advisor - INFO - lifespan:27 - Shutting down AI-Powered Risk & Scenario Advisor API
+2025-08-16 12:28:16,609 - investment_advisor - INFO - lifespan:22 - Starting AI-Powered Risk & Scenario Advisor API
+2025-08-16 12:28:16,618 - investment_advisor - INFO - lifespan:24 - Database initialized successfully

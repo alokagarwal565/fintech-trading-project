@@ -22,6 +22,13 @@ import uuid
 from pathlib import Path
 from typing import Dict, Any, Optional
 
+# Load environment variables from .env file
+try:
+    from dotenv import load_dotenv
+    load_dotenv()
+except ImportError:
+    print("⚠️ python-dotenv not installed. Environment variables may not be loaded from .env file")
+
 # Configuration
 BASE_URL = "http://localhost:8000"
 TEST_PASSWORD = "TestPass123!"
