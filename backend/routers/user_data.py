@@ -104,7 +104,11 @@ async def get_user_data(
                     "insights": json.loads(scenario.insights),
                     "recommendations": json.loads(scenario.recommendations),
                     "risk_assessment": scenario.risk_assessment,
-                    "created_at": scenario.created_at.isoformat()
+                    "created_at": scenario.created_at.isoformat(),
+                    # Add the enhanced fields that are being saved
+                    "risk_details": json.loads(scenario.risk_details) if scenario.risk_details else {},
+                    "portfolio_impact": json.loads(scenario.portfolio_impact) if scenario.portfolio_impact else {},
+                    "portfolio_composition": json.loads(scenario.portfolio_composition) if scenario.portfolio_composition else {}
                 })
         except Exception as e:
             print(f"Warning: Could not fetch scenarios: {e}")
