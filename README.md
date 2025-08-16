@@ -30,6 +30,24 @@ The **AI-Powered Risk & Scenario Advisor** is a comprehensive financial technolo
 - **Rate Limiting**: Redis-based API protection and caching
 - **Comprehensive Testing**: 100% test coverage with automated test suite
 
+## ⚡ Quick Start Commands
+
+### **Process Cleanup (if services won't start)**
+```powershell
+# Windows (PowerShell)
+taskkill /f /im python.exe
+Start-Sleep -Seconds 5
+
+# Linux/Mac
+pkill -f python
+sleep 5
+```
+
+### **Start Services**
+```bash
+python start_services.py
+```
+
 ## 🏗️ Architecture & Tech Stack
 
 ### **Backend (FastAPI)**
@@ -125,10 +143,39 @@ python -c "from backend.models.database import create_db_and_tables; create_db_a
 
 ### **Option 1: Automated Startup (Recommended)**
 
-```bash
-# Start both backend and frontend automatically
+**Before running start_services.py, ensure clean startup:**
+
+#### Windows (PowerShell):
+```powershell
+# Kill all Python processes 
+taskkill /f /im python.exe
+
+# Wait 
+Start-Sleep -Seconds 5
+
+# Then run
 python start_services.py
 ```
+
+#### Linux/Mac:
+```bash
+# Kill all Python processes
+pkill -f python
+
+# Wait
+sleep 5
+
+# Then run
+python start_services.py
+```
+
+**What start_services.py does automatically:**
+- Opens two separate terminal windows
+- Starts the FastAPI backend on port 8000
+- Starts the Streamlit frontend on port 8501
+- Handles virtual environment activation
+- Provides clear status messages
+- **Automatically cleans up existing Python processes**
 
 ### **Option 2: Manual Startup**
 
@@ -480,6 +527,22 @@ Once the backend is running, visit:
 ## 🐛 Troubleshooting
 
 ### **Common Issues**
+
+#### **Port Conflicts & Process Issues**
+```bash
+# Windows (PowerShell)
+taskkill /f /im python.exe
+Start-Sleep -Seconds 5
+
+# Linux/Mac
+pkill -f python
+sleep 5
+```
+
+**Then restart services:**
+```bash
+python start_services.py
+```
 
 #### **Backend Won't Start**
 ```bash

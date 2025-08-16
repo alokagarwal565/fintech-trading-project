@@ -166,7 +166,7 @@ def setup_admin_user(api_base_url="http://localhost:8000"):
         print("❌ Email is required")
         return False
     
-    admin_password = input("Admin Password: ").strip()
+    admin_password = input("Admin Password (at least 8 characters long, must contain uppercase, lowercase, digit, and special character): ").strip()
     if not admin_password:
         print("❌ Password is required")
         return False
